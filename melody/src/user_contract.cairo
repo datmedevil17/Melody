@@ -1,5 +1,6 @@
 use super::model::UserProfile;
 use super::errors::UserErrors;
+use starknet::ContractAddress;
 
 #[starknet::interface]
 trait IUserContract<TContractState> {
@@ -10,6 +11,8 @@ trait IUserContract<TContractState> {
     fn get_user_tokens(self: @TContractState, user_address: starknet::ContractAddress) -> u256;
     fn get_user_profile(self: @TContractState, user_address: starknet::ContractAddress) -> UserProfile;
     fn is_registered(self: @TContractState, user_address: starknet::ContractAddress) -> bool;
+    fn set_artist_contract(ref self: TContractState, new_artist_contract: ContractAddress);
+    fn set_song_contract(ref self: TContractState, new_song_contract: ContractAddress);
 }
 
 #[starknet::contract]
@@ -209,6 +212,16 @@ mod UserContract {
 
         fn is_registered(self: @ContractState, user_address: ContractAddress) -> bool {
             self.registered_users.read(user_address)
+        }
+
+        fn set_artist_contract(ref self: ContractState, new_artist_contract: ContractAddress) {
+            // TODO: Add access control if needed
+            self.artist_contract.write(new_artist_contract);
+        }
+
+        fn set_song_contract(ref self: ContractState, new_song_contract: ContractAddress) {
+            // TODO: Add access control if needed
+            self.song_contract.write(new_song_contract);
         }
     }
 

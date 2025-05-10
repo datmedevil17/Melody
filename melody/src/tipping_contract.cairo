@@ -17,6 +17,8 @@ trait ITippingContract<TContractState> {
     fn get_artist_tip_history(
         self: @TContractState, artist_address: starknet::ContractAddress,
     ) -> Array<TipRecord>;
+    fn set_user_contract(ref self: TContractState, new_user_contract: starknet::ContractAddress);
+    fn set_artist_contract(ref self: TContractState, new_artist_contract: starknet::ContractAddress);
 }
 
 
@@ -197,6 +199,16 @@ mod TippingContract {
             }
 
             tip_history
+        }
+
+        fn set_user_contract(ref self: ContractState, new_user_contract: ContractAddress) {
+            // TODO: Add access control if needed
+            self.user_contract.write(new_user_contract);
+        }
+
+        fn set_artist_contract(ref self: ContractState, new_artist_contract: ContractAddress) {
+            // TODO: Add access control if needed
+            self.artist_contract.write(new_artist_contract);
         }
     }
 

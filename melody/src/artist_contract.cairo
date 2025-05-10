@@ -35,6 +35,7 @@ trait IArtistContract<TContractState> {
     fn get_artist_collaborations(
         self: @TContractState, artist_address: starknet::ContractAddress,
     ) -> Array<felt252>;
+    fn set_song_contract(ref self: TContractState, new_song_contract: starknet::ContractAddress);
 }
 
 
@@ -331,6 +332,11 @@ mod ArtistContract {
             }
 
             collabs
+        }
+
+        fn set_song_contract(ref self: ContractState, new_song_contract: ContractAddress) {
+            // TODO: Add access control if needed
+            self.song_contract.write(new_song_contract);
         }
     }
 }

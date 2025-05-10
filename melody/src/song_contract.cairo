@@ -1,5 +1,6 @@
 use super::errors::SongErrors;
 use super::model::{Comment, SongStats};
+use starknet::ContractAddress;
 
 #[starknet::interface]
 trait ISongContract<TContractState> {
@@ -22,6 +23,8 @@ trait ISongContract<TContractState> {
     fn get_user_comments(
         self: @TContractState, user_address: starknet::ContractAddress,
     ) -> Array<(felt252, Comment)>;
+    fn set_artist_contract(ref self: TContractState, new_artist_contract: ContractAddress);
+    fn set_user_contract(ref self: TContractState, new_user_contract: ContractAddress);
 }
 
 #[starknet::contract]
@@ -251,6 +254,16 @@ mod SongContract {
             }
 
             user_comments
+        }
+
+        fn set_artist_contract(ref self: ContractState, new_artist_contract: ContractAddress) {
+            // TODO: Add access control if needed
+            self.artist_contract.write(new_artist_contract);
+        }
+
+        fn set_user_contract(ref self: ContractState, new_user_contract: ContractAddress) {
+            // TODO: Add access control if needed
+            self.user_contract.write(new_user_contract);
         }
     }
 
