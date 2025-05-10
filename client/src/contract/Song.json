@@ -1,0 +1,305 @@
+{
+    "abi":[
+        {
+          "type": "impl",
+          "name": "SongContractImpl",
+          "interface_name": "melody::song_contract::ISongContract"
+        },
+        {
+          "type": "struct",
+          "name": "melody::model::Comment",
+          "members": [
+            {
+              "name": "user_address",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "text",
+              "type": "core::felt252"
+            },
+            {
+              "name": "timestamp",
+              "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "core::bool",
+          "variants": [
+            {
+              "name": "False",
+              "type": "()"
+            },
+            {
+              "name": "True",
+              "type": "()"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "melody::model::SongStats",
+          "members": [
+            {
+              "name": "likes_count",
+              "type": "core::integer::u32"
+            },
+            {
+              "name": "comments_count",
+              "type": "core::integer::u32"
+            },
+            {
+              "name": "last_activity_timestamp",
+              "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "melody::song_contract::ISongContract",
+          "items": [
+            {
+              "type": "function",
+              "name": "like_song",
+              "inputs": [
+                {
+                  "name": "song_id",
+                  "type": "core::felt252"
+                },
+                {
+                  "name": "user_address",
+                  "type": "core::starknet::contract_address::ContractAddress"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "external"
+            },
+            {
+              "type": "function",
+              "name": "comment_on_song",
+              "inputs": [
+                {
+                  "name": "song_id",
+                  "type": "core::felt252"
+                },
+                {
+                  "name": "user_address",
+                  "type": "core::starknet::contract_address::ContractAddress"
+                },
+                {
+                  "name": "comment_text",
+                  "type": "core::felt252"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "external"
+            },
+            {
+              "type": "function",
+              "name": "get_comments",
+              "inputs": [
+                {
+                  "name": "song_id",
+                  "type": "core::felt252"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "core::array::Array::<melody::model::Comment>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "get_likes_count",
+              "inputs": [
+                {
+                  "name": "song_id",
+                  "type": "core::felt252"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "has_user_liked",
+              "inputs": [
+                {
+                  "name": "song_id",
+                  "type": "core::felt252"
+                },
+                {
+                  "name": "user_address",
+                  "type": "core::starknet::contract_address::ContractAddress"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "core::bool"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "is_valid_song",
+              "inputs": [
+                {
+                  "name": "song_id",
+                  "type": "core::felt252"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "core::bool"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "get_song_stats",
+              "inputs": [
+                {
+                  "name": "song_id",
+                  "type": "core::felt252"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "melody::model::SongStats"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "get_user_comments",
+              "inputs": [
+                {
+                  "name": "user_address",
+                  "type": "core::starknet::contract_address::ContractAddress"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "core::array::Array::<(core::felt252, melody::model::Comment)>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "set_artist_contract",
+              "inputs": [
+                {
+                  "name": "new_artist_contract",
+                  "type": "core::starknet::contract_address::ContractAddress"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "external"
+            },
+            {
+              "type": "function",
+              "name": "set_user_contract",
+              "inputs": [
+                {
+                  "name": "new_user_contract",
+                  "type": "core::starknet::contract_address::ContractAddress"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "external"
+            }
+          ]
+        },
+        {
+          "type": "constructor",
+          "name": "constructor",
+          "inputs": [
+            {
+              "name": "artist_contract",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "user_contract",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "melody::song_contract::SongContract::SongLiked",
+          "kind": "struct",
+          "members": [
+            {
+              "name": "song_id",
+              "type": "core::felt252",
+              "kind": "data"
+            },
+            {
+              "name": "user_address",
+              "type": "core::starknet::contract_address::ContractAddress",
+              "kind": "data"
+            },
+            {
+              "name": "timestamp",
+              "type": "core::integer::u64",
+              "kind": "data"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "melody::song_contract::SongContract::CommentAdded",
+          "kind": "struct",
+          "members": [
+            {
+              "name": "song_id",
+              "type": "core::felt252",
+              "kind": "data"
+            },
+            {
+              "name": "user_address",
+              "type": "core::starknet::contract_address::ContractAddress",
+              "kind": "data"
+            },
+            {
+              "name": "comment_text",
+              "type": "core::felt252",
+              "kind": "data"
+            },
+            {
+              "name": "timestamp",
+              "type": "core::integer::u64",
+              "kind": "data"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "melody::song_contract::SongContract::Event",
+          "kind": "enum",
+          "variants": [
+            {
+              "name": "SongLiked",
+              "type": "melody::song_contract::SongContract::SongLiked",
+              "kind": "nested"
+            },
+            {
+              "name": "CommentAdded",
+              "type": "melody::song_contract::SongContract::CommentAdded",
+              "kind": "nested"
+            }
+          ]
+        }
+      ]
+}
