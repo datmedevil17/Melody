@@ -5,6 +5,7 @@ const pinataSecretKey = process.env.NEXT_PUBLIC_PINATA_SECRET_KEY;
 
 export const uploadToIpfs = async (file) => {
   try {
+    console.log(pinataApiKey,pinataSecretKey)
     const formData = new FormData();
     formData.append('file', file);
 
