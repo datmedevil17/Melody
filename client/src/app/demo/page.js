@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { uploadToIpfs, uploadToIpfsJson } from '../../contract/pinata';
 import { useAccount, useContract, useProvider, useSendTransaction } from '@starknet-react/core';
 import { artistABI, artistContractAddress } from '../../contract/contract';
-import { shortString, uint256, number } from 'starknet';
+import { shortString, uint256, num } from 'starknet';
 import SHA256 from 'crypto-js/sha256';
 
 // Utility function to hash IPFS hash to a shorter format
@@ -52,12 +52,13 @@ const UploadSong = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   
-  // Initialize useSendTransaction without specifying calls
-  const { execute, error: txError } = useSendTransaction();
+  // Fix: Initialize useSendTransaction hook with proper function destructuring
+  const { sendAsync, error: txError } = useSendTransaction({calls : undefined});
 
   const handleFileChange = (e) => {
     setSongFile(e.target.files[0]);
   };
+  
 
   const handleMetadataChange = (e) => {
     setMetadata({
@@ -92,19 +93,26 @@ const UploadSong = () => {
         },
         artist_address: address
       });
+      // const obj = {
+      //   title : shortString.encodeShortString(metadata.title),
+      //   genre : shortString.encodeShortString(metadata.genre),
+      //   release_date : dateToTimestamp(metadata.release_date),
+      //   description : shortString.encodeShortString(metadata.description),
+      // }
       
       // Encode the song hash as felt252
       const encodedSongHash = shortString.encodeShortString(songHash);
       
       // Convert release_date to u64 timestamp
       const releaseTimestamp = dateToTimestamp(metadata.release_date);
-      
+      const test = num.isBigNumberish(releaseTimestamp)
+      console.log("Release date timestamp:", releaseTimestamp, "Is BigNumberish:", test);
       // Create the metadata struct with proper types as expected by the contract
       const songMetadataStruct = {
-        title: shortString.encodeShortString(metadata.title),
-        genre: shortString.encodeShortString(metadata.genre),
-        release_date: releaseTimestamp, // This should be a u64 number
-        description: shortString.encodeShortString(metadata.description)
+        title: metadata.title,
+        genre: metadata.genre,
+        release_date: num.toBigInt(releaseTimestamp), // This should be a u64 number
+        description: metadata.description
       };
       
       console.log("Sending transaction with data:", {
@@ -113,19 +121,48 @@ const UploadSong = () => {
         songMetadataStruct
       });
       
-      // Prepare the call for the contract
-      const calldata = contract.populateTransaction.upload_song(
+      // Fix: Properly prepare the transaction call
+      if (!contract) {
+        throw new Error('Contract is not initialized');
+      }
+      
+      // Prepare calls array for StarkNet transaction
+      // const calls = [{
+      //   contractAddress: artistContractAddress,
+      //   entrypoint: "upload_song",
+      //   calldata: [
+      //     address,
+      //     encodedSongHash,
+      //     songMetadataStruct.title,
+      //     songMetadataStruct.genre,
+      //     songMetadataStruct.release_date,
+      //     songMetadataStruct.description
+      //   ]
+      // }];
+
+      
+      
+      // Execute the transaction with the calls array
+      console.log({
         address,
         encodedSongHash,
         songMetadataStruct
-      );
+      })
+      // console.log("Call:", call);
+      const call = contract.populate("upload_song", [
+        address,
+        encodedSongHash,
+        {
+          title: songMetadataStruct.title,
+          genre: songMetadataStruct.genre,
+          release_date: songMetadataStruct.release_date,
+          description: songMetadataStruct.description
+        }
+      ])
+      const res  = await sendAsync([call])
+
+      console.log("Transaction response:", res);
       
-      // Execute the transaction with the prepared call
-      await execute({
-        contractAddress: artistContractAddress,
-        entrypoint: "upload_song",
-        calldata: calldata.calldata
-      });
       setSuccess(true);
       
       // Reset form on success

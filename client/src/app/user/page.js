@@ -19,7 +19,7 @@ const UserRegistration = () => {
     provider,
   });
 
-  const { send, error: txError } = useSendTransaction({
+  const { sendAsync, error: txError } = useSendTransaction({
     calls: contract && address && name
       ? [contract.populate("register_user", [
           address,
@@ -40,7 +40,8 @@ const UserRegistration = () => {
     setSuccess(false);
 
     try {
-      await send();
+      const res = await sendAsync();
+      console.log(res);
       setSuccess(true);
       setName('');
     } catch (err) {
