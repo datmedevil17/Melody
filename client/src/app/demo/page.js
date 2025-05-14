@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { uploadToIpfs, uploadToIpfsJson } from '../../contract/pinata';
 import { useAccount, useContract, useProvider, useSendTransaction } from '@starknet-react/core';
 import { artistABI, artistContractAddress } from '../../contract/contract';
-import { shortString, uint256, num } from 'starknet';
+import { shortString, uint256, num, hash } from 'starknet';
 import SHA256 from 'crypto-js/sha256';
 
 // Utility function to hash IPFS hash to a shorter format
@@ -112,7 +112,7 @@ const UploadSong = () => {
         title: metadata.title,
         genre: metadata.genre,
         release_date: num.toBigInt(releaseTimestamp), // This should be a u64 number
-        description: metadata.description
+        description: metadata.description,
       };
       
       console.log("Sending transaction with data:", {

@@ -11,7 +11,7 @@ trait ISongContract<TContractState> {
         ref self: TContractState,
         song_id: felt252,
         user_address: starknet::ContractAddress,
-        comment_text: felt252,
+        comment_text: ByteArray,
     );
     fn get_comments(self: @TContractState, song_id: felt252) -> Array<Comment>;
     fn get_likes_count(self: @TContractState, song_id: felt252) -> u32;
@@ -106,7 +106,7 @@ mod SongContract {
     struct CommentAdded {
         song_id: felt252,
         user_address: ContractAddress,
-        comment_text: felt252,
+        comment_text: ByteArray,
         timestamp: u64,
     }
 
@@ -150,38 +150,41 @@ mod SongContract {
             ref self: ContractState,
             song_id: felt252,
             user_address: ContractAddress,
-            comment_text: felt252,
+            comment_text: ByteArray,
         ) {
             // Verify song exists
             assert(self._verify_song(song_id), SongErrors::INVALID_SONG);
-
+        
             // Verify user is registered
             assert(self._verify_user(user_address), SongErrors::USER_NOT_REGISTERED);
-
+        
             // Verify comment is not empty
-            assert(comment_text != 0, SongErrors::EMPTY_COMMENT);
-
+            assert(comment_text.len()>0, SongErrors::EMPTY_COMMENT);
+        
             // Get current timestamp
             let timestamp = get_block_timestamp();
-
+        
+            // Clone the comment_text for later use in the event
+            let comment_text_for_event = comment_text.clone();
+        
             // Create comment object
             let comment = Comment { user_address, text: comment_text, timestamp };
-
+        
             // Store comment for the song
             let comment_index = self.song_comments_count.read(song_id);
             self.song_comments.write((song_id, comment_index), comment);
             self.song_comments_count.write(song_id, comment_index + 1_u32);
-
+        
             // Store reference to comment for the user
             let user_comment_index = self.user_comments_count.read(user_address);
             self.user_comments.write((user_address, user_comment_index), (song_id, comment_index));
             self.user_comments_count.write(user_address, user_comment_index + 1_u32);
-
+        
             // Update last activity
             self.song_last_activity.write(song_id, timestamp);
-
+        
             // Emit event
-            self.emit(CommentAdded { song_id, user_address, comment_text, timestamp });
+            self.emit(CommentAdded { song_id, user_address, comment_text: comment_text_for_event, timestamp });
         }
 
         fn get_comments(self: @ContractState, song_id: felt252) -> Array<Comment> {

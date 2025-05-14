@@ -9,7 +9,7 @@ trait IArtistContract<TContractState> {
     fn upload_song(
         ref self: TContractState,
         artist_address: starknet::ContractAddress,
-        song_uri: felt252,
+        song_uri: ByteArray,
         metadata: SongMetadata,
     );
     fn get_artist_songs(
@@ -19,7 +19,7 @@ trait IArtistContract<TContractState> {
         ref self: TContractState,
         artist1: starknet::ContractAddress,
         artist2: starknet::ContractAddress,
-        song_uri: felt252,
+        song_uri: ByteArray,
         metadata: SongMetadata,
     );
     fn get_artist_profile(
@@ -48,6 +48,7 @@ mod ArtistContract {
     };
     use starknet::{ContractAddress, get_block_timestamp, get_caller_address};
     use super::{ArtistErrors, ArtistProfile, IArtistContract, SongDetails, SongMetadata};
+    use core::byte_array::ByteArray;
 
     #[storage]
     struct Storage {
@@ -60,7 +61,7 @@ mod ArtistContract {
         // Song management
         song_counter: felt252,
         song_exists: Map<felt252, bool>,
-        song_uris: Map<felt252, felt252>,
+        song_uris: Map<felt252, ByteArray>,  // Changed from felt252 to ByteArray
         song_metadatas: Map<felt252, SongMetadata>,
         song_creation_dates: Map<felt252, u64>,
         song_is_collab: Map<felt252, bool>,
@@ -93,7 +94,7 @@ mod ArtistContract {
     struct SongUploaded {
         song_id: felt252,
         artist_address: ContractAddress,
-        song_uri: felt252,
+        song_uri: ByteArray,
         title: felt252,
         timestamp: u64,
     }
@@ -103,7 +104,7 @@ mod ArtistContract {
         song_id: felt252,
         artist1: ContractAddress,
         artist2: ContractAddress,
-        song_uri: felt252,
+        song_uri: ByteArray,
         title: felt252,
         timestamp: u64,
     }
@@ -140,7 +141,7 @@ mod ArtistContract {
         fn upload_song(
             ref self: ContractState,
             artist_address: ContractAddress,
-            song_uri: felt252,
+            song_uri: ByteArray,  // Fixed typo: ByeArray -> ByteArray
             metadata: SongMetadata,
         ) {
             // Verify caller is the artist or authorized
@@ -158,10 +159,19 @@ mod ArtistContract {
             let song_id = self.song_counter.read();
             self.song_counter.write(song_id + 1);
 
+            // Extract metadata fields before using them
+            let title = metadata.title;
+            
+            // Clone the ByteArray for later use in event
+            let song_uri_clone = song_uri.clone();
+            
             // Store song details
             self.song_exists.write(song_id, true);
             self.song_uris.write(song_id, song_uri);
+            
+            // Write metadata to storage
             self.song_metadatas.write(song_id, metadata);
+            
             let timestamp = get_block_timestamp();
             self.song_creation_dates.write(song_id, timestamp);
             self.song_is_collab.write(song_id, false);
@@ -179,7 +189,7 @@ mod ArtistContract {
             self
                 .emit(
                     SongUploaded {
-                        song_id, artist_address, song_uri, title: metadata.title, timestamp,
+                        song_id, artist_address, song_uri: song_uri_clone, title, timestamp,
                     },
                 );
         }
@@ -209,7 +219,7 @@ mod ArtistContract {
             ref self: ContractState,
             artist1: ContractAddress,
             artist2: ContractAddress,
-            song_uri: felt252,
+            song_uri: ByteArray,
             metadata: SongMetadata,
         ) {
             // Verify caller is one of the artists or authorized
@@ -229,6 +239,12 @@ mod ArtistContract {
             let song_id = self.song_counter.read();
             self.song_counter.write(song_id + 1);
 
+            // Extract metadata fields before using them
+            let title = metadata.title;
+            
+            // Clone the ByteArray for later use in event
+            let song_uri_clone = song_uri.clone();
+            
             // Store song details
             self.song_exists.write(song_id, true);
             self.song_uris.write(song_id, song_uri);
@@ -256,7 +272,7 @@ mod ArtistContract {
             self
                 .emit(
                     CollabSongCreated {
-                        song_id, artist1, artist2, song_uri, title: metadata.title, timestamp,
+                        song_id, artist1, artist2, song_uri: song_uri_clone, title, timestamp,
                     },
                 );
         }
