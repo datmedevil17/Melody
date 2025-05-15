@@ -21,6 +21,11 @@ test = "snforge test"
 [tool.scarb]
 allow-prebuilt-plugins = ["snforge_std"]
 
+[tool.sncast.sepolia]
+account = "sepolia"
+url = "https://starknet-sepolia.g.alchemy.com/starknet/version/rpc/v0_8/OlHr_15i85AUNY6JNMQ2isTduKxgWGFy"
+
+
 # Visit https://foundry-rs.github.io/starknet-foundry/appendix/scarb-toml.html for more information
 
 # [tool.snforge]                                             # Define `snforge` tool section

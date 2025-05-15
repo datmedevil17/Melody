@@ -25,6 +25,7 @@ export const uploadToIpfs = async (file) => {
     if (response.status !== 200) {
       throw new Error(`Pinata upload failed with status ${response.status}`);
     }
+    console.log(`ipfs://${response.data.IpfsHash}`)
 
     return `ipfs://${response.data.IpfsHash}`;
   } catch (error) {

@@ -1,212 +1,212 @@
 {
     "abi":[
-        {
-          "type": "impl",
-          "name": "TippingContractImpl",
-          "interface_name": "melody::tipping_contract::ITippingContract"
-        },
-        {
-          "type": "struct",
-          "name": "core::integer::u256",
-          "members": [
-            {
-              "name": "low",
-              "type": "core::integer::u128"
-            },
-            {
-              "name": "high",
-              "type": "core::integer::u128"
-            }
-          ]
-        },
-        {
-          "type": "struct",
-          "name": "melody::model::TipRecord",
-          "members": [
-            {
-              "name": "from_user",
-              "type": "core::starknet::contract_address::ContractAddress"
-            },
-            {
-              "name": "to_artist",
-              "type": "core::starknet::contract_address::ContractAddress"
-            },
-            {
-              "name": "amount",
-              "type": "core::integer::u256"
-            },
-            {
-              "name": "timestamp",
-              "type": "core::integer::u64"
-            }
-          ]
-        },
-        {
-          "type": "interface",
-          "name": "melody::tipping_contract::ITippingContract",
-          "items": [
-            {
-              "type": "function",
-              "name": "tip_artist",
-              "inputs": [
-                {
-                  "name": "user_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "artist_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "amount",
-                  "type": "core::integer::u256"
-                }
-              ],
-              "outputs": [],
-              "state_mutability": "external"
-            },
-            {
-              "type": "function",
-              "name": "get_tips_received",
-              "inputs": [
-                {
-                  "name": "artist_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::integer::u256"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "get_tips_by_user",
-              "inputs": [
-                {
-                  "name": "user_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::integer::u256"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "get_user_tipping_history",
-              "inputs": [
-                {
-                  "name": "user_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::array::Array::<melody::model::TipRecord>"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "get_artist_tip_history",
-              "inputs": [
-                {
-                  "name": "artist_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::array::Array::<melody::model::TipRecord>"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "set_user_contract",
-              "inputs": [
-                {
-                  "name": "new_user_contract",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [],
-              "state_mutability": "external"
-            },
-            {
-              "type": "function",
-              "name": "set_artist_contract",
-              "inputs": [
-                {
-                  "name": "new_artist_contract",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [],
-              "state_mutability": "external"
-            }
-          ]
-        },
-        {
-          "type": "constructor",
-          "name": "constructor",
-          "inputs": [
-            {
-              "name": "user_contract",
-              "type": "core::starknet::contract_address::ContractAddress"
-            },
-            {
-              "name": "artist_contract",
-              "type": "core::starknet::contract_address::ContractAddress"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "melody::tipping_contract::TippingContract::ArtistTipped",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "user_address",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "data"
-            },
-            {
-              "name": "artist_address",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "data"
-            },
-            {
-              "name": "amount",
-              "type": "core::integer::u256",
-              "kind": "data"
-            },
-            {
-              "name": "timestamp",
-              "type": "core::integer::u64",
-              "kind": "data"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "melody::tipping_contract::TippingContract::Event",
-          "kind": "enum",
-          "variants": [
-            {
-              "name": "ArtistTipped",
-              "type": "melody::tipping_contract::TippingContract::ArtistTipped",
-              "kind": "nested"
-            }
-          ]
-        }
-      ]
+      {
+        "type": "impl",
+        "name": "TippingContractImpl",
+        "interface_name": "melody::tipping_contract::ITippingContract"
+      },
+      {
+        "type": "struct",
+        "name": "core::integer::u256",
+        "members": [
+          {
+            "name": "low",
+            "type": "core::integer::u128"
+          },
+          {
+            "name": "high",
+            "type": "core::integer::u128"
+          }
+        ]
+      },
+      {
+        "type": "struct",
+        "name": "melody::model::TipRecord",
+        "members": [
+          {
+            "name": "from_user",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "to_artist",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "amount",
+            "type": "core::integer::u256"
+          },
+          {
+            "name": "timestamp",
+            "type": "core::integer::u64"
+          }
+        ]
+      },
+      {
+        "type": "interface",
+        "name": "melody::tipping_contract::ITippingContract",
+        "items": [
+          {
+            "type": "function",
+            "name": "tip_artist",
+            "inputs": [
+              {
+                "name": "user_address",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "artist_address",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "amount",
+                "type": "core::integer::u256"
+              }
+            ],
+            "outputs": [],
+            "state_mutability": "external"
+          },
+          {
+            "type": "function",
+            "name": "get_tips_received",
+            "inputs": [
+              {
+                "name": "artist_address",
+                "type": "core::starknet::contract_address::ContractAddress"
+              }
+            ],
+            "outputs": [
+              {
+                "type": "core::integer::u256"
+              }
+            ],
+            "state_mutability": "view"
+          },
+          {
+            "type": "function",
+            "name": "get_tips_by_user",
+            "inputs": [
+              {
+                "name": "user_address",
+                "type": "core::starknet::contract_address::ContractAddress"
+              }
+            ],
+            "outputs": [
+              {
+                "type": "core::integer::u256"
+              }
+            ],
+            "state_mutability": "view"
+          },
+          {
+            "type": "function",
+            "name": "get_user_tipping_history",
+            "inputs": [
+              {
+                "name": "user_address",
+                "type": "core::starknet::contract_address::ContractAddress"
+              }
+            ],
+            "outputs": [
+              {
+                "type": "core::array::Array::<melody::model::TipRecord>"
+              }
+            ],
+            "state_mutability": "view"
+          },
+          {
+            "type": "function",
+            "name": "get_artist_tip_history",
+            "inputs": [
+              {
+                "name": "artist_address",
+                "type": "core::starknet::contract_address::ContractAddress"
+              }
+            ],
+            "outputs": [
+              {
+                "type": "core::array::Array::<melody::model::TipRecord>"
+              }
+            ],
+            "state_mutability": "view"
+          },
+          {
+            "type": "function",
+            "name": "set_user_contract",
+            "inputs": [
+              {
+                "name": "new_user_contract",
+                "type": "core::starknet::contract_address::ContractAddress"
+              }
+            ],
+            "outputs": [],
+            "state_mutability": "external"
+          },
+          {
+            "type": "function",
+            "name": "set_artist_contract",
+            "inputs": [
+              {
+                "name": "new_artist_contract",
+                "type": "core::starknet::contract_address::ContractAddress"
+              }
+            ],
+            "outputs": [],
+            "state_mutability": "external"
+          }
+        ]
+      },
+      {
+        "type": "constructor",
+        "name": "constructor",
+        "inputs": [
+          {
+            "name": "user_contract",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "artist_contract",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "name": "melody::tipping_contract::TippingContract::ArtistTipped",
+        "kind": "struct",
+        "members": [
+          {
+            "name": "user_address",
+            "type": "core::starknet::contract_address::ContractAddress",
+            "kind": "data"
+          },
+          {
+            "name": "artist_address",
+            "type": "core::starknet::contract_address::ContractAddress",
+            "kind": "data"
+          },
+          {
+            "name": "amount",
+            "type": "core::integer::u256",
+            "kind": "data"
+          },
+          {
+            "name": "timestamp",
+            "type": "core::integer::u64",
+            "kind": "data"
+          }
+        ]
+      },
+      {
+        "type": "event",
+        "name": "melody::tipping_contract::TippingContract::Event",
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "ArtistTipped",
+            "type": "melody::tipping_contract::TippingContract::ArtistTipped",
+            "kind": "nested"
+          }
+        ]
+      }
+    ]
 }

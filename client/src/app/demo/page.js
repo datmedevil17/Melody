@@ -5,6 +5,28 @@ import { uploadToIpfs, uploadToIpfsJson } from '../../contract/pinata';
 import { useAccount, useContract, useProvider, useSendTransaction } from '@starknet-react/core';
 import { artistABI, artistContractAddress } from '../../contract/contract';
 import { shortString, uint256, num, hash } from 'starknet';
+<<<<<<< HEAD
+=======
+import SHA256 from 'crypto-js/sha256';
+
+// Utility function to hash IPFS hash to a shorter format
+const hashIpfsHash = (ipfsHash) => {
+  
+  // Generate SHA-256 hash of the IPFS hash
+  const hash = SHA256(ipfsHash).toString();
+  // Take first 31 characters to fit in felt
+  return hash.substring(0, 31);
+};
+
+const extractIpfsHash = (ipfsUrl) => {
+  // Extract hash from ipfs://QmHash format
+  const hash = ipfsUrl.replace('ipfs://', '');
+  return {
+    originalHash: hash,
+    shortenedHash: hashIpfsHash(hash)
+  };
+};
+>>>>>>> 163da8d (fixed contract)
 
 // Convert date string to UNIX timestamp (seconds since epoch) for u64 type
 const dateToTimestamp = (dateString) => {

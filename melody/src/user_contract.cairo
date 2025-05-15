@@ -13,6 +13,13 @@ trait IUserContract<TContractState> {
     fn is_registered(self: @TContractState, user_address: starknet::ContractAddress) -> bool;
     fn set_artist_contract(ref self: TContractState, new_artist_contract: ContractAddress);
     fn set_song_contract(ref self: TContractState, new_song_contract: ContractAddress);
+    fn get_user_name(self: @TContractState, user_address: ContractAddress) -> felt252;
+    fn get_user_registration_date(self: @TContractState, user_address: ContractAddress) -> u64;
+    fn get_favorites_count(self: @TContractState, user_address: ContractAddress) -> u32;
+    fn is_artist_favorited(self: @TContractState, user_address: ContractAddress, artist_address: ContractAddress) -> bool;
+    fn get_listening_reward(self: @TContractState) -> u256;
+    fn get_contract_addresses(self: @TContractState) -> (ContractAddress, ContractAddress); // Returns (artist_contract, song_contract)
+    fn get_user_batch_info(self: @TContractState, user_address: ContractAddress) -> (felt252, u256, u64, u32);
 }
 
 #[starknet::contract]
@@ -223,6 +230,54 @@ mod UserContract {
             // TODO: Add access control if needed
             self.song_contract.write(new_song_contract);
         }
+           fn get_user_name(self: @ContractState, user_address: ContractAddress) -> felt252 {
+            let is_registered = self.registered_users.read(user_address);
+            assert(is_registered, UserErrors::USER_NOT_REGISTERED);
+            
+            self.user_names.read(user_address)
+        }
+        
+        fn get_user_registration_date(self: @ContractState, user_address: ContractAddress) -> u64 {
+            let is_registered = self.registered_users.read(user_address);
+            assert(is_registered, UserErrors::USER_NOT_REGISTERED);
+            
+            self.user_registration_dates.read(user_address)
+        }
+        
+        fn get_favorites_count(self: @ContractState, user_address: ContractAddress) -> u32 {
+            let is_registered = self.registered_users.read(user_address);
+            assert(is_registered, UserErrors::USER_NOT_REGISTERED);
+            
+            self.user_favorites_count.read(user_address)
+        }
+        
+        fn is_artist_favorited(self: @ContractState, user_address: ContractAddress, artist_address: ContractAddress) -> bool {
+            let is_registered = self.registered_users.read(user_address);
+            assert(is_registered, UserErrors::USER_NOT_REGISTERED);
+            
+            self.user_favorites.read((user_address, artist_address))
+        }
+        
+        fn get_listening_reward(self: @ContractState) -> u256 {
+            self.listening_reward.read()
+        }
+        
+        fn get_contract_addresses(self: @ContractState) -> (ContractAddress, ContractAddress) {
+            (self.artist_contract.read(), self.song_contract.read())
+        }
+        
+        fn get_user_batch_info(self: @ContractState, user_address: ContractAddress) -> (felt252, u256, u64, u32) {
+            let is_registered = self.registered_users.read(user_address);
+            assert(is_registered, UserErrors::USER_NOT_REGISTERED);
+            
+            let name = self.user_names.read(user_address);
+            let tokens = self.user_tokens.read(user_address);
+            let registration_date = self.user_registration_dates.read(user_address);
+            let favorites_count = self.user_favorites_count.read(user_address);
+            
+            (name, tokens, registration_date, favorites_count)
+        }
+        
     }
 
     #[generate_trait]
