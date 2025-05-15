@@ -5,24 +5,6 @@ import { uploadToIpfs, uploadToIpfsJson } from '../../contract/pinata';
 import { useAccount, useContract, useProvider, useSendTransaction } from '@starknet-react/core';
 import { artistABI, artistContractAddress } from '../../contract/contract';
 import { shortString, uint256, num, hash } from 'starknet';
-import SHA256 from 'crypto-js/sha256';
-
-// Utility function to hash IPFS hash to a shorter format
-const hashIpfsHash = (ipfsHash) => {
-  // Generate SHA-256 hash of the IPFS hash
-  const hash = SHA256(ipfsHash).toString();
-  // Take first 31 characters to fit in felt
-  return hash.substring(0, 31);
-};
-
-const extractIpfsHash = (ipfsUrl) => {
-  // Extract hash from ipfs://QmHash format
-  const hash = ipfsUrl.replace('ipfs://', '');
-  return {
-    originalHash: hash,
-    shortenedHash: hashIpfsHash(hash)
-  };
-};
 
 // Convert date string to UNIX timestamp (seconds since epoch) for u64 type
 const dateToTimestamp = (dateString) => {
@@ -42,6 +24,7 @@ const UploadSong = () => {
   });
 
   const [songFile, setSongFile] = useState(null);
+  const [songHash, setSongHash] = useState(null);
   const [metadata, setMetadata] = useState({
     title: '',
     genre: '',
@@ -55,8 +38,20 @@ const UploadSong = () => {
   // Fix: Initialize useSendTransaction hook with proper function destructuring
   const { sendAsync, error: txError } = useSendTransaction({calls : undefined});
 
-  const handleFileChange = (e) => {
-    setSongFile(e.target.files[0]);
+  const handleFileChange = async(e) => {
+    const file = e.target.files[0];
+    setLoading(true);
+    if(file){
+      const res = await uploadToIpfs(file);
+      console.log("File upload response:", res);
+      setSongFile(file);
+      setSongHash(res);
+    }
+    else{
+      setSongFile(null);
+      setSongHash(null);
+    }
+    setLoading(false);
   };
   
 
@@ -79,34 +74,11 @@ const UploadSong = () => {
     setSuccess(false);
 
     try {
-      // Upload song file to IPFS
-      const songUrl = await uploadToIpfs(songFile);
-      const { originalHash: songOriginalHash, shortenedHash: songHash } = extractIpfsHash(songUrl);
-      
-      // Upload metadata to IPFS with hash mappings
-      const metadataUrl = await uploadToIpfsJson({
-        ...metadata,
-        song_uri: songUrl,
-        song_hash_mapping: {
-          shortened: songHash,
-          original: songOriginalHash
-        },
-        artist_address: address
-      });
-      // const obj = {
-      //   title : shortString.encodeShortString(metadata.title),
-      //   genre : shortString.encodeShortString(metadata.genre),
-      //   release_date : dateToTimestamp(metadata.release_date),
-      //   description : shortString.encodeShortString(metadata.description),
-      // }
-      
       // Encode the song hash as felt252
-      const encodedSongHash = shortString.encodeShortString(songHash);
+      // const encodedSongHash = shortString.encodeShortString(songHash);
       
       // Convert release_date to u64 timestamp
       const releaseTimestamp = dateToTimestamp(metadata.release_date);
-      const test = num.isBigNumberish(releaseTimestamp)
-      console.log("Release date timestamp:", releaseTimestamp, "Is BigNumberish:", test);
       // Create the metadata struct with proper types as expected by the contract
       const songMetadataStruct = {
         title: metadata.title,
@@ -115,48 +87,23 @@ const UploadSong = () => {
         description: metadata.description,
       };
       
-      console.log("Sending transaction with data:", {
-        address,
-        encodedSongHash,
-        songMetadataStruct
-      });
-      
       // Fix: Properly prepare the transaction call
       if (!contract) {
         throw new Error('Contract is not initialized');
       }
-      
-      // Prepare calls array for StarkNet transaction
-      // const calls = [{
-      //   contractAddress: artistContractAddress,
-      //   entrypoint: "upload_song",
-      //   calldata: [
-      //     address,
-      //     encodedSongHash,
-      //     songMetadataStruct.title,
-      //     songMetadataStruct.genre,
-      //     songMetadataStruct.release_date,
-      //     songMetadataStruct.description
-      //   ]
-      // }];
-
-      
-      
-      // Execute the transaction with the calls array
       console.log({
         address,
-        encodedSongHash,
+        songHash,
         songMetadataStruct
       })
-      // console.log("Call:", call);
       const call = contract.populate("upload_song", [
         address,
-        encodedSongHash,
+        songUrl,
         {
           title: songMetadataStruct.title,
           genre: songMetadataStruct.genre,
           release_date: songMetadataStruct.release_date,
-          description: songMetadataStruct.description
+          description: songMetadataStruct.description,
         }
       ])
       const res  = await sendAsync([call])
@@ -182,26 +129,6 @@ const UploadSong = () => {
     }
   };
 
-  // For sample input display
-  const getSampleInput = () => {
-    const sampleAddress = "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef";
-    const sampleSongHash = shortString.encodeShortString("QmSample");
-    const sampleDate = dateToTimestamp("2023-05-12");
-    
-    return {
-      artist_address: sampleAddress,
-      song_uri: sampleSongHash,
-      metadata: {
-        title: shortString.encodeShortString("Sample Title"),
-        genre: shortString.encodeShortString("Sample Genre"),
-        release_date: sampleDate,
-        description: shortString.encodeShortString("Sample Description")
-      }
-    };
-  };
-
-  const sampleInput = getSampleInput();
-
   return (
     <div className="max-w-2xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-8">Upload Song</h1>
@@ -212,10 +139,10 @@ const UploadSong = () => {
         </div>
       ) : (
         <>
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg text-sm">
+          {/* <div className="mb-6 p-4 bg-gray-50 rounded-lg text-sm">
             <h2 className="font-bold mb-2">Sample Input Format</h2>
             <pre className="overflow-x-auto">{JSON.stringify(sampleInput, null, 2)}</pre>
-          </div>
+          </div> */}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -225,6 +152,8 @@ const UploadSong = () => {
                 accept="audio/*"
                 onChange={handleFileChange}
                 className="w-full p-2 border rounded"
+                placeholder='e.g. my-song.mp3'
+                disabled={loading}
                 required
               />
             </div>
