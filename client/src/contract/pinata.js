@@ -27,7 +27,7 @@ export const uploadToIpfs = async (file) => {
     }
     console.log(`ipfs://${response.data.IpfsHash}`)
 
-    return `ipfs://${response.data.IpfsHash}`;
+    return `ipfs.io/ipfs/${response.data.IpfsHash}`;
   } catch (error) {
     console.error('Error uploading file:', error.response?.data || error.message);
     throw new Error('Error uploading file to IPFS');
