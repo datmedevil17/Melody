@@ -1,10 +1,15 @@
-"use client"
-import { useState, useRef } from 'react'
+'use client'
+import { useState, useRef, useEffect } from 'react'
 import { uploadToIpfs } from '../contract/pinata'
-import { useAccount, useContract, useProvider, useSendTransaction } from '@starknet-react/core'
+import {
+  useAccount,
+  useContract,
+  useProvider,
+  useSendTransaction,
+} from '@starknet-react/core'
 import { artistABI, artistContractAddress } from '../contract/contract'
 
-const ArtistRegistration = () => {
+const ArtistRegistration = ({ onClose, onSuccess }) => {
   const [name, setName] = useState('')
   const [profileImage, setProfileImage] = useState(null)
   const [profileImageFile, setProfileImageFile] = useState(null)
@@ -12,16 +17,45 @@ const ArtistRegistration = () => {
   const [loading, setLoading] = useState(false)
   const [imageUploading, setImageUploading] = useState(false)
   const [error, setError] = useState(null)
-    const {address} = useAccount();
-    const provider = useProvider();
-    const {contract} = useContract({
-        address: artistContractAddress,
-        abi: artistABI,
-        provider
-    })
+  const { address } = useAccount()
+  const provider = useProvider()
+  const { contract } = useContract({
+    address: artistContractAddress,
+    abi: artistABI,
+    provider,
+  })
   const modalRef = useRef(null)
-    const {sendAsync, error: txerror} = useSendTransaction({calls:null})
+  const { sendAsync, error: txerror } = useSendTransaction({ calls: null })
+
   // Handle click outside to close modal
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClose()
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [onClose])
+
+  // Handle escape key to close modal
+  useEffect(() => {
+    const handleEscKey = (event) => {
+      if (event.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    document.addEventListener('keydown', handleEscKey)
+
+    return () => {
+      document.removeEventListener('keydown', handleEscKey)
+    }
+  }, [onClose])
 
   // Handle profile image upload
   const handleProfileImageChange = async (e) => {
@@ -68,29 +102,35 @@ const ArtistRegistration = () => {
       setError('Please upload a profile image')
       return
     }
-    if(!contract){
-        setError("Contract not found")
-        return
+    if (!contract) {
+      setError('Contract not found')
+      return
     }
     setLoading(true)
 
     try {
       // Pass registration data to parent component
       console.log(contract)
-      const call = contract.populate('register_artist',[
+      const call = contract.populate('register_artist', [
         address,
         name,
-        profileImageHash
+        profileImageHash,
       ])
 
-      const tx = await sendAsync([call]);
-    console.log('Transaction sent:', tx)
+      const tx = await sendAsync([call])
+      console.log('Transaction sent:', tx)
 
       // Reset form
       setName('')
       setProfileImage(null)
       setProfileImageFile(null)
       setProfileImageHash(null)
+
+      onClose()
+      if (onSuccess) {
+        console.log('onSuccess function called')
+        onSuccess()
+      }
 
       // Close modal
     } catch (err) {
@@ -101,10 +141,8 @@ const ArtistRegistration = () => {
     }
   }
 
-
   return (
-    <div
-      className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4'>
+    <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4'>
       <div
         ref={modalRef}
         className='bg-gray-900 rounded-xl shadow-xl max-w-md w-full p-6'>
@@ -113,6 +151,7 @@ const ArtistRegistration = () => {
             Register as Artist
           </h2>
           <button
+            onClick={onClose}
             className='text-gray-400 hover:text-white'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -228,6 +267,7 @@ const ArtistRegistration = () => {
           <div className='flex justify-end space-x-3 mt-6'>
             <button
               type='button'
+              onClick={onClose}
               className='px-4 py-2 bg-gray-700 text-gray-300 rounded-md hover:bg-gray-600 transition-colors'
               disabled={loading || imageUploading}>
               Cancel
