@@ -1,18 +1,27 @@
     // User contract
-    #[derive(Drop, Serde)]
+    #[derive(Drop, Serde ,starknet::Store)]
     pub struct UserProfile {
         pub name: felt252,
         pub tokens: u256,
         pub registration_date: u64,
     }
 
-    // Artist contract
     #[derive(Drop, Serde)]
+pub struct SongBasicInfo {
+    pub id: felt252,
+    pub likes_count: u32,
+    pub comments_count: u32,
+    pub last_activity: u64,
+}
+
+    // Artist contract
+    #[derive(Drop, Serde, starknet::Store)]
     pub struct ArtistProfile {
         pub name: felt252,
         pub song_count: u32,
         pub collab_count: u32,
         pub registration_date: u64,
+        pub artist_profile: ByteArray
     }
     #[derive(Drop, Clone, Serde, starknet::Store)]
     pub struct SongMetadata {
@@ -20,15 +29,25 @@
         pub genre: felt252,
         pub release_date: u64,
         pub description: ByteArray,
+        pub cover_image: ByteArray,
+
+    }
+    #[derive(Drop, Copy, Serde, starknet::Store)]
+    pub struct ArtistStats {
+        pub song_count: u32,
+        pub collab_count: u32,
+        pub registration_date: u64,
+        pub last_upload_timestamp: u64,
     }
 
-    #[derive(Drop, Serde)]
+    #[derive(Drop, Serde, starknet::Store)]
     pub struct SongDetails {
         pub id: felt252,
         pub uri: ByteArray,
         pub metadata: SongMetadata,
         pub creation_date: u64,
         pub is_collab: bool,
+
     }
 
     // Song contracts
@@ -39,7 +58,7 @@
         pub timestamp: u64,
     }
 
-    #[derive(Drop, Serde)]
+    #[derive(Drop, Serde, starknet::Store)]
     pub struct SongStats {
         pub likes_count: u32,
         pub comments_count: u32,

@@ -1,298 +1,404 @@
 {
     "abi":[
-        {
-          "type": "impl",
-          "name": "UserContractImpl",
-          "interface_name": "melody::user_contract::IUserContract"
-        },
-        {
-          "type": "struct",
-          "name": "core::integer::u256",
-          "members": [
-            {
-              "name": "low",
-              "type": "core::integer::u128"
-            },
-            {
-              "name": "high",
-              "type": "core::integer::u128"
-            }
-          ]
-        },
-        {
-          "type": "struct",
-          "name": "melody::model::UserProfile",
-          "members": [
-            {
-              "name": "name",
-              "type": "core::felt252"
-            },
-            {
-              "name": "tokens",
-              "type": "core::integer::u256"
-            },
-            {
-              "name": "registration_date",
-              "type": "core::integer::u64"
-            }
-          ]
-        },
-        {
-          "type": "enum",
-          "name": "core::bool",
-          "variants": [
-            {
-              "name": "False",
-              "type": "()"
-            },
-            {
-              "name": "True",
-              "type": "()"
-            }
-          ]
-        },
-        {
-          "type": "interface",
-          "name": "melody::user_contract::IUserContract",
-          "items": [
-            {
-              "type": "function",
-              "name": "register_user",
-              "inputs": [
-                {
-                  "name": "user_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "name",
-                  "type": "core::felt252"
-                }
-              ],
-              "outputs": [],
-              "state_mutability": "external"
-            },
-            {
-              "type": "function",
-              "name": "favorite_artist",
-              "inputs": [
-                {
-                  "name": "user_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "artist_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [],
-              "state_mutability": "external"
-            },
-            {
-              "type": "function",
-              "name": "get_favorites",
-              "inputs": [
-                {
-                  "name": "user_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::array::Array::<core::starknet::contract_address::ContractAddress>"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "reward_user_for_listening",
-              "inputs": [
-                {
-                  "name": "user_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "song_id",
-                  "type": "core::felt252"
-                }
-              ],
-              "outputs": [],
-              "state_mutability": "external"
-            },
-            {
-              "type": "function",
-              "name": "get_user_tokens",
-              "inputs": [
-                {
-                  "name": "user_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::integer::u256"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "get_user_profile",
-              "inputs": [
-                {
-                  "name": "user_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "melody::model::UserProfile"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "is_registered",
-              "inputs": [
-                {
-                  "name": "user_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::bool"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "set_artist_contract",
-              "inputs": [
-                {
-                  "name": "new_artist_contract",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [],
-              "state_mutability": "external"
-            },
-            {
-              "type": "function",
-              "name": "set_song_contract",
-              "inputs": [
-                {
-                  "name": "new_song_contract",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [],
-              "state_mutability": "external"
-            }
-          ]
-        },
-        {
-          "type": "constructor",
-          "name": "constructor",
-          "inputs": [
-            {
-              "name": "artist_contract",
-              "type": "core::starknet::contract_address::ContractAddress"
-            },
-            {
-              "name": "song_contract",
-              "type": "core::starknet::contract_address::ContractAddress"
-            },
-            {
-              "name": "initial_listening_reward",
-              "type": "core::integer::u256"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "melody::user_contract::UserContract::UserRegistered",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "user_address",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "data"
-            },
-            {
-              "name": "name",
-              "type": "core::felt252",
-              "kind": "data"
-            },
-            {
-              "name": "timestamp",
-              "type": "core::integer::u64",
-              "kind": "data"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "melody::user_contract::UserContract::ArtistFavorited",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "user_address",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "data"
-            },
-            {
-              "name": "artist_address",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "data"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "melody::user_contract::UserContract::UserRewarded",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "user_address",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "data"
-            },
-            {
-              "name": "song_id",
-              "type": "core::felt252",
-              "kind": "data"
-            },
-            {
-              "name": "amount",
-              "type": "core::integer::u256",
-              "kind": "data"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "melody::user_contract::UserContract::Event",
-          "kind": "enum",
-          "variants": [
-            {
-              "name": "UserRegistered",
-              "type": "melody::user_contract::UserContract::UserRegistered",
-              "kind": "nested"
-            },
-            {
-              "name": "ArtistFavorited",
-              "type": "melody::user_contract::UserContract::ArtistFavorited",
-              "kind": "nested"
-            },
-            {
-              "name": "UserRewarded",
-              "type": "melody::user_contract::UserContract::UserRewarded",
-              "kind": "nested"
-            }
-          ]
-        }
-      ]
+  {
+    "name": "UserContractImpl",
+    "type": "impl",
+    "interface_name": "melody::user_contract::IUserContract"
+  },
+  {
+    "name": "core::integer::u256",
+    "type": "struct",
+    "members": [
+      {
+        "name": "low",
+        "type": "core::integer::u128"
+      },
+      {
+        "name": "high",
+        "type": "core::integer::u128"
+      }
+    ]
+  },
+  {
+    "name": "melody::model::UserProfile",
+    "type": "struct",
+    "members": [
+      {
+        "name": "name",
+        "type": "core::felt252"
+      },
+      {
+        "name": "tokens",
+        "type": "core::integer::u256"
+      },
+      {
+        "name": "registration_date",
+        "type": "core::integer::u64"
+      }
+    ]
+  },
+  {
+    "name": "core::bool",
+    "type": "enum",
+    "variants": [
+      {
+        "name": "False",
+        "type": "()"
+      },
+      {
+        "name": "True",
+        "type": "()"
+      }
+    ]
+  },
+  {
+    "name": "melody::user_contract::IUserContract",
+    "type": "interface",
+    "items": [
+      {
+        "name": "register_user",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "user_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "name",
+            "type": "core::felt252"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "name": "favorite_artist",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "user_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "artist_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "name": "get_favorites",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "user_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::array::Array::<core::starknet::contract_address::ContractAddress>"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "name": "reward_user_for_listening",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "user_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "song_id",
+            "type": "core::felt252"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "name": "get_user_tokens",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "user_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::integer::u256"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "name": "get_user_profile",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "user_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "melody::model::UserProfile"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "name": "is_registered",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "user_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::bool"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "name": "set_artist_contract",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "new_artist_contract",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "name": "set_song_contract",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "new_song_contract",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "name": "get_user_name",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "user_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::felt252"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "name": "get_user_registration_date",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "user_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::integer::u64"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "name": "get_favorites_count",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "user_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::integer::u32"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "name": "is_artist_favorited",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "user_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "artist_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::bool"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "name": "get_listening_reward",
+        "type": "function",
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "core::integer::u256"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "name": "get_contract_addresses",
+        "type": "function",
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "(core::starknet::contract_address::ContractAddress, core::starknet::contract_address::ContractAddress)"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "name": "get_user_batch_info",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "user_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "(core::felt252, core::integer::u256, core::integer::u64, core::integer::u32)"
+          }
+        ],
+        "state_mutability": "view"
+      }
+    ]
+  },
+  {
+    "name": "constructor",
+    "type": "constructor",
+    "inputs": [
+      {
+        "name": "artist_contract",
+        "type": "core::starknet::contract_address::ContractAddress"
+      },
+      {
+        "name": "song_contract",
+        "type": "core::starknet::contract_address::ContractAddress"
+      },
+      {
+        "name": "initial_listening_reward",
+        "type": "core::integer::u256"
+      }
+    ]
+  },
+  {
+    "kind": "struct",
+    "name": "melody::user_contract::UserContract::UserRegistered",
+    "type": "event",
+    "members": [
+      {
+        "kind": "data",
+        "name": "user_address",
+        "type": "core::starknet::contract_address::ContractAddress"
+      },
+      {
+        "kind": "data",
+        "name": "name",
+        "type": "core::felt252"
+      },
+      {
+        "kind": "data",
+        "name": "timestamp",
+        "type": "core::integer::u64"
+      }
+    ]
+  },
+  {
+    "kind": "struct",
+    "name": "melody::user_contract::UserContract::ArtistFavorited",
+    "type": "event",
+    "members": [
+      {
+        "kind": "data",
+        "name": "user_address",
+        "type": "core::starknet::contract_address::ContractAddress"
+      },
+      {
+        "kind": "data",
+        "name": "artist_address",
+        "type": "core::starknet::contract_address::ContractAddress"
+      }
+    ]
+  },
+  {
+    "kind": "struct",
+    "name": "melody::user_contract::UserContract::UserRewarded",
+    "type": "event",
+    "members": [
+      {
+        "kind": "data",
+        "name": "user_address",
+        "type": "core::starknet::contract_address::ContractAddress"
+      },
+      {
+        "kind": "data",
+        "name": "song_id",
+        "type": "core::felt252"
+      },
+      {
+        "kind": "data",
+        "name": "amount",
+        "type": "core::integer::u256"
+      }
+    ]
+  },
+  {
+    "kind": "enum",
+    "name": "melody::user_contract::UserContract::Event",
+    "type": "event",
+    "variants": [
+      {
+        "kind": "nested",
+        "name": "UserRegistered",
+        "type": "melody::user_contract::UserContract::UserRegistered"
+      },
+      {
+        "kind": "nested",
+        "name": "ArtistFavorited",
+        "type": "melody::user_contract::UserContract::ArtistFavorited"
+      },
+      {
+        "kind": "nested",
+        "name": "UserRewarded",
+        "type": "melody::user_contract::UserContract::UserRewarded"
+      }
+    ]
+  }
+]
 }

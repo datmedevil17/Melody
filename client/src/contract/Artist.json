@@ -1,390 +1,575 @@
 {
-    "abi":[
-        {
-          "type": "impl",
-          "name": "ArtistContractImpl",
-          "interface_name": "melody::artist_contract::IArtistContract"
-        },
-        {
-          "type": "struct",
-          "name": "melody::model::SongMetadata",
-          "members": [
-            {
-              "name": "title",
-              "type": "core::felt252"
-            },
-            {
-              "name": "genre",
-              "type": "core::felt252"
-            },
-            {
-              "name": "release_date",
-              "type": "core::integer::u64"
-            },
-            {
-              "name": "description",
-              "type": "core::felt252"
-            }
-          ]
-        },
-        {
-          "type": "struct",
-          "name": "melody::model::ArtistProfile",
-          "members": [
-            {
-              "name": "name",
-              "type": "core::felt252"
-            },
-            {
-              "name": "song_count",
-              "type": "core::integer::u32"
-            },
-            {
-              "name": "collab_count",
-              "type": "core::integer::u32"
-            },
-            {
-              "name": "registration_date",
-              "type": "core::integer::u64"
-            }
-          ]
-        },
-        {
-          "type": "enum",
-          "name": "core::bool",
-          "variants": [
-            {
-              "name": "False",
-              "type": "()"
-            },
-            {
-              "name": "True",
-              "type": "()"
-            }
-          ]
-        },
-        {
-          "type": "struct",
-          "name": "melody::model::SongDetails",
-          "members": [
-            {
-              "name": "id",
-              "type": "core::felt252"
-            },
-            {
-              "name": "uri",
-              "type": "core::felt252"
-            },
-            {
-              "name": "metadata",
-              "type": "melody::model::SongMetadata"
-            },
-            {
-              "name": "creation_date",
-              "type": "core::integer::u64"
-            },
-            {
-              "name": "is_collab",
-              "type": "core::bool"
-            }
-          ]
-        },
-        {
-          "type": "interface",
-          "name": "melody::artist_contract::IArtistContract",
-          "items": [
-            {
-              "type": "function",
-              "name": "register_artist",
-              "inputs": [
-                {
-                  "name": "artist_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "name",
-                  "type": "core::felt252"
-                }
-              ],
-              "outputs": [],
-              "state_mutability": "external"
-            },
-            {
-              "type": "function",
-              "name": "upload_song",
-              "inputs": [
-                {
-                  "name": "artist_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "song_uri",
-                  "type": "core::felt252"
-                },
-                {
-                  "name": "metadata",
-                  "type": "melody::model::SongMetadata"
-                }
-              ],
-              "outputs": [],
-              "state_mutability": "external"
-            },
-            {
-              "type": "function",
-              "name": "get_artist_songs",
-              "inputs": [
-                {
-                  "name": "artist_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::array::Array::<core::felt252>"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "collab_song",
-              "inputs": [
-                {
-                  "name": "artist1",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "artist2",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                },
-                {
-                  "name": "song_uri",
-                  "type": "core::felt252"
-                },
-                {
-                  "name": "metadata",
-                  "type": "melody::model::SongMetadata"
-                }
-              ],
-              "outputs": [],
-              "state_mutability": "external"
-            },
-            {
-              "type": "function",
-              "name": "get_artist_profile",
-              "inputs": [
-                {
-                  "name": "artist_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "melody::model::ArtistProfile"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "is_registered_artist",
-              "inputs": [
-                {
-                  "name": "artist_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::bool"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "get_song_details",
-              "inputs": [
-                {
-                  "name": "song_id",
-                  "type": "core::felt252"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "melody::model::SongDetails"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "get_song_creators",
-              "inputs": [
-                {
-                  "name": "song_id",
-                  "type": "core::felt252"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::array::Array::<core::starknet::contract_address::ContractAddress>"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "get_artist_collaborations",
-              "inputs": [
-                {
-                  "name": "artist_address",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [
-                {
-                  "type": "core::array::Array::<core::felt252>"
-                }
-              ],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "set_song_contract",
-              "inputs": [
-                {
-                  "name": "new_song_contract",
-                  "type": "core::starknet::contract_address::ContractAddress"
-                }
-              ],
-              "outputs": [],
-              "state_mutability": "external"
-            }
-          ]
-        },
-        {
-          "type": "constructor",
-          "name": "constructor",
-          "inputs": [
-            {
-              "name": "song_contract",
-              "type": "core::starknet::contract_address::ContractAddress"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "melody::artist_contract::ArtistContract::ArtistRegistered",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "artist_address",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "data"
-            },
-            {
-              "name": "name",
-              "type": "core::felt252",
-              "kind": "data"
-            },
-            {
-              "name": "timestamp",
-              "type": "core::integer::u64",
-              "kind": "data"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "melody::artist_contract::ArtistContract::SongUploaded",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "song_id",
-              "type": "core::felt252",
-              "kind": "data"
-            },
-            {
-              "name": "artist_address",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "data"
-            },
-            {
-              "name": "song_uri",
-              "type": "core::felt252",
-              "kind": "data"
-            },
-            {
-              "name": "title",
-              "type": "core::felt252",
-              "kind": "data"
-            },
-            {
-              "name": "timestamp",
-              "type": "core::integer::u64",
-              "kind": "data"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "melody::artist_contract::ArtistContract::CollabSongCreated",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "song_id",
-              "type": "core::felt252",
-              "kind": "data"
-            },
-            {
-              "name": "artist1",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "data"
-            },
-            {
-              "name": "artist2",
-              "type": "core::starknet::contract_address::ContractAddress",
-              "kind": "data"
-            },
-            {
-              "name": "song_uri",
-              "type": "core::felt252",
-              "kind": "data"
-            },
-            {
-              "name": "title",
-              "type": "core::felt252",
-              "kind": "data"
-            },
-            {
-              "name": "timestamp",
-              "type": "core::integer::u64",
-              "kind": "data"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "melody::artist_contract::ArtistContract::Event",
-          "kind": "enum",
-          "variants": [
-            {
-              "name": "ArtistRegistered",
-              "type": "melody::artist_contract::ArtistContract::ArtistRegistered",
-              "kind": "nested"
-            },
-            {
-              "name": "SongUploaded",
-              "type": "melody::artist_contract::ArtistContract::SongUploaded",
-              "kind": "nested"
-            },
-            {
-              "name": "CollabSongCreated",
-              "type": "melody::artist_contract::ArtistContract::CollabSongCreated",
-              "kind": "nested"
-            }
-          ]
-        }
-      ]
+  "abi":[
+  {
+    "type": "impl",
+    "name": "ArtistContractImpl",
+    "interface_name": "melody::artist_contract::IArtistContract"
+  },
+  {
+    "type": "struct",
+    "name": "core::byte_array::ByteArray",
+    "members": [
+      {
+        "name": "data",
+        "type": "core::array::Array::<core::bytes_31::bytes31>"
+      },
+      {
+        "name": "pending_word",
+        "type": "core::felt252"
+      },
+      {
+        "name": "pending_word_len",
+        "type": "core::integer::u32"
+      }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "melody::model::SongMetadata",
+    "members": [
+      {
+        "name": "title",
+        "type": "core::felt252"
+      },
+      {
+        "name": "genre",
+        "type": "core::felt252"
+      },
+      {
+        "name": "release_date",
+        "type": "core::integer::u64"
+      },
+      {
+        "name": "description",
+        "type": "core::byte_array::ByteArray"
+      },
+      {
+        "name": "cover_image",
+        "type": "core::byte_array::ByteArray"
+      }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "melody::model::ArtistProfile",
+    "members": [
+      {
+        "name": "name",
+        "type": "core::felt252"
+      },
+      {
+        "name": "song_count",
+        "type": "core::integer::u32"
+      },
+      {
+        "name": "collab_count",
+        "type": "core::integer::u32"
+      },
+      {
+        "name": "registration_date",
+        "type": "core::integer::u64"
+      },
+      {
+        "name": "artist_profile",
+        "type": "core::byte_array::ByteArray"
+      }
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "core::bool",
+    "variants": [
+      {
+        "name": "False",
+        "type": "()"
+      },
+      {
+        "name": "True",
+        "type": "()"
+      }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "melody::model::SongDetails",
+    "members": [
+      {
+        "name": "id",
+        "type": "core::felt252"
+      },
+      {
+        "name": "uri",
+        "type": "core::byte_array::ByteArray"
+      },
+      {
+        "name": "metadata",
+        "type": "melody::model::SongMetadata"
+      },
+      {
+        "name": "creation_date",
+        "type": "core::integer::u64"
+      },
+      {
+        "name": "is_collab",
+        "type": "core::bool"
+      }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "melody::model::ArtistStats",
+    "members": [
+      {
+        "name": "song_count",
+        "type": "core::integer::u32"
+      },
+      {
+        "name": "collab_count",
+        "type": "core::integer::u32"
+      },
+      {
+        "name": "registration_date",
+        "type": "core::integer::u64"
+      },
+      {
+        "name": "last_upload_timestamp",
+        "type": "core::integer::u64"
+      }
+    ]
+  },
+  {
+    "type": "interface",
+    "name": "melody::artist_contract::IArtistContract",
+    "items": [
+      {
+        "type": "function",
+        "name": "register_artist",
+        "inputs": [
+          {
+            "name": "artist_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "name",
+            "type": "core::felt252"
+          },
+          {
+            "name": "artist_profile",
+            "type": "core::byte_array::ByteArray"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "upload_song",
+        "inputs": [
+          {
+            "name": "artist_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "song_uri",
+            "type": "core::byte_array::ByteArray"
+          },
+          {
+            "name": "metadata",
+            "type": "melody::model::SongMetadata"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "get_artist_songs",
+        "inputs": [
+          {
+            "name": "artist_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::array::Array::<core::felt252>"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "collab_song",
+        "inputs": [
+          {
+            "name": "artist1",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "artist2",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "song_uri",
+            "type": "core::byte_array::ByteArray"
+          },
+          {
+            "name": "metadata",
+            "type": "melody::model::SongMetadata"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "get_artist_profile",
+        "inputs": [
+          {
+            "name": "artist_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "melody::model::ArtistProfile"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "is_registered_artist",
+        "inputs": [
+          {
+            "name": "artist_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::bool"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_song_details",
+        "inputs": [
+          {
+            "name": "song_id",
+            "type": "core::felt252"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "melody::model::SongDetails"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_song_creators",
+        "inputs": [
+          {
+            "name": "song_id",
+            "type": "core::felt252"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::array::Array::<core::starknet::contract_address::ContractAddress>"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_artist_collaborations",
+        "inputs": [
+          {
+            "name": "artist_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::array::Array::<core::felt252>"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "set_song_contract",
+        "inputs": [
+          {
+            "name": "new_song_contract",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "get_total_artists",
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "core::felt252"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_song_count",
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "core::felt252"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_all_artists",
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "core::array::Array::<core::starknet::contract_address::ContractAddress>"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_artists_page",
+        "inputs": [
+          {
+            "name": "page",
+            "type": "core::integer::u32"
+          },
+          {
+            "name": "page_size",
+            "type": "core::integer::u32"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::array::Array::<core::starknet::contract_address::ContractAddress>"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_recent_songs",
+        "inputs": [
+          {
+            "name": "count",
+            "type": "core::integer::u32"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::array::Array::<core::felt252>"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "search_artists_by_name",
+        "inputs": [
+          {
+            "name": "name_prefix",
+            "type": "core::felt252"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::array::Array::<core::starknet::contract_address::ContractAddress>"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_trending_songs",
+        "inputs": [
+          {
+            "name": "count",
+            "type": "core::integer::u32"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::array::Array::<core::felt252>"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_artist_stats",
+        "inputs": [
+          {
+            "name": "artist_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "melody::model::ArtistStats"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_artist_name",
+        "inputs": [
+          {
+            "name": "artist_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::felt252"
+          }
+        ],
+        "state_mutability": "view"
+      }
+    ]
+  },
+  {
+    "type": "constructor",
+    "name": "constructor",
+    "inputs": [
+      {
+        "name": "song_contract",
+        "type": "core::starknet::contract_address::ContractAddress"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "melody::artist_contract::ArtistContract::ArtistRegistered",
+    "kind": "struct",
+    "members": [
+      {
+        "name": "artist_address",
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
+      },
+      {
+        "name": "name",
+        "type": "core::felt252",
+        "kind": "data"
+      },
+      {
+        "name": "timestamp",
+        "type": "core::integer::u64",
+        "kind": "data"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "melody::artist_contract::ArtistContract::SongUploaded",
+    "kind": "struct",
+    "members": [
+      {
+        "name": "song_id",
+        "type": "core::felt252",
+        "kind": "data"
+      },
+      {
+        "name": "artist_address",
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
+      },
+      {
+        "name": "song_uri",
+        "type": "core::byte_array::ByteArray",
+        "kind": "data"
+      },
+      {
+        "name": "title",
+        "type": "core::felt252",
+        "kind": "data"
+      },
+      {
+        "name": "timestamp",
+        "type": "core::integer::u64",
+        "kind": "data"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "melody::artist_contract::ArtistContract::CollabSongCreated",
+    "kind": "struct",
+    "members": [
+      {
+        "name": "song_id",
+        "type": "core::felt252",
+        "kind": "data"
+      },
+      {
+        "name": "artist1",
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
+      },
+      {
+        "name": "artist2",
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
+      },
+      {
+        "name": "song_uri",
+        "type": "core::byte_array::ByteArray",
+        "kind": "data"
+      },
+      {
+        "name": "title",
+        "type": "core::felt252",
+        "kind": "data"
+      },
+      {
+        "name": "timestamp",
+        "type": "core::integer::u64",
+        "kind": "data"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "melody::artist_contract::ArtistContract::Event",
+    "kind": "enum",
+    "variants": [
+      {
+        "name": "ArtistRegistered",
+        "type": "melody::artist_contract::ArtistContract::ArtistRegistered",
+        "kind": "nested"
+      },
+      {
+        "name": "SongUploaded",
+        "type": "melody::artist_contract::ArtistContract::SongUploaded",
+        "kind": "nested"
+      },
+      {
+        "name": "CollabSongCreated",
+        "type": "melody::artist_contract::ArtistContract::CollabSongCreated",
+        "kind": "nested"
+      }
+    ]
+  }
+]
 }
