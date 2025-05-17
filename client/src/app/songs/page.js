@@ -52,7 +52,9 @@ const Songs = () => {
   // Stop current song if any is playing
   if (audioPlayer) {
     audioPlayer.pause();
-    
+    console.log(audioPlayer)
+    console.log(currentlyPlaying)
+    console.log(songId, uri, title)
     // If we're clicking on the same song that's already playing, just toggle play/pause
     if (currentlyPlaying === songId) {
       if (isPlaying) {
@@ -64,25 +66,32 @@ const Songs = () => {
         return;
       }
     }
+    else{
+      console.log(currentlyPlaying, songId)
+      setIsPlaying(false);
+      audioPlayer.src = "https://"+uri;
+      audioPlayer.play();
+      console.log(songId, uri)
+      setCurrentlyPlaying(songId)
+      setIsPlaying(true);
+      return;
+    }
   }
   
   // Create a new audio player for a different song
   const audio = new Audio();
   
   // Format URI properly
-  let formattedUri = uri;
-  if (uri?.startsWith('ipfs://')) {
-    formattedUri = `https://ipfs.io/ipfs/${uri.replace('ipfs://', '')}`;
-  }
-  
+  let formattedUri = "https://" + uri
+  // setCurrentlyPlaying(songId)
   audio.src = formattedUri;
   audio.oncanplay = () => {
     audio.play();
     setIsPlaying(true);
-    setCurrentlyPlaying(songId);
   };
   
   audio.onerror = (e) => {
+    console.log('Audio error:', e);
     console.error(`Error playing audio: ${e}`);
     alert(`Could not play ${title}. The audio file may be unavailable.`);
     setIsPlaying(false);
@@ -92,14 +101,14 @@ const Songs = () => {
   audio.onended = () => {
     setIsPlaying(false);
   };
-  
+  setCurrentlyPlaying(songId)
   setAudioPlayer(audio);
 }
 
   const fetchSongArtists = async (songId) => {
     try {
       // Get artists for the song
-      const artists = await artistContract.call('get_song_collab', [songId])
+      const artists = await artistContract.call('get_song_creators', [songId])
       
       // Format artists data if needed
       const formattedArtists = Array.isArray(artists) ? artists : [artists]
