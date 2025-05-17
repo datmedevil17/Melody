@@ -99,7 +99,7 @@ const Songs = () => {
   const fetchSongArtists = async (songId) => {
     try {
       // Get artists for the song
-      const artists = await artistContract.call('get_song_artists', [songId])
+      const artists = await artistContract.call('get_song_collab', [songId])
       
       // Format artists data if needed
       const formattedArtists = Array.isArray(artists) ? artists : [artists]
