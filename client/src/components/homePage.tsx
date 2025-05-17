@@ -1,7 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import ArtistSlider from './gallery';
-import WalletConnectorModal from './WalletConnectorModal';
 
 const ReluxeLanding: React.FC = () => {
     const features = [
@@ -22,26 +21,6 @@ const ReluxeLanding: React.FC = () => {
     return (
         <>
         <div className="bg-black text-white min-h-screen px-6 py-6 font-sans">
-            {/* Navbar */}
-            <header className="flex flex-wrap justify-between items-center mb-12 border-b border-white/10 pb-4">
-                <div className="text-2xl font-extrabold tracking-wide">
-                    <span className="text-yellow-400">N</span> Reluxe
-                </div>
-                <nav className="hidden md:flex gap-8 items-center text-sm font-medium">
-                    {['Home', 'About', 'Tracks', 'How it works'].map((item) => (
-                        <button
-                            key={item}
-                            className="relative group transition text-white hover:text-yellow-400"
-                        >
-                            {item}
-                            <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
-                        </button>
-                    ))}
-                </nav>
-                <div className="flex gap-3 text-sm">
-                    <WalletConnectorModal/>
-                </div>
-            </header>
 
             {/* Hero Section */}
             <section className="relative flex flex-col md:flex-row justify-center items-center gap-12 mb-20">
@@ -59,7 +38,7 @@ const ReluxeLanding: React.FC = () => {
                 </div>
 
                 <div className="relative z-10 w-64 h-64 bg-white rounded-full flex items-center justify-center text-5xl font-bold text-black shadow-2xl border-4 border-yellow-400">
-                    Reluxe
+                    Melody
                 </div>
 
                 <div className="relative z-10 w-64 h-64 rounded-full overflow-hidden shadow-2xl border-4 border-white">

@@ -5,7 +5,7 @@ import {
   decimalToAscii,
   songContract,
   userContract,
-} from '../../contract/contract'
+} from '../../../contract/contract'
 import { num } from 'starknet'
 import { useAccount, useSendTransaction } from '@starknet-react/core'
 import { motion, AnimatePresence } from 'framer-motion'

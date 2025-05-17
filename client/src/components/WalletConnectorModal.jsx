@@ -48,7 +48,7 @@ export default function WalletConnectorModal() {
   }
 
   return (
-    <div className="flex flex-col gap-3 min-w-[200px]">
+    <div className="flex gap-3 min-w-[200px]">
       <div className="p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl border border-gray-200 shadow-sm">
         <div className="flex items-center space-x-2">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>

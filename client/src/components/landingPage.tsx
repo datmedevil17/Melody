@@ -1,9 +1,25 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import { FaSpotify, FaApple, FaAmazon, FaEllipsisH } from "react-icons/fa";
 import { FaYoutube, FaItunesNote } from "react-icons/fa6";
-import Link from "next/link";
+import WalletConnectorModal from "./WalletConnectorModal";
+
+import { useRouter } from "next/navigation";
+
+import { useAccount } from '@starknet-react/core';
+
 
 const LandingHero = () => {
+    const { address } = useAccount();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (address) {
+            router.push("/start");
+        }
+    }, [address, router]);
+
+
     return (
         <section className="relative h-screen flex items-center justify-center text-white overflow-hidden">
             {/* Background Image */}
@@ -29,11 +45,7 @@ const LandingHero = () => {
                     and royalties.
                 </p>
 
-                <Link href="/start">
-                    <button className="px-6 py-3 bg-purple-600 hover:bg-purple-700 transition-colors rounded-full text-white font-semibold">
-                        Get Started
-                    </button>
-                </Link>
+                <WalletConnectorModal />
 
                 {/* Social Icons */}
                 <div className="mt-10 flex justify-center gap-6 text-2xl">

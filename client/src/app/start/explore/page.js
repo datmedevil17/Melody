@@ -1,14 +1,14 @@
 'use client'
 
 import React, { useState } from 'react'
-import { uploadToIpfs, uploadToIpfsJson } from '../../contract/pinata'
+import { uploadToIpfs, uploadToIpfsJson } from '../../../contract/pinata'
 import {
   useAccount,
   useContract,
   useProvider,
   useSendTransaction,
 } from '@starknet-react/core'
-import { artistABI, artistContractAddress } from '../../contract/contract'
+import { artistABI, artistContractAddress } from '../../../contract/contract'
 import { shortString, uint256, num, hash } from 'starknet'
 import SHA256 from 'crypto-js/sha256'
 

@@ -6,7 +6,7 @@ import {
   songContractAddress,
   songContract,
   artistContract,
-} from '../../contract/contract'
+} from '../../../contract/contract'
 import { Contract } from 'starknet'
 
 const decimalToAscii = (decimal) => {
