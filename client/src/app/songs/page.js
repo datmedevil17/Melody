@@ -5,7 +5,7 @@ import {
   songABI,
   songContractAddress,
   songContract,
-    artistContract,
+  artistContract,
 } from '../../contract/contract'
 import { Contract } from 'starknet'
 
@@ -41,56 +41,146 @@ const Songs = () => {
   const [comments, setComments] = useState([])
   const [newComment, setNewComment] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [songArtists, setSongArtists] = useState({})
+  const [currentlyPlaying, setCurrentlyPlaying] = useState(null)
+  const [audioPlayer, setAudioPlayer] = useState(null)
+  const [isPlaying, setIsPlaying] = useState(false)
   const { sendAsync, error: txError } = useSendTransaction({ calls: undefined })
   const { address } = useAccount()
-    const fetchSongs = async () => {
-      try {
-        setLoading(true)
 
-        const data = await artistContract.call('get_song_count', [])
-        // const data = 2
-        console.log('Song count:', data)
-
-        const songs = []
-        for (let i = 1; i <= Number(data); i++) {
-          try {
-            const song = await artistContract.call('get_song_details', [i])
-            const likes = await songContract.call('get_likes_count', [i])
-            let liked = false
-            if(address){
-                liked = await songContract.call('has_user_liked', [i, address])
-            }
-            songs.push({
-                ...song,
-                metadata:{
-                    ...song.metadata,
-                    title: decimalToAscii(song.metadata.title),
-                    genre: decimalToAscii(song.metadata.genre),
-                    release_date: song.metadata.release_date
-                      ? new Date(
-                          Number(song.metadata.release_date.toString()) * 1000
-                        ).toLocaleDateString()
-                      : 'Unknown Date',
-                },
-                likes: Number(likes),
-                liked
-            })
-          } catch (err) {
-            console.error(`Error fetching song #${i}:`, err)
-          }
-        }
-
-        // Format song data
-
-        console.log('Processed songs:', songs)
-        setSongDetails(songs)
-      } catch (err) {
-        console.error('Error loading songs:', err)
-        setError('Failed to load songs. Please try again.')
-      } finally {
-        setLoading(false)
+  const togglePlayPause = (uri, songId, title) => {
+  // Stop current song if any is playing
+  if (audioPlayer) {
+    audioPlayer.pause();
+    
+    // If we're clicking on the same song that's already playing, just toggle play/pause
+    if (currentlyPlaying === songId) {
+      if (isPlaying) {
+        setIsPlaying(false);
+        return;
+      } else {
+        audioPlayer.play();
+        setIsPlaying(true);
+        return;
       }
     }
+  }
+  
+  // Create a new audio player for a different song
+  const audio = new Audio();
+  
+  // Format URI properly
+  let formattedUri = uri;
+  if (uri?.startsWith('ipfs://')) {
+    formattedUri = `https://ipfs.io/ipfs/${uri.replace('ipfs://', '')}`;
+  }
+  
+  audio.src = formattedUri;
+  audio.oncanplay = () => {
+    audio.play();
+    setIsPlaying(true);
+    setCurrentlyPlaying(songId);
+  };
+  
+  audio.onerror = (e) => {
+    console.error(`Error playing audio: ${e}`);
+    alert(`Could not play ${title}. The audio file may be unavailable.`);
+    setIsPlaying(false);
+  };
+  
+  // When audio finishes playing
+  audio.onended = () => {
+    setIsPlaying(false);
+  };
+  
+  setAudioPlayer(audio);
+}
+
+  const fetchSongArtists = async (songId) => {
+    try {
+      // Get artists for the song
+      const artists = await artistContract.call('get_song_artists', [songId])
+      
+      // Format artists data if needed
+      const formattedArtists = Array.isArray(artists) ? artists : [artists]
+      
+      // Store in state with songId as key
+      setSongArtists(prev => ({
+        ...prev,
+        [songId]: formattedArtists
+      }))
+      
+      return formattedArtists
+    } catch (err) {
+      console.error(`Error fetching artists for song #${songId}:`, err)
+      return []
+    }
+  }
+
+  const fetchSongs = async () => {
+    try {
+      setLoading(true)
+
+      const data = await artistContract.call('get_song_count', [])
+      // const data = 2
+      console.log('Song count:', data)
+
+      const songs = []
+      for (let i = 1; i <= Number(data); i++) {
+        try {
+          const song = await artistContract.call('get_song_details', [i])
+          const likes = await songContract.call('get_likes_count', [i])
+          let liked = false
+          if(address){
+              liked = await songContract.call('has_user_liked', [i, address])
+          }
+          
+          // Fetch artists for this song
+          const artists = await fetchSongArtists(i)
+          
+          songs.push({
+              ...song,
+              metadata:{
+                  ...song.metadata,
+                  title: decimalToAscii(song.metadata.title),
+                  genre: decimalToAscii(song.metadata.genre),
+                  release_date: song.metadata.release_date
+                    ? new Date(
+                        Number(song.metadata.release_date.toString()) * 1000
+                      ).toLocaleDateString()
+                    : 'Unknown Date',
+              },
+              likes: Number(likes),
+              liked,
+              artists
+          })
+        } catch (err) {
+          console.error(`Error fetching song #${i}:`, err)
+        }
+      }
+
+      // Format song data
+
+      console.log('Processed songs:', songs)
+      setSongDetails(songs)
+    } catch (err) {
+      console.error('Error loading songs:', err)
+      setError('Failed to load songs. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+  
+  // Cleanup audio player when component unmounts
+  useEffect(() => {
+    return () => {
+      if (audioPlayer) {
+        audioPlayer.pause();
+        audioPlayer.src = '';
+      }
+    };
+  }, [audioPlayer]);
+  
   useEffect(() => {
     fetchSongs()
   }, [address])
@@ -139,6 +229,11 @@ const Songs = () => {
       // Fetch comments
       const songComments = await getCommentsOfSong(songId)
       setComments(songComments || [])
+      
+      // Fetch artists if not already loaded
+      if (!songArtists[songId]) {
+        await fetchSongArtists(songId)
+      }
     } catch (err) {
       console.error('Error fetching song details:', err)
     }
@@ -163,6 +258,7 @@ const Songs = () => {
       return []
     }
   }
+  
 
   const handleAddComment = async () => {
     if (!newComment.trim() || !selectedSong) return
@@ -202,6 +298,13 @@ const Songs = () => {
 
     return uri
   }
+
+  // Format wallet address for display
+  const formatAddress = (address) => {
+  if (!address) return 'Unknown Artist';
+  const addressStr = address.toString();
+  return `${addressStr.substring(0, 6)}...${addressStr.substring(addressStr.length - 4)}`;
+};
 
   return (
     <div className='bg-gray-900 min-h-screen py-10 px-4 sm:px-6'>
@@ -252,21 +355,30 @@ const Songs = () => {
 
                     <button
                       className='absolute bottom-3 right-3 bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-full shadow-lg transition-colors'
-                      onClick={() => {
-                        const audioUrl = formatImageUrl(song.uri)
-                        console.log('Playing song:', audioUrl)
-                        // Implement audio playback logic here
-                      }}>
-                      <svg
-                        className='w-6 h-6'
-                        fill='currentColor'
-                        viewBox='0 0 20 20'>
-                        <path
-                          fillRule='evenodd'
-                          d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'
-                          clipRule='evenodd'
-                        />
-                      </svg>
+                      onClick={() => togglePlayPause(song.uri, songId, song.metadata.title)}>
+                      {currentlyPlaying === songId && isPlaying ? (
+                        <svg
+                          className='w-6 h-6'
+                          fill='currentColor'
+                          viewBox='0 0 20 20'>
+                          <path
+                            fillRule='evenodd'
+                            d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z'
+                            clipRule='evenodd'
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          className='w-6 h-6'
+                          fill='currentColor'
+                          viewBox='0 0 20 20'>
+                          <path
+                            fillRule='evenodd'
+                            d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'
+                            clipRule='evenodd'
+                          />
+                        </svg>
+                      )}
                     </button>
                   </div>
 
@@ -333,14 +445,38 @@ const Songs = () => {
                       </div>
                     </div>
 
+                    {/* Artists Section */}
+                    <div className='mb-2'>
+                      <p className='text-xs text-gray-300'>
+                        {song.artists && song.artists.length > 0 ? (
+                          <span>
+                            By: {song.artists.map(artist => formatAddress(artist)).join(', ')}
+                          </span>
+                        ) : (
+                          <span className='text-gray-500'>Unknown Artist</span>
+                        )}
+                      </p>
+                    </div>
+
                     <div className='flex items-center justify-between mb-3'>
                       <span className='bg-purple-900/50 text-purple-300 text-xs px-2 py-1 rounded'>
                         {song.metadata.genre}
                       </span>
 
-                      <span className='text-xs text-gray-500'>
-                        {song.metadata.release_date}
-                      </span>
+                      <div className='flex items-center gap-2'>
+                        {currentlyPlaying === songId && isPlaying && (
+                          <div className='flex items-center'>
+                            <span className="flex gap-0.5">
+                              <span className="w-1 h-3 bg-purple-400 rounded-sm animate-pulse" style={{animationDelay: '0ms'}}></span>
+                              <span className="w-1 h-4 bg-purple-400 rounded-sm animate-pulse" style={{animationDelay: '200ms'}}></span>
+                              <span className="w-1 h-2 bg-purple-400 rounded-sm animate-pulse" style={{animationDelay: '400ms'}}></span>
+                            </span>
+                          </div>
+                        )}
+                        <span className='text-xs text-gray-500'>
+                          {song.metadata.release_date}
+                        </span>
+                      </div>
                     </div>
 
                     {song.metadata.description && (
@@ -383,27 +519,92 @@ const Songs = () => {
         {modalOpen && (
           <div className='fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4'>
             <div className='bg-gray-800 rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto'>
-              <div className='p-6'>
+                              <div className='p-6'>
                 <div className='flex justify-between items-center mb-6'>
                   <h2 className='text-2xl font-bold text-white'>
                     Song Details
                   </h2>
-                  <button
-                    onClick={() => setModalOpen(false)}
-                    className='text-gray-400 hover:text-white'>
-                    <svg
-                      className='w-6 h-6'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'>
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth='2'
-                        d='M6 18L18 6M6 6l12 12'
-                      />
-                    </svg>
-                  </button>
+                  <div className='flex items-center gap-3'>
+                    {selectedSong && (
+                      <button
+                        onClick={() => {
+                          const song = songDetails.find(s => s.id === selectedSong);
+                          if (song) {
+                            togglePlayPause(song.uri, selectedSong, song.metadata.title);
+                          }
+                        }}
+                        className='bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-md shadow transition-colors flex items-center gap-2'>
+                        {currentlyPlaying === selectedSong && isPlaying ? (
+                          <>
+                            <svg className='w-5 h-5' fill='currentColor' viewBox='0 0 20 20'>
+                              <path 
+                                fillRule='evenodd' 
+                                d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z'
+                                clipRule='evenodd' 
+                              />
+                            </svg>
+                            <span>Pause</span>
+                          </>
+                        ) : (
+                          <>
+                            <svg className='w-5 h-5' fill='currentColor' viewBox='0 0 20 20'>
+                              <path 
+                                fillRule='evenodd' 
+                                d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'
+                                clipRule='evenodd' 
+                              />
+                            </svg>
+                            <span>Play</span>
+                          </>
+                        )}
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setModalOpen(false)}
+                      className='text-gray-400 hover:text-white'>
+                      <svg
+                        className='w-6 h-6'
+                        fill='none'
+                        stroke='currentColor'
+                        viewBox='0 0 24 24'>
+                        <path
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          strokeWidth='2'
+                          d='M6 18L18 6M6 6l12 12'
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Song Artists Section */}
+                <div className='mb-6'>
+                  <h3 className='text-lg font-semibold text-purple-400 mb-4'>
+                    Artists
+                  </h3>
+                  {selectedSong && songArtists[selectedSong] ? (
+                    <div className='flex flex-wrap gap-2'>
+                      {songArtists[selectedSong].length > 0 ? (
+                        songArtists[selectedSong].map((artist, index) => (
+                          <div 
+                            key={index} 
+                            className='bg-gray-700 px-3 py-2 rounded-lg flex items-center'>
+                            <div className='w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center mr-2'>
+                              {artist ? artist.toString().substring(0, 1) : '?'}
+                            </div>
+                            <span className='text-white text-sm'>
+                              {formatAddress(artist)}
+                            </span>
+                          </div>
+                        ))
+                      ) : (
+                        <div className='text-gray-400'>No artists found</div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className='text-gray-400'>Loading artists...</div>
+                  )}
                 </div>
 
                 {/* Song Stats */}
