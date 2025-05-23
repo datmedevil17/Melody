@@ -1,7 +1,7 @@
-export const artistContractAddress = '0x00dd3e2df2a36035ecf3d0e7c01001dd634055aa6c9d283fb605d4cc4938d41b'
+export const artistContractAddress = '0x067dd9e465a7e30413c7e9d9ecc4cb5d1e4d177e1dc6ebe2313b1b077f033781'
 export const tokenContractAddress = '0x04bcc2528cc6a9acec235c28882f7b8cd1c57e775ff8a9c16fb023130158da71'
-export const songContractAddress = '0x02061a8937537e9c33cd8f73081162d5b23bfadce5ed8552e23ae1907c08c298'
-export const userContractAddress = '0x07dbb3dbf408776a185e1e50d6b0efc192fc7c62cec22b1ba68a747554c80d48'
+export const songContractAddress = '0x05c1db326d59c86d00bccb1ee80b63d8141534a5cfb99a9a367e97155b3f4d84'
+export const userContractAddress = '0x041834b7d9eda1d2e69a894f5504a6d89dc632659c4bbd5cf9835e7f48ed2014'
 export const tippingContractAddress = '0x049c673d3cae8c7562f3b7ae8ac82eeff9ea19f4e64ed515f5884ad779749a99'
 
 

@@ -429,22 +429,6 @@
           }
         ],
         "state_mutability": "view"
-      },
-      {
-        "type": "function",
-        "name": "get_artist_name",
-        "inputs": [
-          {
-            "name": "artist_address",
-            "type": "core::starknet::contract_address::ContractAddress"
-          }
-        ],
-        "outputs": [
-          {
-            "type": "core::felt252"
-          }
-        ],
-        "state_mutability": "view"
       }
     ]
   },

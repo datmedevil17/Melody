@@ -1,13 +1,13 @@
 {
     "abi":[
   {
-    "name": "SongContractImpl",
     "type": "impl",
+    "name": "SongContractImpl",
     "interface_name": "melody::song_contract::ISongContract"
   },
   {
-    "name": "core::byte_array::ByteArray",
     "type": "struct",
+    "name": "core::byte_array::ByteArray",
     "members": [
       {
         "name": "data",
@@ -24,8 +24,8 @@
     ]
   },
   {
-    "name": "melody::model::Comment",
     "type": "struct",
+    "name": "melody::model::Comment",
     "members": [
       {
         "name": "user_address",
@@ -42,8 +42,8 @@
     ]
   },
   {
-    "name": "core::bool",
     "type": "enum",
+    "name": "core::bool",
     "variants": [
       {
         "name": "False",
@@ -56,8 +56,8 @@
     ]
   },
   {
-    "name": "melody::model::SongStats",
     "type": "struct",
+    "name": "melody::model::SongStats",
     "members": [
       {
         "name": "likes_count",
@@ -74,8 +74,8 @@
     ]
   },
   {
-    "name": "melody::model::SongBasicInfo",
     "type": "struct",
+    "name": "melody::model::SongBasicInfo",
     "members": [
       {
         "name": "id",
@@ -96,12 +96,12 @@
     ]
   },
   {
-    "name": "melody::song_contract::ISongContract",
     "type": "interface",
+    "name": "melody::song_contract::ISongContract",
     "items": [
       {
-        "name": "like_song",
         "type": "function",
+        "name": "like_song",
         "inputs": [
           {
             "name": "song_id",
@@ -116,8 +116,8 @@
         "state_mutability": "external"
       },
       {
-        "name": "comment_on_song",
         "type": "function",
+        "name": "comment_on_song",
         "inputs": [
           {
             "name": "song_id",
@@ -136,8 +136,8 @@
         "state_mutability": "external"
       },
       {
-        "name": "get_comments",
         "type": "function",
+        "name": "get_comments",
         "inputs": [
           {
             "name": "song_id",
@@ -152,8 +152,8 @@
         "state_mutability": "view"
       },
       {
-        "name": "get_likes_count",
         "type": "function",
+        "name": "get_likes_count",
         "inputs": [
           {
             "name": "song_id",
@@ -168,8 +168,8 @@
         "state_mutability": "view"
       },
       {
-        "name": "has_user_liked",
         "type": "function",
+        "name": "has_user_liked",
         "inputs": [
           {
             "name": "song_id",
@@ -188,8 +188,8 @@
         "state_mutability": "view"
       },
       {
-        "name": "is_valid_song",
         "type": "function",
+        "name": "is_valid_song",
         "inputs": [
           {
             "name": "song_id",
@@ -204,8 +204,8 @@
         "state_mutability": "view"
       },
       {
-        "name": "get_song_stats",
         "type": "function",
+        "name": "get_song_stats",
         "inputs": [
           {
             "name": "song_id",
@@ -220,8 +220,8 @@
         "state_mutability": "view"
       },
       {
-        "name": "get_user_comments",
         "type": "function",
+        "name": "get_user_comments",
         "inputs": [
           {
             "name": "user_address",
@@ -236,8 +236,8 @@
         "state_mutability": "view"
       },
       {
-        "name": "set_artist_contract",
         "type": "function",
+        "name": "set_artist_contract",
         "inputs": [
           {
             "name": "new_artist_contract",
@@ -248,8 +248,8 @@
         "state_mutability": "external"
       },
       {
-        "name": "set_user_contract",
         "type": "function",
+        "name": "set_user_contract",
         "inputs": [
           {
             "name": "new_user_contract",
@@ -260,8 +260,8 @@
         "state_mutability": "external"
       },
       {
-        "name": "get_total_songs_count",
         "type": "function",
+        "name": "get_total_songs_count",
         "inputs": [],
         "outputs": [
           {
@@ -271,8 +271,8 @@
         "state_mutability": "view"
       },
       {
-        "name": "get_songs_list",
         "type": "function",
+        "name": "get_songs_list",
         "inputs": [
           {
             "name": "start_index",
@@ -291,8 +291,8 @@
         "state_mutability": "view"
       },
       {
-        "name": "get_comments_paginated",
         "type": "function",
+        "name": "get_comments_paginated",
         "inputs": [
           {
             "name": "song_id",
@@ -315,8 +315,8 @@
         "state_mutability": "view"
       },
       {
-        "name": "get_comments_count",
         "type": "function",
+        "name": "get_comments_count",
         "inputs": [
           {
             "name": "song_id",
@@ -331,8 +331,8 @@
         "state_mutability": "view"
       },
       {
-        "name": "get_song_batch_info",
         "type": "function",
+        "name": "get_song_batch_info",
         "inputs": [
           {
             "name": "song_id",
@@ -347,8 +347,8 @@
         "state_mutability": "view"
       },
       {
-        "name": "get_contract_addresses",
         "type": "function",
+        "name": "get_contract_addresses",
         "inputs": [],
         "outputs": [
           {
@@ -358,8 +358,8 @@
         "state_mutability": "view"
       },
       {
-        "name": "get_user_liked_songs",
         "type": "function",
+        "name": "get_user_liked_songs",
         "inputs": [
           {
             "name": "user_address",
@@ -374,8 +374,8 @@
         "state_mutability": "view"
       },
       {
-        "name": "get_songs_by_popularity",
         "type": "function",
+        "name": "get_songs_by_popularity",
         "inputs": [
           {
             "name": "limit",
@@ -390,8 +390,8 @@
         "state_mutability": "view"
       },
       {
-        "name": "get_recent_activities",
         "type": "function",
+        "name": "get_recent_activities",
         "inputs": [
           {
             "name": "limit",
@@ -406,8 +406,8 @@
         "state_mutability": "view"
       },
       {
-        "name": "get_songs_basic_info",
         "type": "function",
+        "name": "get_songs_basic_info",
         "inputs": [
           {
             "name": "song_ids",
@@ -424,8 +424,8 @@
     ]
   },
   {
-    "name": "constructor",
     "type": "constructor",
+    "name": "constructor",
     "inputs": [
       {
         "name": "artist_contract",
@@ -438,90 +438,90 @@
     ]
   },
   {
-    "kind": "struct",
+    "type": "event",
     "name": "melody::song_contract::SongContract::SongLiked",
-    "type": "event",
+    "kind": "struct",
     "members": [
       {
-        "kind": "data",
         "name": "song_id",
-        "type": "core::felt252"
+        "type": "core::felt252",
+        "kind": "data"
       },
       {
-        "kind": "data",
         "name": "user_address",
-        "type": "core::starknet::contract_address::ContractAddress"
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
       },
       {
-        "kind": "data",
         "name": "timestamp",
-        "type": "core::integer::u64"
+        "type": "core::integer::u64",
+        "kind": "data"
       }
     ]
   },
   {
-    "kind": "struct",
+    "type": "event",
     "name": "melody::song_contract::SongContract::CommentAdded",
-    "type": "event",
-    "members": [
-      {
-        "kind": "data",
-        "name": "song_id",
-        "type": "core::felt252"
-      },
-      {
-        "kind": "data",
-        "name": "user_address",
-        "type": "core::starknet::contract_address::ContractAddress"
-      },
-      {
-        "kind": "data",
-        "name": "comment_text",
-        "type": "core::byte_array::ByteArray"
-      },
-      {
-        "kind": "data",
-        "name": "timestamp",
-        "type": "core::integer::u64"
-      }
-    ]
-  },
-  {
     "kind": "struct",
-    "name": "melody::song_contract::SongContract::SongAdded",
-    "type": "event",
     "members": [
       {
-        "kind": "data",
         "name": "song_id",
-        "type": "core::felt252"
+        "type": "core::felt252",
+        "kind": "data"
       },
       {
-        "kind": "data",
+        "name": "user_address",
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
+      },
+      {
+        "name": "comment_text",
+        "type": "core::byte_array::ByteArray",
+        "kind": "data"
+      },
+      {
         "name": "timestamp",
-        "type": "core::integer::u64"
+        "type": "core::integer::u64",
+        "kind": "data"
       }
     ]
   },
   {
-    "kind": "enum",
-    "name": "melody::song_contract::SongContract::Event",
     "type": "event",
+    "name": "melody::song_contract::SongContract::SongAdded",
+    "kind": "struct",
+    "members": [
+      {
+        "name": "song_id",
+        "type": "core::felt252",
+        "kind": "data"
+      },
+      {
+        "name": "timestamp",
+        "type": "core::integer::u64",
+        "kind": "data"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "melody::song_contract::SongContract::Event",
+    "kind": "enum",
     "variants": [
       {
-        "kind": "nested",
         "name": "SongLiked",
-        "type": "melody::song_contract::SongContract::SongLiked"
+        "type": "melody::song_contract::SongContract::SongLiked",
+        "kind": "nested"
       },
       {
-        "kind": "nested",
         "name": "CommentAdded",
-        "type": "melody::song_contract::SongContract::CommentAdded"
+        "type": "melody::song_contract::SongContract::CommentAdded",
+        "kind": "nested"
       },
       {
-        "kind": "nested",
         "name": "SongAdded",
-        "type": "melody::song_contract::SongContract::SongAdded"
+        "type": "melody::song_contract::SongContract::SongAdded",
+        "kind": "nested"
       }
     ]
   }
