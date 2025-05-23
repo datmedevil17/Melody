@@ -16,10 +16,10 @@ export default function HomePage2() {
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
       {/* Background gradient */}
-      <div className="fixed inset-0 bg-gradient-to-br from-[#002200] via-black to-[#001a00] z-0" />
+      <div className="fixed bg-gradient-to-br from-[#002200] via-black to-[#001a00] z-0" />
 
       {/* Animated music elements background */}
-      <div className="fixed inset-0 z-0 overflow-hidden">
+      <div className="fixed inset-0 top-12 z-0 overflow-hidden">
         {/* Music notes */}
         {Array.from({ length: 15 }).map((_, i) => (
           <motion.div

@@ -31,7 +31,7 @@ const decimalToAscii = (decimal) => {
 
 const Songs = () => {
 
-  const { setMusic } = useContext(UserContext);
+  const { setMusic,setIsPlaying : setPlaying } = useContext(UserContext);
 
 
   const [songDetails, setSongDetails] = useState([])
@@ -64,21 +64,25 @@ const Songs = () => {
     if (currentlyPlaying === songId) {
       if (isPlaying) {
         setIsPlaying(false);
+        setPlaying(false);
         return;
       } else {
         audioPlayer.play();
         setIsPlaying(true);
+        setPlaying(true);
         return;
       }
     }
     else{
       console.log(currentlyPlaying, songId)
       setIsPlaying(false);
+      setPlaying(false);
       audioPlayer.src = "https://"+uri;
       audioPlayer.play();
       console.log(songId, uri)
       setCurrentlyPlaying(songId)
       setIsPlaying(true);
+      setPlaying(true);
       return;
     }
   }
@@ -93,18 +97,21 @@ const Songs = () => {
   audio.oncanplay = () => {
     audio.play();
     setIsPlaying(true);
+    setPlaying(true);
   };
   
   audio.onerror = (e) => {
     console.log('Audio error:', e);
     console.error(`Error playing audio: ${e}`);
-    alert(`Could not play ${title}. The audio file may be unavailable.`);
+    // alert(`Could not play ${title}. The audio file may be unavailable.`);
     setIsPlaying(false);
+    setPlaying(false);
   };
   
   // When audio finishes playing
   audio.onended = () => {
     setIsPlaying(false);
+    setPlaying(false);
   };
   setCurrentlyPlaying(songId)
   setAudioPlayer(audio);

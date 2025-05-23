@@ -1,10 +1,12 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import { motion } from "framer-motion";
 import { IAudioMetadata } from "music-metadata";
 import * as musicMetadata from "music-metadata";
 import { Buffer } from "buffer";
 import Image from "next/image";
+import { UserContext } from "../../context/userContextProvider";
+
 
 const PlayIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="black" viewBox="0 0 24 24">
@@ -38,11 +40,12 @@ const formatTime = (time: number) =>
     .padStart(2, "0")}`;
 
 const BottomBarMusicPlayer = ({ audioSrc }: { audioSrc: string }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [progress, setProgress] = useState(0);
   const [metadata, setMetadata] = useState<IAudioMetadata | null>(null);
   const [isHovered, setIsHovered] = useState(false);
+
+  const { isPlaying,setIsPlaying} = useContext(UserContext);
 
   const audioRef = useRef(new Audio(audioSrc));
   const intervalRef = useRef<NodeJS.Timeout>();
@@ -105,7 +108,7 @@ const BottomBarMusicPlayer = ({ audioSrc }: { audioSrc: string }) => {
 
   return (
     <motion.div
-      className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-[90%] md:w-[70%] rounded-3xl shadow-xl bg-white/90 backdrop-blur-md border border-gray-200 p-3 flex items-center gap-4 transition-all duration-300"
+      className="fixed z-50 bottom-4 left-1/2 transform -translate-x-1/2 w-[90%] md:w-[70%] rounded-3xl shadow-xl bg-white/90 backdrop-blur-md border border-gray-200 p-3 flex items-center gap-4 transition-all duration-300"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       initial={{ y: 100 }}

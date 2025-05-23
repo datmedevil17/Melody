@@ -1,9 +1,10 @@
 import ReluxeLanding from "@/components/homePage";
+import HomePage2 from "@/components/HomePage2";
 
 export default function Home() {
     return (
         <div>
-            <ReluxeLanding />
+        <HomePage2 /> 
         </div>
     );
     }
