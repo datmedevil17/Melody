@@ -1,0 +1,28 @@
+@keyframes float {
+    0%, 100% {
+      transform: translateY(0) rotate(45deg);
+    }
+    50% {
+      transform: translateY(-10px) rotate(45deg);
+    }
+  }
+  
+  @keyframes pulseFade {
+    0%, 100% {
+      opacity: 0.2;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(1.1);
+    }
+  }
+  
+  .float-animate {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .pulse-fade {
+    animation: pulseFade 8s ease-in-out infinite;
+  }
+  
