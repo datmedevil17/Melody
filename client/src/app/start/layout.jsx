@@ -6,18 +6,6 @@ import { UserContext } from "../../context/userContextProvider";
 const Layout = ({ children }) => {
     const { music, setMusic } = useContext(UserContext);
 
-    const currentSong = {
-        title: "No song playing",
-        artist: "Unknown Artist",
-        albumArt: "https://i.scdn.co/image/ab67616d0000b2736b8b09ed4b52dbfdf9ed5d13",
-    };
-
-    useEffect(() => {
-        if (!music) {
-            setMusic(currentSong);
-        }
-    }, [music, setMusic]);
-
     console.log("Music in Layout:", music);
 
     return (

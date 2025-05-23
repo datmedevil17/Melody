@@ -9,6 +9,7 @@ import {
 } from '../../../contract/contract'
 import { Contract } from 'starknet'
 import {UserContext} from '../../../context/userContextProvider'
+import { motion } from 'framer-motion'
 
 const decimalToAscii = (decimal) => {
   if (!decimal) return 'N/A'
@@ -328,506 +329,552 @@ const Songs = () => {
 };
 
   return (
-    <div className='bg-gray-900 min-h-screen py-10 px-4 sm:px-6'>
-      <div className='max-w-7xl mx-auto'>
-        <h1 className='text-3xl font-bold text-purple-400 mb-8'>
-          Explore Music
-        </h1>
+    <div className='min-h-screen bg-black text-white'>
+      {/* Background gradient */}
+      <div className="fixed bg-gradient-to-br from-[#002200] via-black to-[#001a00] z-0" />
 
-        {loading ? (
-          <div className='flex justify-center items-center h-64'>
-            <div className='flex flex-col items-center'>
-              <div className='w-12 h-12 border-4 border-t-purple-500 border-purple-200/20 rounded-full animate-spin'></div>
-              <p className='mt-4 text-gray-300'>Loading songs...</p>
+      {/* Animated music elements background */}
+      <div className="fixed inset-0 top-12 z-0 overflow-hidden">
+        {/* Music notes */}
+        {Array.from({ length: 10 }).map((_, i) => (
+          <motion.div
+            key={`note-${i}`}
+            initial={{
+              opacity: 0,
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight,
+            }}
+            animate={{
+              opacity: [0.4, 0.7, 0.4],
+              x: [
+                Math.random() * window.innerWidth,
+                Math.random() * window.innerWidth,
+                Math.random() * window.innerWidth,
+              ],
+              y: [
+                Math.random() * window.innerHeight,
+                Math.random() * window.innerHeight,
+                Math.random() * window.innerHeight,
+              ],
+              rotate: [0, 180, 360],
+            }}
+            transition={{
+              duration: Math.random() * 20 + 15,
+              repeat: Number.POSITIVE_INFINITY,
+              repeatType: "reverse",
+            }}
+            className="absolute text-[#90EE90]/30"
+            style={{
+              fontSize: `${Math.random() * 40 + 20}px`,
+              filter: "blur(0.5px)",
+            }}
+          >
+            {["♪", "♫", "♬", "♩", "♭", "♮"][Math.floor(Math.random() * 6)]}
+          </motion.div>
+        ))}
+      </div>
+
+      <div className='relative z-10 py-10 px-4 sm:px-6'>
+        <div className='max-w-7xl mx-auto'>
+          <h1 className='text-4xl font-bold mb-8 text-center text-[#90EE90]' style={{ fontFamily: "'Audiowide', cursive" }}>
+            Explore Music
+          </h1>
+
+          {loading ? (
+            <div className='flex justify-center items-center h-64'>
+              <div className='flex flex-col items-center'>
+                <div className='w-12 h-12 border-4 border-t-[#90EE90] border-[#004d00]/20 rounded-full animate-spin'></div>
+                <p className='mt-4 text-[#90EE90]'>Loading songs...</p>
+              </div>
             </div>
-          </div>
-        ) : error ? (
-          <div className='bg-red-900/30 border border-red-800 p-4 rounded-lg text-red-400'>
-            <p>{error}</p>
-          </div>
-        ) : songDetails.length === 0 ? (
-          <div className='bg-gray-800 border border-gray-700 p-8 rounded-lg text-center'>
-            <div className='text-gray-400 mb-4 text-6xl'>🎵</div>
-            <h3 className='text-xl text-white mb-2'>No songs available</h3>
-            <p className='text-gray-400'>Be the first to upload a song!</p>
-          </div>
-        ) : (
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
-            {songDetails.map((song, index) => {
-              const songId = song.id
-              const isLiked = !!likedSongs[songId]
-              const isLikeLoading = !!likesLoading[songId]
+          ) : error ? (
+            <div className='bg-[#004d00]/30 border border-[#004d00] p-4 rounded-lg text-[#90EE90]'>
+              <p>{error}</p>
+            </div>
+          ) : songDetails.length === 0 ? (
+            <div className='bg-[#001a00]/50 border border-[#004d00] p-8 rounded-lg text-center'>
+              <div className='text-[#90EE90] mb-4 text-6xl'>🎵</div>
+              <h3 className='text-xl text-[#90EE90] mb-2'>No songs available</h3>
+              <p className='text-[#90EE90]/70'>Be the first to upload a song!</p>
+            </div>
+          ) : (
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
+              {songDetails.map((song, index) => {
+                const songId = song.id
+                const isLiked = !!likedSongs[songId]
+                const isLikeLoading = !!likesLoading[songId]
 
-              return (
-                <div
-                  key={index}
-                  className='bg-gray-800 rounded-xl overflow-hidden border border-gray-700 transition-all hover:shadow-lg hover:shadow-purple-900/20 flex flex-col'>
-                  <div className='aspect-square bg-gray-900 relative'>
-                    <img
-                      src={formatImageUrl(song.metadata.cover_image)}
-                      alt={song.metadata.title}
-                      className='w-full h-full object-cover'
-                      onError={(e) => {
-                        e.target.onerror = null
-                        e.target.src =
-                          'https://placehold.co/400x400/1f2937/6b7280?text=No+Image'
-                      }}
-                    />
+                return (
+                  <div
+                    key={index}
+                    className='bg-[#001a00]/50 rounded-xl overflow-hidden border border-[#004d00] transition-all hover:shadow-lg hover:shadow-[#90EE90]/20 flex flex-col'>
+                    <div className='aspect-square bg-[#002200] relative'>
+                      <img
+                        src={formatImageUrl(song.metadata.cover_image)}
+                        alt={song.metadata.title}
+                        className='w-full h-full object-cover'
+                        onError={(e) => {
+                          e.target.onerror = null
+                          e.target.src =
+                            'https://placehold.co/400x400/002200/90EE90?text=No+Image'
+                        }}
+                      />
 
-                    <button
-                      className='absolute bottom-3 right-3 bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-full shadow-lg transition-colors'
-                      onClick={() => {
-                        setMusic(song.uri);
-                        togglePlayPause(song.uri, songId, song.metadata.title);
-                      }}>
-                      {currentlyPlaying === songId && isPlaying ? (
-                        <svg
-                          className='w-6 h-6'
-                          fill='currentColor'
-                          viewBox='0 0 20 20'>
-                          <path
-                            fillRule='evenodd'
-                            d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z'
-                            clipRule='evenodd'
-                          />
-                        </svg>
-                      ) : (
-                        <svg
-                          className='w-6 h-6'
-                          fill='currentColor'
-                          viewBox='0 0 20 20'>
-                          <path
-                            fillRule='evenodd'
-                            d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'
-                            clipRule='evenodd'
-                          />
-                        </svg>
+                      <button
+                        className='absolute bottom-3 right-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white p-3 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105'
+                        onClick={() => {
+                          setMusic(song.uri);
+                          togglePlayPause(song.uri, songId, song.metadata.title);
+                        }}>
+                        {currentlyPlaying === songId && isPlaying ? (
+                          <svg
+                            className='w-6 h-6'
+                            fill='currentColor'
+                            viewBox='0 0 20 20'>
+                            <path
+                              fillRule='evenodd'
+                              d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z'
+                              clipRule='evenodd'
+                            />
+                          </svg>
+                        ) : (
+                          <svg
+                            className='w-6 h-6'
+                            fill='currentColor'
+                            viewBox='0 0 20 20'>
+                            <path
+                              fillRule='evenodd'
+                              d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'
+                              clipRule='evenodd'
+                            />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
+
+                    <div className='p-4 flex-1'>
+                      <div className='flex justify-between items-start'>
+                        <h3 className='font-bold text-lg text-[#90EE90] mb-1 truncate'>
+                          {song.metadata.title}
+                        </h3>
+
+                        <div className='flex items-center'>
+                          <span className='text-[#90EE90]/70 text-xs mr-1'>
+                            {song.likes}
+                          </span>
+                          <button
+                            disabled={isLikeLoading || song.liked}
+                            className={`text-[#90EE90]/70 hover:text-red-500 transition-colors focus:outline-none ${
+                              isLikeLoading ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
+                            onClick={() => handleLike(songId)}
+                            aria-label={isLiked ? 'Unlike song' : 'Like song'}>
+                            {isLikeLoading ? (
+                              <svg
+                                className='animate-spin h-5 w-5'
+                                xmlns='http://www.w3.org/2000/svg'
+                                fill='none'
+                                viewBox='0 0 24 24'>
+                                <circle
+                                  className='opacity-25'
+                                  cx='12'
+                                  cy='12'
+                                  r='10'
+                                  stroke='currentColor'
+                                  strokeWidth='4'></circle>
+                                <path
+                                  className='opacity-75'
+                                  fill='currentColor'
+                                  d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
+                              </svg>
+                            ) : song.liked ? (
+                              <svg
+                                className='w-6 h-6 text-red-500 fill-current'
+                                viewBox='0 0 20 20'>
+                                <path
+                                  fillRule='evenodd'
+                                  d='M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z'
+                                  clipRule='evenodd'
+                                />
+                              </svg>
+                            ) : (
+                              <svg
+                                className='w-6 h-6'
+                                fill='none'
+                                stroke='currentColor'
+                                viewBox='0 0 24 24'>
+                                <path
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  strokeWidth='2'
+                                  d='M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'
+                                />
+                              </svg>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Artists Section */}
+                      <div className='mb-2'>
+                        <p className='text-xs text-[#90EE90]/70'>
+                          {song.artists && song.artists.length > 0 ? (
+                            <span>
+                              By: {song.artists.map(artist => formatAddress(artist)).join(', ')}
+                            </span>
+                          ) : (
+                            <span className='text-[#90EE90]/50'>Unknown Artist</span>
+                          )}
+                        </p>
+                      </div>
+
+                      <div className='flex items-center justify-between mb-3'>
+                        <span className='bg-[#004d00]/50 text-[#90EE90] text-xs px-2 py-1 rounded'>
+                          {song.metadata.genre}
+                        </span>
+
+                        <div className='flex items-center gap-2'>
+                          {currentlyPlaying === songId && isPlaying && (
+                            <div className='flex items-center'>
+                              <span className="flex gap-0.5">
+                                <span className="w-1 h-3 bg-[#90EE90] rounded-sm animate-pulse" style={{animationDelay: '0ms'}}></span>
+                                <span className="w-1 h-4 bg-[#90EE90] rounded-sm animate-pulse" style={{animationDelay: '200ms'}}></span>
+                                <span className="w-1 h-2 bg-[#90EE90] rounded-sm animate-pulse" style={{animationDelay: '400ms'}}></span>
+                              </span>
+                            </div>
+                          )}
+                          <span className='text-xs text-[#90EE90]/50'>
+                            {song.metadata.release_date}
+                          </span>
+                        </div>
+                      </div>
+
+                      {song.metadata.description && (
+                        <p className='text-sm text-[#90EE90]/70 line-clamp-2 mt-2'>
+                          {song.metadata.description}
+                        </p>
                       )}
-                    </button>
+                    </div>
+
+                    <div className='px-4 pb-4 pt-2 border-t border-[#004d00] mt-auto'>
+                      <div className='flex justify-between items-center'>
+                        <span className='text-xs text-[#90EE90]/50'>
+                          ID: {songId}
+                        </span>
+
+                        <button
+                          onClick={() => openSongDetails(songId)}
+                          className='text-[#90EE90] hover:text-[#90EE90]/80 text-sm font-medium flex items-center'>
+                          <span>Details</span>
+                          <svg
+                            className='w-4 h-4 ml-1'
+                            viewBox='0 0 20 20'
+                            fill='currentColor'>
+                            <path
+                              fillRule='evenodd'
+                              d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z'
+                              clipRule='evenodd'
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+
+          {/* Song Details Modal */}
+          {modalOpen && (
+            <div className='fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn'>
+              <div className='bg-gradient-to-b from-[#001a00] to-black rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-[#004d00] animate-slideUp'>
+                <div className='p-8'>
+                  {/* Header Section */}
+                  <div className='flex justify-between items-center mb-8'>
+                    <h2 className='text-3xl font-bold text-[#90EE90]' style={{ fontFamily: "'Audiowide', cursive" }}>
+                      Song Details
+                    </h2>
+                    <div className='flex items-center gap-4'>
+                      {selectedSong && (
+                        <button
+                          onClick={() => {
+                            const song = songDetails.find(s => s.id === selectedSong);
+                            if (song) {
+                              togglePlayPause(song.uri, selectedSong, song.metadata.title);
+                            }
+                          }}
+                          className='bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 rounded-lg shadow-lg transition-all duration-300 flex items-center gap-2 transform hover:scale-105'>
+                          {currentlyPlaying === selectedSong && isPlaying ? (
+                            <>
+                              <svg className='w-5 h-5' fill='currentColor' viewBox='0 0 20 20'>
+                                <path 
+                                  fillRule='evenodd' 
+                                  d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z'
+                                  clipRule='evenodd' 
+                                />
+                              </svg>
+                              <span>Pause</span>
+                            </>
+                          ) : (
+                            <>
+                              <svg className='w-5 h-5' fill='currentColor' viewBox='0 0 20 20'>
+                                <path 
+                                  fillRule='evenodd' 
+                                  d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'
+                                  clipRule='evenodd' 
+                                />
+                              </svg>
+                              <span>Play</span>
+                            </>
+                          )}
+                        </button>
+                      )}
+                      <button
+                        onClick={() => setModalOpen(false)}
+                        className='text-[#90EE90]/70 hover:text-[#90EE90] transition-colors duration-300 p-2 hover:bg-[#004d00]/30 rounded-lg'>
+                        <svg
+                          className='w-6 h-6'
+                          fill='none'
+                          stroke='currentColor'
+                          viewBox='0 0 24 24'>
+                          <path
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
+                            strokeWidth='2'
+                            d='M6 18L18 6M6 6l12 12'
+                          />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
 
-                  <div className='p-4 flex-1'>
-                    <div className='flex justify-between items-start'>
-                      <h3 className='font-bold text-lg text-white mb-1 truncate'>
-                        {song.metadata.title}
-                      </h3>
+                  {/* Music Visualization */}
+                  {currentlyPlaying === selectedSong && isPlaying && (
+                    <div className='mb-8 bg-[#001a00]/50 p-6 rounded-xl border border-[#004d00]'>
+                      <div className='flex items-center justify-center gap-1 h-16'>
+                        {[...Array(20)].map((_, i) => (
+                          <div
+                            key={i}
+                            className='w-1 bg-gradient-to-t from-[#90EE90] to-[#004d00] rounded-full animate-music-bar'
+                            style={{
+                              height: `${Math.random() * 100}%`,
+                              animationDelay: `${i * 0.1}s`,
+                              animationDuration: '0.8s'
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
-                      <div className='flex items-center'>
-                        <span className='text-gray-400 text-xs mr-1'>
-                          {song.likes}
-                        </span>
+                  {/* Song Artists Section */}
+                  <div className='mb-8 bg-[#001a00]/50 p-6 rounded-xl border border-[#004d00]'>
+                    <h3 className='text-xl font-semibold text-[#90EE90] mb-4'>
+                      Artists
+                    </h3>
+                    {selectedSong && songArtists[selectedSong] ? (
+                      <div className='flex flex-wrap gap-3'>
+                        {songArtists[selectedSong].length > 0 ? (
+                          songArtists[selectedSong].map((artist, index) => (
+                            <div 
+                              key={index} 
+                              className='bg-gradient-to-r from-[#002200] to-[#001a00] px-4 py-3 rounded-xl flex items-center shadow-lg transform hover:scale-105 transition-all duration-300 border border-[#004d00]'>
+                              <div className='w-10 h-10 rounded-full bg-gradient-to-r from-green-600 to-green-700 flex items-center justify-center mr-3 shadow-lg'>
+                                <span className='text-white font-medium'>
+                                  {artist ? artist.toString().substring(0, 1).toUpperCase() : '?'}
+                                </span>
+                              </div>
+                              <span className='text-[#90EE90] text-sm font-medium'>
+                                {formatAddress(artist)}
+                              </span>
+                            </div>
+                          ))
+                        ) : (
+                          <div className='text-[#90EE90]/70 italic'>No artists found</div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className='flex items-center justify-center py-4'>
+                        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-[#90EE90]'></div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Song Stats with Modern Charts */}
+                  <div className='mb-8'>
+                    <h3 className='text-xl font-semibold text-[#90EE90] mb-4'>
+                      Stats
+                    </h3>
+                    {songStats ? (
+                      <div className='grid grid-cols-2 gap-6'>
+                        <div className='bg-gradient-to-br from-[#002200] to-[#001a00] p-6 rounded-xl border border-[#004d00] shadow-lg transform hover:scale-105 transition-all duration-300'>
+                          <div className='text-sm text-[#90EE90]/70 mb-2'>Total Likes</div>
+                          <div className='text-3xl font-bold text-[#90EE90]'>
+                            {songStats.likes_count || 0}
+                          </div>
+                          {/* Like Trend Chart */}
+                          <div className='mt-4 h-16 flex items-end gap-1'>
+                            {[...Array(7)].map((_, i) => (
+                              <div
+                                key={i}
+                                className='w-full bg-gradient-to-t from-[#90EE90]/50 to-[#004d00]/50 rounded-t-sm'
+                                style={{
+                                  height: `${Math.random() * 100}%`,
+                                  animation: 'pulse 2s infinite',
+                                  animationDelay: `${i * 0.2}s`
+                                }}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                        <div className='bg-gradient-to-br from-[#002200] to-[#001a00] p-6 rounded-xl border border-[#004d00] shadow-lg transform hover:scale-105 transition-all duration-300'>
+                          <div className='text-sm text-[#90EE90]/70 mb-2'>
+                            Total Comments
+                          </div>
+                          <div className='text-3xl font-bold text-[#90EE90]'>
+                            {songStats.comments_count || 0}
+                          </div>
+                          {/* Comment Activity Chart */}
+                          <div className='mt-4 h-16 flex items-end gap-1'>
+                            {[...Array(7)].map((_, i) => (
+                              <div
+                                key={i}
+                                className='w-full bg-gradient-to-t from-[#004d00]/50 to-[#90EE90]/50 rounded-t-sm'
+                                style={{
+                                  height: `${Math.random() * 100}%`,
+                                  animation: 'pulse 2s infinite',
+                                  animationDelay: `${i * 0.2}s`
+                                }}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className='flex items-center justify-center py-4'>
+                        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-[#90EE90]'></div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Engagement Metrics */}
+                  <div className='mb-8 bg-[#001a00]/50 p-6 rounded-xl border border-[#004d00]'>
+                    <h3 className='text-xl font-semibold text-[#90EE90] mb-4'>
+                      Engagement
+                    </h3>
+                    <div className='grid grid-cols-3 gap-4'>
+                      <div className='text-center'>
+                        <div className='text-2xl font-bold text-[#90EE90] mb-1'>🔥</div>
+                        <div className='text-sm text-[#90EE90]/70'>Vibes</div>
+                        <div className='text-lg font-bold text-[#90EE90]'>{Math.floor(Math.random() * 1000)}</div>
+                      </div>
+                      <div className='text-center'>
+                        <div className='text-2xl font-bold text-[#90EE90] mb-1'>🎵</div>
+                        <div className='text-sm text-[#90EE90]/70'>Plays</div>
+                        <div className='text-lg font-bold text-[#90EE90]'>{Math.floor(Math.random() * 5000)}</div>
+                      </div>
+                      <div className='text-center'>
+                        <div className='text-2xl font-bold text-[#90EE90] mb-1'>💫</div>
+                        <div className='text-sm text-[#90EE90]/70'>Shares</div>
+                        <div className='text-lg font-bold text-[#90EE90]'>{Math.floor(Math.random() * 500)}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Comments Section */}
+                  <div className='bg-[#001a00]/50 p-6 rounded-xl border border-[#004d00]'>
+                    <h3 className='text-xl font-semibold text-[#90EE90] mb-4'>
+                      Comments
+                    </h3>
+
+                    <div className='mb-6'>
+                      <div className='flex gap-3'>
+                        <input
+                          type='text'
+                          value={newComment}
+                          onChange={(e) => setNewComment(e.target.value)}
+                          placeholder='Add a comment...'
+                          className='flex-1 bg-[#002200] border border-[#004d00] rounded-xl px-4 py-3 text-[#90EE90] focus:outline-none focus:ring-2 focus:ring-[#90EE90]/50 transition-all duration-300'
+                        />
                         <button
-                          disabled={isLikeLoading || song.liked}
-                          className={`text-gray-400 hover:text-red-500 transition-colors focus:outline-none ${
-                            isLikeLoading ? 'opacity-50 cursor-not-allowed' : ''
-                          }`}
-                          onClick={() => handleLike(songId)}
-                          aria-label={isLiked ? 'Unlike song' : 'Like song'}>
-                          {isLikeLoading ? (
-                            <svg
-                              className='animate-spin h-5 w-5'
-                              xmlns='http://www.w3.org/2000/svg'
-                              fill='none'
-                              viewBox='0 0 24 24'>
-                              <circle
-                                className='opacity-25'
-                                cx='12'
-                                cy='12'
-                                r='10'
-                                stroke='currentColor'
-                                strokeWidth='4'></circle>
-                              <path
-                                className='opacity-75'
-                                fill='currentColor'
-                                d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
-                            </svg>
-                          ) : song.liked ? (
-                            <svg
-                              className='w-6 h-6 text-red-500 fill-current'
-                              viewBox='0 0 20 20'>
-                              <path
-                                fillRule='evenodd'
-                                d='M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z'
-                                clipRule='evenodd'
-                              />
-                            </svg>
+                          onClick={handleAddComment}
+                          disabled={isSubmitting || !newComment.trim()}
+                          className={`bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 ${
+                            isSubmitting || !newComment.trim()
+                              ? 'opacity-50 cursor-not-allowed'
+                              : ''
+                          }`}>
+                          {isSubmitting ? (
+                            <div className='flex items-center gap-2'>
+                              <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white'></div>
+                              <span>Adding...</span>
+                            </div>
                           ) : (
-                            <svg
-                              className='w-6 h-6'
-                              fill='none'
-                              stroke='currentColor'
-                              viewBox='0 0 24 24'>
-                              <path
-                                strokeLinecap='round'
-                                strokeLinejoin='round'
-                                strokeWidth='2'
-                                d='M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'
-                              />
-                            </svg>
+                            'Add Comment'
                           )}
                         </button>
                       </div>
                     </div>
 
-                    {/* Artists Section */}
-                    <div className='mb-2'>
-                      <p className='text-xs text-gray-300'>
-                        {song.artists && song.artists.length > 0 ? (
-                          <span>
-                            By: {song.artists.map(artist => formatAddress(artist)).join(', ')}
-                          </span>
-                        ) : (
-                          <span className='text-gray-500'>Unknown Artist</span>
-                        )}
-                      </p>
-                    </div>
-
-                    <div className='flex items-center justify-between mb-3'>
-                      <span className='bg-purple-900/50 text-purple-300 text-xs px-2 py-1 rounded'>
-                        {song.metadata.genre}
-                      </span>
-
-                      <div className='flex items-center gap-2'>
-                        {currentlyPlaying === songId && isPlaying && (
-                          <div className='flex items-center'>
-                            <span className="flex gap-0.5">
-                              <span className="w-1 h-3 bg-purple-400 rounded-sm animate-pulse" style={{animationDelay: '0ms'}}></span>
-                              <span className="w-1 h-4 bg-purple-400 rounded-sm animate-pulse" style={{animationDelay: '200ms'}}></span>
-                              <span className="w-1 h-2 bg-purple-400 rounded-sm animate-pulse" style={{animationDelay: '400ms'}}></span>
-                            </span>
-                          </div>
-                        )}
-                        <span className='text-xs text-gray-500'>
-                          {song.metadata.release_date}
-                        </span>
-                      </div>
-                    </div>
-
-                    {song.metadata.description && (
-                      <p className='text-sm text-gray-400 line-clamp-2 mt-2'>
-                        {song.metadata.description}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className='px-4 pb-4 pt-2 border-t border-gray-700 mt-auto'>
-                    <div className='flex justify-between items-center'>
-                      <span className='text-xs text-gray-500'>
-                        ID: {songId}
-                      </span>
-
-                      <button
-                        onClick={() => openSongDetails(songId)}
-                        className='text-purple-400 hover:text-purple-300 text-sm font-medium flex items-center'>
-                        <span>Details</span>
-                        <svg
-                          className='w-4 h-4 ml-1'
-                          viewBox='0 0 20 20'
-                          fill='currentColor'>
-                          <path
-                            fillRule='evenodd'
-                            d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z'
-                            clipRule='evenodd'
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        )}
-
-        {/* Song Details Modal */}
-        {modalOpen && (
-          <div className='fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn'>
-            <div className='bg-gradient-to-b from-slate-900 to-gray-900 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-700/30 animate-slideUp'>
-              <div className='p-8'>
-                {/* Header Section */}
-                <div className='flex justify-between items-center mb-8'>
-                  <h2 className='text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400'>
-                    Song Details
-                  </h2>
-                  <div className='flex items-center gap-4'>
-                    {selectedSong && (
-                      <button
-                        onClick={() => {
-                          const song = songDetails.find(s => s.id === selectedSong);
-                          if (song) {
-                            togglePlayPause(song.uri, selectedSong, song.metadata.title);
-                          }
-                        }}
-                        className='bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg shadow-lg transition-all duration-300 flex items-center gap-2 transform hover:scale-105'>
-                        {currentlyPlaying === selectedSong && isPlaying ? (
-                          <>
-                            <svg className='w-5 h-5' fill='currentColor' viewBox='0 0 20 20'>
-                              <path 
-                                fillRule='evenodd' 
-                                d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z'
-                                clipRule='evenodd' 
-                              />
-                            </svg>
-                            <span>Pause</span>
-                          </>
-                        ) : (
-                          <>
-                            <svg className='w-5 h-5' fill='currentColor' viewBox='0 0 20 20'>
-                              <path 
-                                fillRule='evenodd' 
-                                d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'
-                                clipRule='evenodd' 
-                              />
-                            </svg>
-                            <span>Play</span>
-                          </>
-                        )}
-                      </button>
-                    )}
-                    <button
-                      onClick={() => setModalOpen(false)}
-                      className='text-slate-400 hover:text-white transition-colors duration-300 p-2 hover:bg-slate-800/50 rounded-lg'>
-                      <svg
-                        className='w-6 h-6'
-                        fill='none'
-                        stroke='currentColor'
-                        viewBox='0 0 24 24'>
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth='2'
-                          d='M6 18L18 6M6 6l12 12'
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Music Visualization */}
-                {currentlyPlaying === selectedSong && isPlaying && (
-                  <div className='mb-8 bg-slate-800/30 p-6 rounded-xl border border-slate-700/30'>
-                    <div className='flex items-center justify-center gap-1 h-16'>
-                      {[...Array(20)].map((_, i) => (
-                        <div
-                          key={i}
-                          className='w-1 bg-gradient-to-t from-blue-500 to-indigo-500 rounded-full animate-music-bar'
-                          style={{
-                            height: `${Math.random() * 100}%`,
-                            animationDelay: `${i * 0.1}s`,
-                            animationDuration: '0.8s'
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Song Artists Section */}
-                <div className='mb-8 bg-slate-800/30 p-6 rounded-xl border border-slate-700/30'>
-                  <h3 className='text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 mb-4'>
-                    Artists
-                  </h3>
-                  {selectedSong && songArtists[selectedSong] ? (
-                    <div className='flex flex-wrap gap-3'>
-                      {songArtists[selectedSong].length > 0 ? (
-                        songArtists[selectedSong].map((artist, index) => (
-                          <div 
-                            key={index} 
-                            className='bg-gradient-to-r from-slate-800 to-slate-900 px-4 py-3 rounded-xl flex items-center shadow-lg transform hover:scale-105 transition-all duration-300 border border-slate-700/30'>
-                            <div className='w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center mr-3 shadow-lg'>
-                              <span className='text-white font-medium'>
-                                {artist ? artist.toString().substring(0, 1).toUpperCase() : '?'}
-                              </span>
+                    {/* Comments List */}
+                    <div className='space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar'>
+                      {comments && comments.length > 0 ? (
+                        comments.map((comment, index) => (
+                          <div
+                            key={index}
+                            className='bg-gradient-to-br from-[#002200]/50 to-[#001a00]/50 p-5 rounded-xl border border-[#004d00] transform hover:scale-[1.02] transition-all duration-300'>
+                            <div className='flex justify-between items-center mb-3'>
+                              <div className='font-medium text-[#90EE90] truncate'>
+                                {comment.user?.substring(0, 8)}...
+                                {comment.user?.substring(comment.user.length - 6)}
+                              </div>
+                              <div className='text-xs text-[#90EE90]/70'>
+                                {new Date(
+                                  Number(comment.timestamp) * 1000
+                                ).toLocaleString()}
+                              </div>
                             </div>
-                            <span className='text-white text-sm font-medium'>
-                              {formatAddress(artist)}
-                            </span>
+                            <p className='text-[#90EE90]/90'>{comment.text}</p>
                           </div>
                         ))
                       ) : (
-                        <div className='text-slate-400 italic'>No artists found</div>
+                        <div className='text-center py-8 text-[#90EE90]/70 italic'>
+                          No comments yet. Be the first to comment!
+                        </div>
                       )}
                     </div>
-                  ) : (
-                    <div className='flex items-center justify-center py-4'>
-                      <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500'></div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Song Stats with Modern Charts */}
-                <div className='mb-8'>
-                  <h3 className='text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 mb-4'>
-                    Stats
-                  </h3>
-                  {songStats ? (
-                    <div className='grid grid-cols-2 gap-6'>
-                      <div className='bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700/30 shadow-lg transform hover:scale-105 transition-all duration-300'>
-                        <div className='text-sm text-slate-400 mb-2'>Total Likes</div>
-                        <div className='text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400'>
-                          {songStats.likes_count || 0}
-                        </div>
-                        {/* Like Trend Chart */}
-                        <div className='mt-4 h-16 flex items-end gap-1'>
-                          {[...Array(7)].map((_, i) => (
-                            <div
-                              key={i}
-                              className='w-full bg-gradient-to-t from-blue-500/50 to-indigo-500/50 rounded-t-sm'
-                              style={{
-                                height: `${Math.random() * 100}%`,
-                                animation: 'pulse 2s infinite',
-                                animationDelay: `${i * 0.2}s`
-                              }}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <div className='bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700/30 shadow-lg transform hover:scale-105 transition-all duration-300'>
-                        <div className='text-sm text-slate-400 mb-2'>
-                          Total Comments
-                        </div>
-                        <div className='text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400'>
-                          {songStats.comments_count || 0}
-                        </div>
-                        {/* Comment Activity Chart */}
-                        <div className='mt-4 h-16 flex items-end gap-1'>
-                          {[...Array(7)].map((_, i) => (
-                            <div
-                              key={i}
-                              className='w-full bg-gradient-to-t from-indigo-500/50 to-blue-500/50 rounded-t-sm'
-                              style={{
-                                height: `${Math.random() * 100}%`,
-                                animation: 'pulse 2s infinite',
-                                animationDelay: `${i * 0.2}s`
-                              }}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className='flex items-center justify-center py-4'>
-                      <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500'></div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Engagement Metrics */}
-                <div className='mb-8 bg-slate-800/30 p-6 rounded-xl border border-slate-700/30'>
-                  <h3 className='text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 mb-4'>
-                    Engagement
-                  </h3>
-                  <div className='grid grid-cols-3 gap-4'>
-                    <div className='text-center'>
-                      <div className='text-2xl font-bold text-blue-400 mb-1'>🔥</div>
-                      <div className='text-sm text-slate-400'>Vibes</div>
-                      <div className='text-lg font-bold text-white'>{Math.floor(Math.random() * 1000)}</div>
-                    </div>
-                    <div className='text-center'>
-                      <div className='text-2xl font-bold text-indigo-400 mb-1'>🎵</div>
-                      <div className='text-sm text-slate-400'>Plays</div>
-                      <div className='text-lg font-bold text-white'>{Math.floor(Math.random() * 5000)}</div>
-                    </div>
-                    <div className='text-center'>
-                      <div className='text-2xl font-bold text-blue-400 mb-1'>💫</div>
-                      <div className='text-sm text-slate-400'>Shares</div>
-                      <div className='text-lg font-bold text-white'>{Math.floor(Math.random() * 500)}</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Comments Section */}
-                <div className='bg-slate-800/30 p-6 rounded-xl border border-slate-700/30'>
-                  <h3 className='text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 mb-4'>
-                    Comments
-                  </h3>
-
-                  <div className='mb-6'>
-                    <div className='flex gap-3'>
-                      <input
-                        type='text'
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                        placeholder='Add a comment...'
-                        className='flex-1 bg-slate-800/50 border border-slate-700/50 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all duration-300'
-                      />
-                      <button
-                        onClick={handleAddComment}
-                        disabled={isSubmitting || !newComment.trim()}
-                        className={`bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 ${
-                          isSubmitting || !newComment.trim()
-                            ? 'opacity-50 cursor-not-allowed'
-                            : ''
-                        }`}>
-                        {isSubmitting ? (
-                          <div className='flex items-center gap-2'>
-                            <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white'></div>
-                            <span>Adding...</span>
-                          </div>
-                        ) : (
-                          'Add Comment'
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Comments List */}
-                  <div className='space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar'>
-                    {comments && comments.length > 0 ? (
-                      comments.map((comment, index) => (
-                        <div
-                          key={index}
-                          className='bg-gradient-to-br from-slate-800/50 to-slate-900/50 p-5 rounded-xl border border-slate-700/30 transform hover:scale-[1.02] transition-all duration-300'>
-                          <div className='flex justify-between items-center mb-3'>
-                            <div className='font-medium text-blue-300 truncate'>
-                              {comment.user?.substring(0, 8)}...
-                              {comment.user?.substring(comment.user.length - 6)}
-                            </div>
-                            <div className='text-xs text-slate-400'>
-                              {new Date(
-                                Number(comment.timestamp) * 1000
-                              ).toLocaleString()}
-                            </div>
-                          </div>
-                          <p className='text-gray-200'>{comment.text}</p>
-                        </div>
-                      ))
-                    ) : (
-                      <div className='text-center py-8 text-slate-400 italic'>
-                        No comments yet. Be the first to comment!
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <style jsx>{`
-          @keyframes music-bar {
-            0%, 100% { height: 20%; }
-            50% { height: 100%; }
-          }
-          @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-          }
-          .animate-music-bar {
-            animation: music-bar 0.8s ease-in-out infinite;
-          }
-          .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-          }
-          .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(30, 41, 59, 0.1);
-            border-radius: 3px;
-          }
-          .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, #3b82f6, #6366f1);
-            border-radius: 3px;
-          }
-        `}</style>
+          <style jsx>{`
+            @keyframes music-bar {
+              0%, 100% { height: 20%; }
+              50% { height: 100%; }
+            }
+            @keyframes pulse {
+              0%, 100% { opacity: 0.5; }
+              50% { opacity: 1; }
+            }
+            .animate-music-bar {
+              animation: music-bar 0.8s ease-in-out infinite;
+            }
+            .custom-scrollbar::-webkit-scrollbar {
+              width: 6px;
+            }
+            .custom-scrollbar::-webkit-scrollbar-track {
+              background: rgba(0, 77, 0, 0.1);
+              border-radius: 3px;
+            }
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+              background: linear-gradient(to bottom, #90EE90, #004d00);
+              border-radius: 3px;
+            }
+          `}</style>
+        </div>
       </div>
     </div>
   )

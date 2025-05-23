@@ -11,6 +11,7 @@ import {
 import { artistABI, artistContractAddress } from '../../../contract/contract'
 import { shortString, uint256, num, hash } from 'starknet'
 import SHA256 from 'crypto-js/sha256'
+import { motion } from 'framer-motion'
 
 // Utility function to hash IPFS hash to a shorter format
 const hashIpfsHash = (ipfsHash) => {
@@ -200,269 +201,319 @@ const UploadSong = () => {
   }
 
   return (
-    <div className='max-w-3xl mx-auto p-6 bg-gray-900 shadow-lg rounded-xl my-8 text-gray-200'>
-      <h1 className='text-3xl font-bold mb-8 text-center text-purple-400'>
-        Upload Song
-      </h1>
+    <div className='min-h-screen bg-black text-white'>
+      {/* Background gradient */}
+      <div className="fixed bg-gradient-to-br from-[#002200] via-black to-[#001a00] z-0" />
 
-      {!address ? (
-        <div className='text-center p-6 bg-yellow-900/30 rounded-lg border border-yellow-700'>
-          <p className='text-yellow-300 font-medium'>
-            Please connect your wallet first
-          </p>
-        </div>
-      ) : (
-        <div className='space-y-8'>
-          <form
-            onSubmit={handleSubmit}
-            className='space-y-6'>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-              <div className='space-y-6'>
-                <div className='bg-gray-800 p-4 rounded-lg border border-gray-700'>
-                  <label className='block text-sm font-medium mb-2 text-gray-300'>
-                    Song File
-                  </label>
-                  <div className='relative'>
-                    <div className='flex items-center'>
-                      <label className='cursor-pointer bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-l-md transition-colors'>
-                        <span>Choose File</span>
-                        <input
-                          type='file'
-                          accept='audio/*'
-                          onChange={handleFileChange}
-                          className='sr-only'
-                          disabled={loading}
-                          required
-                        />
-                      </label>
-                      <div className='bg-gray-700 text-gray-300 truncate border-l-0 border border-gray-600 rounded-r-md px-3 py-2 flex-1'>
-                        {songFile ? songFile.name : 'No file chosen'}
-                      </div>
-                    </div>
-                  </div>
-                  {songUploading && (
-                    <div className='mt-2 flex items-center text-sm text-purple-400'>
-                      <svg
-                        className='animate-spin h-4 w-4 mr-2'
-                        xmlns='http://www.w3.org/2000/svg'
-                        fill='none'
-                        viewBox='0 0 24 24'>
-                        <circle
-                          className='opacity-25'
-                          cx='12'
-                          cy='12'
-                          r='10'
-                          stroke='currentColor'
-                          strokeWidth='4'></circle>
-                        <path
-                          className='opacity-75'
-                          fill='currentColor'
-                          d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
-                      </svg>
-                      Uploading to IPFS...
-                    </div>
-                  )}
-                  {songFile && !songUploading && (
-                    <p className='mt-2 text-sm text-green-400'>
-                      ✓ File uploaded successfully
-                    </p>
-                  )}
-                  {songHash && (
-                    <div className='mt-2 text-xs text-gray-400 break-all'>
-                      <p>IPFS Hash: {songHash}</p>
-                    </div>
-                  )}
-                </div>
+      {/* Animated music elements background */}
+      <div className="fixed inset-0 top-12 z-0 overflow-hidden">
+        {/* Music notes */}
+        {Array.from({ length: 10 }).map((_, i) => (
+          <motion.div
+            key={`note-${i}`}
+            initial={{
+              opacity: 0,
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight,
+            }}
+            animate={{
+              opacity: [0.4, 0.7, 0.4],
+              x: [
+                Math.random() * window.innerWidth,
+                Math.random() * window.innerWidth,
+                Math.random() * window.innerWidth,
+              ],
+              y: [
+                Math.random() * window.innerHeight,
+                Math.random() * window.innerHeight,
+                Math.random() * window.innerHeight,
+              ],
+              rotate: [0, 180, 360],
+            }}
+            transition={{
+              duration: Math.random() * 20 + 15,
+              repeat: Number.POSITIVE_INFINITY,
+              repeatType: "reverse",
+            }}
+            className="absolute text-[#90EE90]/30"
+            style={{
+              fontSize: `${Math.random() * 40 + 20}px`,
+              filter: "blur(0.5px)",
+            }}
+          >
+            {["♪", "♫", "♬", "♩", "♭", "♮"][Math.floor(Math.random() * 6)]}
+          </motion.div>
+        ))}
+      </div>
 
-                <div className='bg-gray-800 p-4 rounded-lg border border-gray-700'>
-                  <label className='block text-sm font-medium mb-2 text-gray-300'>
-                    Cover Image
-                  </label>
-                  <div className='relative'>
-                    <div className='flex items-center'>
-                      <label className='cursor-pointer bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-l-md transition-colors'>
-                        <span>Choose Image</span>
-                        <input
-                          type='file'
-                          accept='image/*'
-                          onChange={handleCoverImageChange}
-                          className='sr-only'
-                          disabled={loading}
-                        />
+      <div className='relative z-10'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+          <h1 className='text-4xl font-bold mb-8 text-center text-[#90EE90]' style={{ fontFamily: "'Audiowide', cursive" }}>
+            Upload Your Music
+          </h1>
+
+          {!address ? (
+            <div className='text-center p-4 bg-[#004d00]/30 rounded-lg max-w-md mx-auto'>
+              <p className='text-[#90EE90] font-medium'>
+                Please connect your wallet first
+              </p>
+            </div>
+          ) : (
+            <div className='space-y-6'>
+              <form onSubmit={handleSubmit} className='space-y-6'>
+                <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+                  <div className='space-y-6'>
+                    <div className='bg-[#001a00]/50 p-4 rounded-xl'>
+                      <label className='block text-lg font-medium mb-3 text-[#90EE90]'>
+                        Song File
                       </label>
-                      <div className='bg-gray-700 text-gray-300 truncate border-l-0 border border-gray-600 rounded-r-md px-3 py-2 flex-1'>
-                        {coverImageFile
-                          ? coverImageFile.name
-                          : 'No image chosen'}
+                      <div className='relative'>
+                        <div className='flex items-center'>
+                          <label className='cursor-pointer bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 rounded-l-lg transition-all duration-300 transform hover:scale-105'>
+                            <span>Choose File</span>
+                            <input
+                              type='file'
+                              accept='audio/*'
+                              onChange={handleFileChange}
+                              className='sr-only'
+                              disabled={loading}
+                              required
+                            />
+                          </label>
+                          <div className='bg-[#002200] text-[#90EE90] truncate border-l-0 border border-[#004d00] rounded-r-lg px-3 py-2 flex-1'>
+                            {songFile ? songFile.name : 'No file chosen'}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  {imageUploading && (
-                    <div className='mt-2 flex items-center text-sm text-purple-400'>
-                      <svg
-                        className='animate-spin h-4 w-4 mr-2'
-                        xmlns='http://www.w3.org/2000/svg'
-                        fill='none'
-                        viewBox='0 0 24 24'>
-                        <circle
-                          className='opacity-25'
-                          cx='12'
-                          cy='12'
-                          r='10'
-                          stroke='currentColor'
-                          strokeWidth='4'></circle>
-                        <path
-                          className='opacity-75'
-                          fill='currentColor'
-                          d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
-                      </svg>
-                      Uploading to IPFS...
-                    </div>
-                  )}
-                  {coverImage && !imageUploading && (
-                    <div className='mt-3'>
-                      <p className='text-sm text-green-400 mb-2'>
-                        ✓ Image uploaded successfully
-                      </p>
-                      <div className='relative w-full h-48 bg-gray-700 rounded-lg overflow-hidden border border-gray-600'>
-                        <img
-                          src={coverImage}
-                          alt='Cover preview'
-                          className='object-contain w-full h-full'
-                        />
-                      </div>
-                      {coverImageHash && (
-                        <div className='mt-2 text-xs text-gray-400 break-all'>
-                          <p>IPFS Hash: {coverImageHash}</p>
+                      {songUploading && (
+                        <div className='mt-3 flex items-center text-sm text-[#90EE90]'>
+                          <svg
+                            className='animate-spin h-4 w-4 mr-2'
+                            xmlns='http://www.w3.org/2000/svg'
+                            fill='none'
+                            viewBox='0 0 24 24'>
+                            <circle
+                              className='opacity-25'
+                              cx='12'
+                              cy='12'
+                              r='10'
+                              stroke='currentColor'
+                              strokeWidth='4'></circle>
+                            <path
+                              className='opacity-75'
+                              fill='currentColor'
+                              d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
+                          </svg>
+                          Uploading to IPFS...
+                        </div>
+                      )}
+                      {songFile && !songUploading && (
+                        <p className='mt-3 text-sm text-[#90EE90]'>
+                          ✓ File uploaded successfully
+                        </p>
+                      )}
+                      {songHash && (
+                        <div className='mt-3 text-xs text-[#90EE90]/70 break-all'>
+                          <p>IPFS Hash: {songHash}</p>
                         </div>
                       )}
                     </div>
+
+                    <div className='bg-[#001a00]/50 p-4 rounded-xl'>
+                      <label className='block text-lg font-medium mb-3 text-[#90EE90]'>
+                        Cover Image
+                      </label>
+                      <div className='relative'>
+                        <div className='flex items-center'>
+                          <label className='cursor-pointer bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 rounded-l-lg transition-all duration-300 transform hover:scale-105'>
+                            <span>Choose Image</span>
+                            <input
+                              type='file'
+                              accept='image/*'
+                              onChange={handleCoverImageChange}
+                              className='sr-only'
+                              disabled={loading}
+                            />
+                          </label>
+                          <div className='bg-[#002200] text-[#90EE90] truncate border-l-0 border border-[#004d00] rounded-r-lg px-3 py-2 flex-1'>
+                            {coverImageFile
+                              ? coverImageFile.name
+                              : 'No image chosen'}
+                          </div>
+                        </div>
+                      </div>
+                      {imageUploading && (
+                        <div className='mt-3 flex items-center text-sm text-[#90EE90]'>
+                          <svg
+                            className='animate-spin h-4 w-4 mr-2'
+                            xmlns='http://www.w3.org/2000/svg'
+                            fill='none'
+                            viewBox='0 0 24 24'>
+                            <circle
+                              className='opacity-25'
+                              cx='12'
+                              cy='12'
+                              r='10'
+                              stroke='currentColor'
+                              strokeWidth='4'></circle>
+                            <path
+                              className='opacity-75'
+                              fill='currentColor'
+                              d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
+                          </svg>
+                          Uploading to IPFS...
+                        </div>
+                      )}
+                      {coverImage && !imageUploading && (
+                        <div className='mt-3'>
+                          <p className='text-sm text-[#90EE90] mb-2'>
+                            ✓ Image uploaded successfully
+                          </p>
+                          <div className='relative w-full h-40 bg-[#002200] rounded-lg overflow-hidden'>
+                            <img
+                              src={coverImage}
+                              alt='Cover preview'
+                              className='object-contain w-full h-full'
+                            />
+                          </div>
+                          {coverImageHash && (
+                            <div className='mt-3 text-xs text-[#90EE90]/70 break-all'>
+                              <p>IPFS Hash: {coverImageHash}</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className='bg-[#001a00]/50 p-4 rounded-xl'>
+                      <label className='block text-lg font-medium mb-3 text-[#90EE90]'>
+                        Release Date
+                      </label>
+                      <input
+                        type='date'
+                        name='release_date'
+                        value={metadata.release_date}
+                        onChange={handleMetadataChange}
+                        className='w-full p-2 bg-[#002200] text-[#90EE90] rounded-lg focus:ring-2 focus:ring-[#90EE90] focus:border-[#90EE90]'
+                        required
+                      />
+                      {metadata.release_date && (
+                        <p className='text-xs text-[#90EE90]/70 mt-2'>
+                          Will be sent as timestamp:{' '}
+                          {dateToTimestamp(metadata.release_date)}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className='space-y-6'>
+                    <div className='bg-[#001a00]/50 p-4 rounded-xl'>
+                      <label className='block text-lg font-medium mb-3 text-[#90EE90]'>
+                        Title
+                      </label>
+                      <input
+                        type='text'
+                        name='title'
+                        value={metadata.title}
+                        onChange={handleMetadataChange}
+                        placeholder='e.g. My Awesome Song'
+                        className='w-full p-2 bg-[#002200] text-[#90EE90] rounded-lg focus:ring-2 focus:ring-[#90EE90] focus:border-[#90EE90]'
+                        required
+                      />
+                    </div>
+
+                    <div className='bg-[#001a00]/50 p-4 rounded-xl'>
+                      <label className='block text-lg font-medium mb-3 text-[#90EE90]'>
+                        Genre
+                      </label>
+                      <input
+                        type='text'
+                        name='genre'
+                        value={metadata.genre}
+                        onChange={handleMetadataChange}
+                        placeholder='e.g. Rock, Pop, Jazz'
+                        className='w-full p-2 bg-[#002200] text-[#90EE90] rounded-lg focus:ring-2 focus:ring-[#90EE90] focus:border-[#90EE90]'
+                        required
+                      />
+                    </div>
+
+                    
+
+                    <div className='bg-[#001a00]/50 p-4 rounded-xl'>
+                      <label className='block text-lg font-medium mb-3 text-[#90EE90]'>
+                        Description
+                      </label>
+                      <textarea
+                        name='description'
+                        value={metadata.description}
+                        onChange={handleMetadataChange}
+                        placeholder='Brief description of your song'
+                        className='w-full p-2 bg-[#002200] text-[#90EE90] rounded-lg focus:ring-2 focus:ring-[#90EE90] focus:border-[#90EE90]'
+                        rows='3'
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className='max-w-xl mx-auto'>
+                  <button
+                    type='submit'
+                    disabled={!songFile || loading || !address}
+                    className='w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-3 px-6 rounded-xl hover:from-green-700 hover:to-green-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-lg font-medium'>
+                    {loading ? (
+                      <span className='flex items-center justify-center'>
+                        <svg
+                          className='animate-spin -ml-1 mr-3 h-5 w-5 text-white'
+                          xmlns='http://www.w3.org/2000/svg'
+                          fill='none'
+                          viewBox='0 0 24 24'>
+                          <circle
+                            className='opacity-25'
+                            cx='12'
+                            cy='12'
+                            r='10'
+                            stroke='currentColor'
+                            strokeWidth='4'></circle>
+                          <path
+                            className='opacity-75'
+                            fill='currentColor'
+                            d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
+                        </svg>
+                        Processing...
+                      </span>
+                    ) : (
+                      'Upload Song'
+                    )}
+                  </button>
+
+                  {(error || txError) && (
+                    <div className='text-red-400 mt-4 p-4 bg-red-900/30 rounded-lg text-center'>
+                      Error: {error || txError?.message}
+                    </div>
+                  )}
+
+                  {success && (
+                    <div className='text-[#90EE90] mt-4 p-4 bg-[#004d00]/30 rounded-lg flex items-center justify-center'>
+                      <svg
+                        className='h-5 w-5 mr-2'
+                        fill='currentColor'
+                        viewBox='0 0 20 20'>
+                        <path
+                          fillRule='evenodd'
+                          d='M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z'
+                          clipRule='evenodd'
+                        />
+                      </svg>
+                      Song uploaded successfully!
+                    </div>
                   )}
                 </div>
-              </div>
-
-              <div className='space-y-6'>
-                <div>
-                  <label className='block text-sm font-medium mb-2 text-gray-300'>
-                    Title
-                  </label>
-                  <input
-                    type='text'
-                    name='title'
-                    value={metadata.title}
-                    onChange={handleMetadataChange}
-                    placeholder='e.g. My Awesome Song'
-                    className='w-full p-2 bg-gray-800 text-white border border-gray-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500'
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className='block text-sm font-medium mb-2 text-gray-300'>
-                    Genre
-                  </label>
-                  <input
-                    type='text'
-                    name='genre'
-                    value={metadata.genre}
-                    onChange={handleMetadataChange}
-                    placeholder='e.g. Rock, Pop, Jazz'
-                    className='w-full p-2 bg-gray-800 text-white border border-gray-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500'
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className='block text-sm font-medium mb-2 text-gray-300'>
-                    Release Date
-                  </label>
-                  <input
-                    type='date'
-                    name='release_date'
-                    value={metadata.release_date}
-                    onChange={handleMetadataChange}
-                    className='w-full p-2 bg-gray-800 text-white border border-gray-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500'
-                    required
-                  />
-                  {metadata.release_date && (
-                    <p className='text-xs text-gray-400 mt-1'>
-                      Will be sent as timestamp:{' '}
-                      {dateToTimestamp(metadata.release_date)}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label className='block text-sm font-medium mb-2 text-gray-300'>
-                    Description
-                  </label>
-                  <textarea
-                    name='description'
-                    value={metadata.description}
-                    onChange={handleMetadataChange}
-                    placeholder='Brief description of your song'
-                    className='w-full p-2 bg-gray-800 text-white border border-gray-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500'
-                    rows='4'
-                    required
-                  />
-                </div>
-              </div>
+              </form>
             </div>
-
-            <button
-              type='submit'
-              disabled={!songFile || loading || !address}
-              className='w-full bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'>
-              {loading ? (
-                <span className='flex items-center justify-center'>
-                  <svg
-                    className='animate-spin -ml-1 mr-3 h-5 w-5 text-white'
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'>
-                    <circle
-                      className='opacity-25'
-                      cx='12'
-                      cy='12'
-                      r='10'
-                      stroke='currentColor'
-                      strokeWidth='4'></circle>
-                    <path
-                      className='opacity-75'
-                      fill='currentColor'
-                      d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
-                  </svg>
-                  Processing...
-                </span>
-              ) : (
-                'Upload Song'
-              )}
-            </button>
-
-            {(error || txError) && (
-              <div className='text-red-400 mt-4 p-4 bg-red-900/30 rounded-lg border border-red-800'>
-                Error: {error || txError?.message}
-              </div>
-            )}
-
-            {success && (
-              <div className='text-green-400 mt-4 p-4 bg-green-900/30 rounded-lg border border-green-800 flex items-center'>
-                <svg
-                  className='h-5 w-5 mr-2'
-                  fill='currentColor'
-                  viewBox='0 0 20 20'>
-                  <path
-                    fillRule='evenodd'
-                    d='M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z'
-                    clipRule='evenodd'
-                  />
-                </svg>
-                Song uploaded successfully!
-              </div>
-            )}
-          </form>
+          )}
         </div>
-      )}
+      </div>
     </div>
   )
 }
