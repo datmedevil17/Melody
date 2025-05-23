@@ -488,7 +488,7 @@
   },
   {
     "type": "event",
-    "name": "melody::song_contract::SongContract::SongAdded",
+    "name": "melody::song_contract::SongContract::SongTracked",
     "kind": "struct",
     "members": [
       {
@@ -519,8 +519,8 @@
         "kind": "nested"
       },
       {
-        "name": "SongAdded",
-        "type": "melody::song_contract::SongContract::SongAdded",
+        "name": "SongTracked",
+        "type": "melody::song_contract::SongContract::SongTracked",
         "kind": "nested"
       }
     ]
