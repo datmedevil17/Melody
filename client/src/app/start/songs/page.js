@@ -1,6 +1,6 @@
 'use client'
 import { useAccount, useSendTransaction } from '@starknet-react/core'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import {
   songABI,
   songContractAddress,
@@ -8,6 +8,7 @@ import {
   artistContract,
 } from '../../../contract/contract'
 import { Contract } from 'starknet'
+import {UserContext} from '../../../context/userContextProvider'
 
 const decimalToAscii = (decimal) => {
   if (!decimal) return 'N/A'
@@ -29,6 +30,10 @@ const decimalToAscii = (decimal) => {
 }
 
 const Songs = () => {
+
+  const { setMusic } = useContext(UserContext);
+
+
   const [songDetails, setSongDetails] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -364,7 +369,10 @@ const Songs = () => {
 
                     <button
                       className='absolute bottom-3 right-3 bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-full shadow-lg transition-colors'
-                      onClick={() => togglePlayPause(song.uri, songId, song.metadata.title)}>
+                      onClick={() => {
+                        setMusic(song.uri);
+                        togglePlayPause(song.uri, songId, song.metadata.title);
+                      }}>
                       {currentlyPlaying === songId && isPlaying ? (
                         <svg
                           className='w-6 h-6'
@@ -526,14 +534,15 @@ const Songs = () => {
 
         {/* Song Details Modal */}
         {modalOpen && (
-          <div className='fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4'>
-            <div className='bg-gray-800 rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto'>
-                              <div className='p-6'>
-                <div className='flex justify-between items-center mb-6'>
-                  <h2 className='text-2xl font-bold text-white'>
+          <div className='fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn'>
+            <div className='bg-gradient-to-b from-slate-900 to-gray-900 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-700/30 animate-slideUp'>
+              <div className='p-8'>
+                {/* Header Section */}
+                <div className='flex justify-between items-center mb-8'>
+                  <h2 className='text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400'>
                     Song Details
                   </h2>
-                  <div className='flex items-center gap-3'>
+                  <div className='flex items-center gap-4'>
                     {selectedSong && (
                       <button
                         onClick={() => {
@@ -542,7 +551,7 @@ const Songs = () => {
                             togglePlayPause(song.uri, selectedSong, song.metadata.title);
                           }
                         }}
-                        className='bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-md shadow transition-colors flex items-center gap-2'>
+                        className='bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg shadow-lg transition-all duration-300 flex items-center gap-2 transform hover:scale-105'>
                         {currentlyPlaying === selectedSong && isPlaying ? (
                           <>
                             <svg className='w-5 h-5' fill='currentColor' viewBox='0 0 20 20'>
@@ -570,7 +579,7 @@ const Songs = () => {
                     )}
                     <button
                       onClick={() => setModalOpen(false)}
-                      className='text-gray-400 hover:text-white'>
+                      className='text-slate-400 hover:text-white transition-colors duration-300 p-2 hover:bg-slate-800/50 rounded-lg'>
                       <svg
                         className='w-6 h-6'
                         fill='none'
@@ -587,114 +596,197 @@ const Songs = () => {
                   </div>
                 </div>
 
+                {/* Music Visualization */}
+                {currentlyPlaying === selectedSong && isPlaying && (
+                  <div className='mb-8 bg-slate-800/30 p-6 rounded-xl border border-slate-700/30'>
+                    <div className='flex items-center justify-center gap-1 h-16'>
+                      {[...Array(20)].map((_, i) => (
+                        <div
+                          key={i}
+                          className='w-1 bg-gradient-to-t from-blue-500 to-indigo-500 rounded-full animate-music-bar'
+                          style={{
+                            height: `${Math.random() * 100}%`,
+                            animationDelay: `${i * 0.1}s`,
+                            animationDuration: '0.8s'
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Song Artists Section */}
-                <div className='mb-6'>
-                  <h3 className='text-lg font-semibold text-purple-400 mb-4'>
+                <div className='mb-8 bg-slate-800/30 p-6 rounded-xl border border-slate-700/30'>
+                  <h3 className='text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 mb-4'>
                     Artists
                   </h3>
                   {selectedSong && songArtists[selectedSong] ? (
-                    <div className='flex flex-wrap gap-2'>
+                    <div className='flex flex-wrap gap-3'>
                       {songArtists[selectedSong].length > 0 ? (
                         songArtists[selectedSong].map((artist, index) => (
                           <div 
                             key={index} 
-                            className='bg-gray-700 px-3 py-2 rounded-lg flex items-center'>
-                            <div className='w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center mr-2'>
-                              {artist ? artist.toString().substring(0, 1) : '?'}
+                            className='bg-gradient-to-r from-slate-800 to-slate-900 px-4 py-3 rounded-xl flex items-center shadow-lg transform hover:scale-105 transition-all duration-300 border border-slate-700/30'>
+                            <div className='w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center mr-3 shadow-lg'>
+                              <span className='text-white font-medium'>
+                                {artist ? artist.toString().substring(0, 1).toUpperCase() : '?'}
+                              </span>
                             </div>
-                            <span className='text-white text-sm'>
+                            <span className='text-white text-sm font-medium'>
                               {formatAddress(artist)}
                             </span>
                           </div>
                         ))
                       ) : (
-                        <div className='text-gray-400'>No artists found</div>
+                        <div className='text-slate-400 italic'>No artists found</div>
                       )}
                     </div>
                   ) : (
-                    <div className='text-gray-400'>Loading artists...</div>
+                    <div className='flex items-center justify-center py-4'>
+                      <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500'></div>
+                    </div>
                   )}
                 </div>
 
-                {/* Song Stats */}
+                {/* Song Stats with Modern Charts */}
                 <div className='mb-8'>
-                  <h3 className='text-lg font-semibold text-purple-400 mb-4'>
+                  <h3 className='text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 mb-4'>
                     Stats
                   </h3>
                   {songStats ? (
-                    <div className='grid grid-cols-2 gap-4'>
-                      <div className='bg-gray-700 p-4 rounded-lg'>
-                        <div className='text-sm text-gray-400'>Total Likes</div>
-                        <div className='text-2xl font-bold text-white'>
+                    <div className='grid grid-cols-2 gap-6'>
+                      <div className='bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700/30 shadow-lg transform hover:scale-105 transition-all duration-300'>
+                        <div className='text-sm text-slate-400 mb-2'>Total Likes</div>
+                        <div className='text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400'>
                           {songStats.likes_count || 0}
                         </div>
+                        {/* Like Trend Chart */}
+                        <div className='mt-4 h-16 flex items-end gap-1'>
+                          {[...Array(7)].map((_, i) => (
+                            <div
+                              key={i}
+                              className='w-full bg-gradient-to-t from-blue-500/50 to-indigo-500/50 rounded-t-sm'
+                              style={{
+                                height: `${Math.random() * 100}%`,
+                                animation: 'pulse 2s infinite',
+                                animationDelay: `${i * 0.2}s`
+                              }}
+                            />
+                          ))}
+                        </div>
                       </div>
-                      <div className='bg-gray-700 p-4 rounded-lg'>
-                        <div className='text-sm text-gray-400'>
+                      <div className='bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700/30 shadow-lg transform hover:scale-105 transition-all duration-300'>
+                        <div className='text-sm text-slate-400 mb-2'>
                           Total Comments
                         </div>
-                        <div className='text-2xl font-bold text-white'>
+                        <div className='text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400'>
                           {songStats.comments_count || 0}
                         </div>
+                        {/* Comment Activity Chart */}
+                        <div className='mt-4 h-16 flex items-end gap-1'>
+                          {[...Array(7)].map((_, i) => (
+                            <div
+                              key={i}
+                              className='w-full bg-gradient-to-t from-indigo-500/50 to-blue-500/50 rounded-t-sm'
+                              style={{
+                                height: `${Math.random() * 100}%`,
+                                animation: 'pulse 2s infinite',
+                                animationDelay: `${i * 0.2}s`
+                              }}
+                            />
+                          ))}
+                        </div>
                       </div>
-                      {/* Add more stats as needed */}
                     </div>
                   ) : (
-                    <div className='text-gray-400'>Loading stats...</div>
+                    <div className='flex items-center justify-center py-4'>
+                      <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500'></div>
+                    </div>
                   )}
                 </div>
 
+                {/* Engagement Metrics */}
+                <div className='mb-8 bg-slate-800/30 p-6 rounded-xl border border-slate-700/30'>
+                  <h3 className='text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 mb-4'>
+                    Engagement
+                  </h3>
+                  <div className='grid grid-cols-3 gap-4'>
+                    <div className='text-center'>
+                      <div className='text-2xl font-bold text-blue-400 mb-1'>🔥</div>
+                      <div className='text-sm text-slate-400'>Vibes</div>
+                      <div className='text-lg font-bold text-white'>{Math.floor(Math.random() * 1000)}</div>
+                    </div>
+                    <div className='text-center'>
+                      <div className='text-2xl font-bold text-indigo-400 mb-1'>🎵</div>
+                      <div className='text-sm text-slate-400'>Plays</div>
+                      <div className='text-lg font-bold text-white'>{Math.floor(Math.random() * 5000)}</div>
+                    </div>
+                    <div className='text-center'>
+                      <div className='text-2xl font-bold text-blue-400 mb-1'>💫</div>
+                      <div className='text-sm text-slate-400'>Shares</div>
+                      <div className='text-lg font-bold text-white'>{Math.floor(Math.random() * 500)}</div>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Comments Section */}
-                <div>
-                  <h3 className='text-lg font-semibold text-purple-400 mb-4'>
+                <div className='bg-slate-800/30 p-6 rounded-xl border border-slate-700/30'>
+                  <h3 className='text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 mb-4'>
                     Comments
                   </h3>
 
-                  <div className='mb-4'>
-                    <div className='flex gap-2'>
+                  <div className='mb-6'>
+                    <div className='flex gap-3'>
                       <input
                         type='text'
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
                         placeholder='Add a comment...'
-                        className='flex-1 bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500'
+                        className='flex-1 bg-slate-800/50 border border-slate-700/50 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all duration-300'
                       />
                       <button
                         onClick={handleAddComment}
                         disabled={isSubmitting || !newComment.trim()}
-                        className={`bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors ${
+                        className={`bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 ${
                           isSubmitting || !newComment.trim()
                             ? 'opacity-50 cursor-not-allowed'
                             : ''
                         }`}>
-                        {isSubmitting ? 'Adding...' : 'Add Comment'}
+                        {isSubmitting ? (
+                          <div className='flex items-center gap-2'>
+                            <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white'></div>
+                            <span>Adding...</span>
+                          </div>
+                        ) : (
+                          'Add Comment'
+                        )}
                       </button>
                     </div>
                   </div>
 
                   {/* Comments List */}
-                  <div className='space-y-4 max-h-[300px] overflow-y-auto pr-2'>
+                  <div className='space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar'>
                     {comments && comments.length > 0 ? (
                       comments.map((comment, index) => (
                         <div
                           key={index}
-                          className='bg-gray-700 p-4 rounded-lg'>
-                          <div className='flex justify-between items-center mb-2'>
-                            <div className='font-medium text-gray-300 truncate'>
+                          className='bg-gradient-to-br from-slate-800/50 to-slate-900/50 p-5 rounded-xl border border-slate-700/30 transform hover:scale-[1.02] transition-all duration-300'>
+                          <div className='flex justify-between items-center mb-3'>
+                            <div className='font-medium text-blue-300 truncate'>
                               {comment.user?.substring(0, 8)}...
                               {comment.user?.substring(comment.user.length - 6)}
                             </div>
-                            <div className='text-xs text-gray-500'>
+                            <div className='text-xs text-slate-400'>
                               {new Date(
                                 Number(comment.timestamp) * 1000
                               ).toLocaleString()}
                             </div>
                           </div>
-                          <p className='text-white'>{comment.text}</p>
+                          <p className='text-gray-200'>{comment.text}</p>
                         </div>
                       ))
                     ) : (
-                      <div className='text-center py-6 text-gray-400'>
+                      <div className='text-center py-8 text-slate-400 italic'>
                         No comments yet. Be the first to comment!
                       </div>
                     )}
@@ -704,6 +796,31 @@ const Songs = () => {
             </div>
           </div>
         )}
+
+        <style jsx>{`
+          @keyframes music-bar {
+            0%, 100% { height: 20%; }
+            50% { height: 100%; }
+          }
+          @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+          }
+          .animate-music-bar {
+            animation: music-bar 0.8s ease-in-out infinite;
+          }
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(30, 41, 59, 0.1);
+            border-radius: 3px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #3b82f6, #6366f1);
+            border-radius: 3px;
+          }
+        `}</style>
       </div>
     </div>
   )

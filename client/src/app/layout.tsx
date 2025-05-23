@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import StarknetProvider from '../components/StarknetProvider';
 import Navbar from "@/components/Navbar";
+import UserContextProvider from "@/context/userContextProvider"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,10 +30,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <UserContextProvider>
         <StarknetProvider>
           <Navbar />
           {children}
         </StarknetProvider>
+        </UserContextProvider>
       </body>
     </html>
   );

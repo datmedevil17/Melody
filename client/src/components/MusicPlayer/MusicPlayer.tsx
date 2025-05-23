@@ -53,7 +53,7 @@ const MusicPlayer = ({
 
     // Refs
     const audioRef = useRef(new Audio(audioSrc));
-    const intervalRef = useRef<NodeJS.Timeout>();
+    const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
     // Fetch and parse metadata
     useEffect(() => {
@@ -61,7 +61,6 @@ const MusicPlayer = ({
             try {
                 const response = await fetch(audioSrc);
                 const blob = await response.blob();
-
                 const parsedMetadata = await musicMetadata.parseBlob(blob);
                 setMetadata(parsedMetadata);
             } catch (error) {
