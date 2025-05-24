@@ -161,6 +161,16 @@ mod ArtistContract {
             self.artist_collab_count.write(artist_address, 0_u32);
             self.artist_profiles.write(artist_address, artist_profile); // Store the profile
 
+            // **FIX: Add the artist to the artists array and increment count**
+            let current_count = self.total_artist_count.read();
+            let current_index: u32 = current_count.try_into().unwrap();
+
+            // Store artist address at the current index
+            self.artist_addresses.write(current_index, artist_address);
+
+            // Increment total artist count
+            self.total_artist_count.write(current_count + 1);
+
             // Get current timestamp
             let timestamp = get_block_timestamp();
             self.artist_registration_dates.write(artist_address, timestamp);
@@ -411,7 +421,10 @@ mod ArtistContract {
             let mut i: u32 = 0;
             while i != artist_count {
                 let artist_address = self.artist_addresses.read(i);
-                artists.append(artist_address);
+                // **FIX: Add validation to ensure we don't add zero addresses**
+                if artist_address.into() != 0 {
+                    artists.append(artist_address);
+                }
                 i += 1_u32;
             }
 

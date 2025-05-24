@@ -238,8 +238,8 @@ const Page = () => {
             key={`note-${i}`}
             initial={{
               opacity: 0,
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
+               x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+  y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
             }}
             animate={{
               opacity: [0.4, 0.7, 0.4],
