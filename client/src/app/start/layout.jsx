@@ -4,7 +4,7 @@ import BottomBarMusicPlayer from "@/components/MusicPlayer/MusicPlayer";
 import { UserContext } from "../../context/userContextProvider";
 
 const Layout = ({ children }) => {
-    const { music, setMusic } = useContext(UserContext);
+    const { music } = useContext(UserContext);
 
     console.log("Music in Layout:", music);
 
@@ -14,7 +14,7 @@ const Layout = ({ children }) => {
             <main className="flex-1 overflow-y-auto">{children}</main>
 
             {/* Bottom music bar */}
-            {music && (<BottomBarMusicPlayer audioSrc={`https://${music}`} />)}
+            {music && (<BottomBarMusicPlayer />)}
 
         </div>
     );

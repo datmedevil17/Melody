@@ -14,6 +14,7 @@ export default function Navbar() {
         { label: "Explore", href: "/start/explore" },
         { label: "Tracks", href: "/start/songs" },
         { label: "Artist", href: "/start/artists" },
+        { label: "Profile", href: "/user/profile" },
     ];
 
     return (

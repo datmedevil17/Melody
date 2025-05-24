@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import Link from 'next/link'
 import { uploadToIpfs, uploadToIpfsJson } from '../../../contract/pinata'
 import {
   useAccount,
@@ -203,10 +204,10 @@ const UploadSong = () => {
   return (
     <div className='min-h-screen bg-black text-white'>
       {/* Background gradient */}
-      <div className="fixed bg-gradient-to-br from-[#002200] via-black to-[#001a00] z-0" />
+      <div className='fixed bg-gradient-to-br from-[#002200] via-black to-[#001a00] z-0' />
 
       {/* Animated music elements background */}
-      <div className="fixed inset-0 top-12 z-0 overflow-hidden">
+      <div className='fixed inset-0 top-12 z-0 overflow-hidden'>
         {/* Music notes */}
         {Array.from({ length: 10 }).map((_, i) => (
           <motion.div
@@ -233,22 +234,45 @@ const UploadSong = () => {
             transition={{
               duration: Math.random() * 20 + 15,
               repeat: Number.POSITIVE_INFINITY,
-              repeatType: "reverse",
+              repeatType: 'reverse',
             }}
-            className="absolute text-[#90EE90]/30"
+            className='absolute text-[#90EE90]/30'
             style={{
               fontSize: `${Math.random() * 40 + 20}px`,
-              filter: "blur(0.5px)",
-            }}
-          >
-            {["♪", "♫", "♬", "♩", "♭", "♮"][Math.floor(Math.random() * 6)]}
+              filter: 'blur(0.5px)',
+            }}>
+            {['♪', '♫', '♬', '♩', '♭', '♮'][Math.floor(Math.random() * 6)]}
           </motion.div>
         ))}
       </div>
 
       <div className='relative z-10'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
-          <h1 className='text-4xl font-bold mb-8 text-center text-[#90EE90]' style={{ fontFamily: "'Audiowide', cursive" }}>
+          {/* Back button */}
+          <div className='mb-6'>
+            <Link
+              href='/user/profile'
+              className='inline-flex items-center px-4 py-2 bg-[#001a00]/70 text-[#90EE90] rounded-lg border border-[#004d00] hover:bg-[#002a00] transition-colors transform hover:scale-105 duration-200'>
+              <svg
+                className='w-5 h-5 mr-2'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+                xmlns='http://www.w3.org/2000/svg'>
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M10 19l-7-7m0 0l7-7m-7 7h18'
+                />
+              </svg>
+              Back to Profile
+            </Link>
+          </div>
+
+          <h1
+            className='text-4xl font-bold mb-8 text-center text-[#90EE90]'
+            style={{ fontFamily: "'Audiowide', cursive" }}>
             Upload Your Music
           </h1>
 
@@ -260,7 +284,9 @@ const UploadSong = () => {
             </div>
           ) : (
             <div className='space-y-6'>
-              <form onSubmit={handleSubmit} className='space-y-6'>
+              <form
+                onSubmit={handleSubmit}
+                className='space-y-6'>
                 <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
                   <div className='space-y-6'>
                     <div className='bg-[#001a00]/50 p-4 rounded-xl'>
@@ -436,8 +462,6 @@ const UploadSong = () => {
                         required
                       />
                     </div>
-
-                    
 
                     <div className='bg-[#001a00]/50 p-4 rounded-xl'>
                       <label className='block text-lg font-medium mb-3 text-[#90EE90]'>

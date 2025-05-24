@@ -15,7 +15,7 @@ const LandingHero = () => {
 
     useEffect(() => {
         if (address) {
-            router.push("/start");
+            router.push("/start/user/profile");
         }
     }, [address, router]);
 

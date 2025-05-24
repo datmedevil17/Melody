@@ -8,6 +8,7 @@ import {
   useSendTransaction,
 } from '@starknet-react/core'
 import { artistABI, artistContractAddress } from '../contract/contract'
+import { useRouter } from 'next/navigation'
 
 const ArtistRegistration = ({ onClose, onSuccess }) => {
   const [name, setName] = useState('')
@@ -26,7 +27,7 @@ const ArtistRegistration = ({ onClose, onSuccess }) => {
   })
   const modalRef = useRef(null)
   const { sendAsync, error: txerror } = useSendTransaction({ calls: null })
-
+  const router = useRouter()
   // Handle click outside to close modal
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -125,12 +126,9 @@ const ArtistRegistration = ({ onClose, onSuccess }) => {
       setProfileImage(null)
       setProfileImageFile(null)
       setProfileImageHash(null)
-
+      router.push('/start');
       onClose()
-      if (onSuccess) {
-        console.log('onSuccess function called')
-        onSuccess()
-      }
+      console.log('Artist registered successfully:', tx)
 
       // Close modal
     } catch (err) {

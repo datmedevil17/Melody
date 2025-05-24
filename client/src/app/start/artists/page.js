@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import {
   artistContract,
   decimalToAscii,
@@ -9,6 +9,7 @@ import {
 import { num } from 'starknet'
 import { useAccount, useSendTransaction } from '@starknet-react/core'
 import { motion, AnimatePresence } from 'framer-motion'
+import { UserContext } from '../../../context/userContextProvider'
 
 const Page = () => {
   const { address } = useAccount()
@@ -22,7 +23,8 @@ const Page = () => {
   const [likingStates, setLikingStates] = useState({})
   const [favoriteLoading, setFavoriteLoading] = useState({})
   const { sendAsync } = useSendTransaction({ calls: [] })
-
+  const { isPlaying, togglePlayPause, currentlyPlaying } =
+    useContext(UserContext)
   const fetchSongs = async (artistAddress) => {
     setSongLoading(true)
     setSongsData([])
@@ -37,7 +39,7 @@ const Page = () => {
           liked = await songContract.call('has_user_liked', [i, address])
         }
         songs.push({
-          id: i,
+          id: parseInt(i),
           name: decimalToAscii(song.metadata.title),
           genre: decimalToAscii(song.metadata.genre),
           image: formatUrl(song.metadata.cover_image),
@@ -81,7 +83,7 @@ const Page = () => {
               address,
               i,
             ])
-            is_self = (i === num.toBigInt(address))
+            is_self = i === num.toBigInt(address)
           }
 
           artists.push({
@@ -98,7 +100,6 @@ const Page = () => {
             is_favorite: is_favorite,
             is_self: is_self,
           })
-          
         } catch (artistError) {
           console.error(
             `Error fetching artist data for ${num.toHex(i)}:`,
@@ -228,18 +229,22 @@ const Page = () => {
   return (
     <div className='min-h-screen bg-black text-white'>
       {/* Background gradient */}
-      <div className="fixed bg-gradient-to-br from-[#002200] via-black to-[#001a00] z-0" />
+      <div className='fixed bg-gradient-to-br from-[#002200] via-black to-[#001a00] z-0' />
 
       {/* Animated music elements background */}
-      <div className="fixed inset-0 top-12 z-0 overflow-hidden">
+      <div className='fixed inset-0 top-12 z-0 overflow-hidden'>
         {/* Music notes */}
         {Array.from({ length: 10 }).map((_, i) => (
           <motion.div
             key={`note-${i}`}
             initial={{
               opacity: 0,
-               x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
-  y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+              x:
+                Math.random() *
+                (typeof window !== 'undefined' ? window.innerWidth : 1000),
+              y:
+                Math.random() *
+                (typeof window !== 'undefined' ? window.innerHeight : 800),
             }}
             animate={{
               opacity: [0.4, 0.7, 0.4],
@@ -258,15 +263,14 @@ const Page = () => {
             transition={{
               duration: Math.random() * 20 + 15,
               repeat: Number.POSITIVE_INFINITY,
-              repeatType: "reverse",
+              repeatType: 'reverse',
             }}
-            className="absolute text-[#90EE90]/30"
+            className='absolute text-[#90EE90]/30'
             style={{
               fontSize: `${Math.random() * 40 + 20}px`,
-              filter: "blur(0.5px)",
-            }}
-          >
-            {["♪", "♫", "♬", "♩", "♭", "♮"][Math.floor(Math.random() * 6)]}
+              filter: 'blur(0.5px)',
+            }}>
+            {['♪', '♫', '♬', '♩', '♭', '♮'][Math.floor(Math.random() * 6)]}
           </motion.div>
         ))}
       </div>
@@ -275,7 +279,11 @@ const Page = () => {
         {/* Header */}
         <div className='bg-gradient-to-r from-[#002200]/30 to-[#001a00]/30 py-12 mb-8'>
           <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-            <h1 className='text-4xl font-bold text-[#90EE90] mb-2' style={{ fontFamily: "'Audiowide', cursive" }}>Artists</h1>
+            <h1
+              className='text-4xl font-bold text-[#90EE90] mb-2'
+              style={{ fontFamily: "'Audiowide', cursive" }}>
+              Artists
+            </h1>
             <p className='text-[#90EE90]/70'>
               Discover amazing musicians from around the world
             </p>
@@ -288,7 +296,9 @@ const Page = () => {
             <div className='flex justify-center items-center py-20'>
               <div className='flex flex-col items-center'>
                 <div className='w-16 h-16 border-4 border-t-[#90EE90] border-[#004d00]/20 rounded-full animate-spin'></div>
-                <p className='mt-4 text-[#90EE90] text-lg'>Loading artists...</p>
+                <p className='mt-4 text-[#90EE90] text-lg'>
+                  Loading artists...
+                </p>
               </div>
             </div>
           ) : artistsData.length === 0 ? (
@@ -310,8 +320,8 @@ const Page = () => {
                   No artists found
                 </h2>
                 <p className='text-[#90EE90]/70 mt-2 mb-6'>
-                  Be the first to register as an artist and share your music with
-                  the world!
+                  Be the first to register as an artist and share your music
+                  with the world!
                 </p>
                 <button className='inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-full transition-all duration-300 transform hover:scale-105'>
                   <svg
@@ -515,7 +525,9 @@ const Page = () => {
                         <div className='text-sm text-[#90EE90] font-medium'>
                           Artist
                         </div>
-                        <h2 className='text-3xl md:text-4xl font-bold text-[#90EE90] mt-1' style={{ fontFamily: "'Audiowide', cursive" }}>
+                        <h2
+                          className='text-3xl md:text-4xl font-bold text-[#90EE90] mt-1'
+                          style={{ fontFamily: "'Audiowide', cursive" }}>
                           {selectedArtist.name}
                         </h2>
                         <div className='flex items-center mt-2 text-[#90EE90]/70 text-sm'>
@@ -567,13 +579,17 @@ const Page = () => {
                   </div>
 
                   <div className='p-6'>
-                    <h3 className='text-xl font-bold text-[#90EE90] mb-4'>Songs</h3>
+                    <h3 className='text-xl font-bold text-[#90EE90] mb-4'>
+                      Songs
+                    </h3>
 
                     {songLoading ? (
                       <div className='flex justify-center items-center py-12'>
                         <div className='flex flex-col items-center'>
                           <div className='w-10 h-10 border-3 border-t-[#90EE90] border-[#004d00]/20 rounded-full animate-spin'></div>
-                          <p className='mt-3 text-[#90EE90]/70'>Loading songs...</p>
+                          <p className='mt-3 text-[#90EE90]/70'>
+                            Loading songs...
+                          </p>
                         </div>
                       </div>
                     ) : songError ? (
@@ -678,18 +694,58 @@ const Page = () => {
                                 <td className='py-3'>
                                   <div className='flex items-center justify-end space-x-2'>
                                     <button
-                                      className='p-2 text-[#90EE90]/70 hover:text-[#90EE90] rounded-full transition-colors opacity-0 group-hover:opacity-100'
-                                      title='Play song'>
-                                      <svg
-                                        className='w-5 h-5'
-                                        fill='currentColor'
-                                        viewBox='0 0 20 20'>
-                                        <path
-                                          fillRule='evenodd'
-                                          d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'
-                                          clipRule='evenodd'
-                                        />
-                                      </svg>
+                                      onClick={() =>
+                                        togglePlayPause(
+                                          song.song_url,
+                                          song.id,
+                                          {
+                                            title: song.name,
+                                            genre: song.genre,
+                                            artist: selectedArtist.name,
+                                            image: song.image,
+                                          }
+                                        )
+                                      }
+                                      className={`p-2 rounded-full transition-colors opacity-0 group-hover:opacity-100 ${
+                                        currentlyPlaying === song.id &&
+                                        isPlaying
+                                          ? 'text-[#90EE90] bg-[#004d00]/30'
+                                          : 'text-[#90EE90]/70 hover:text-[#90EE90]'
+                                      }`}
+                                      title={
+                                        currentlyPlaying === song.id &&
+                                        isPlaying
+                                          ? 'Pause song'
+                                          : 'Play song'
+                                      }>
+                                      {currentlyPlaying === song.id &&
+                                      isPlaying ? (
+                                        <div className='relative'>
+                                          <svg
+                                            className='w-5 h-5'
+                                            fill='currentColor'
+                                            viewBox='0 0 20 20'>
+                                            <path
+                                              fillRule='evenodd'
+                                              d='M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z'
+                                              clipRule='evenodd'
+                                            />
+                                          </svg>
+                                          {/* Animated waves effect */}
+                                          <span className='absolute -right-1 -top-1 w-2 h-2 bg-[#90EE90] rounded-full animate-ping'></span>
+                                        </div>
+                                      ) : (
+                                        <svg
+                                          className='w-5 h-5'
+                                          fill='currentColor'
+                                          viewBox='0 0 20 20'>
+                                          <path
+                                            fillRule='evenodd'
+                                            d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'
+                                            clipRule='evenodd'
+                                          />
+                                        </svg>
+                                      )}
                                     </button>
                                     {song.liked ? (
                                       <div
@@ -754,11 +810,11 @@ const Page = () => {
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: linear-gradient(to bottom, #90EE90, #004d00);
+          background: linear-gradient(to bottom, #90ee90, #004d00);
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(to bottom, #90EE90, #004d00);
+          background: linear-gradient(to bottom, #90ee90, #004d00);
           opacity: 0.8;
         }
       `}</style>

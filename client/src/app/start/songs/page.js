@@ -10,6 +10,7 @@ import {
 import { Contract } from "starknet";
 import { UserContext } from "../../../context/userContextProvider";
 import { motion } from "framer-motion";
+import { title } from "process";
 
 const decimalToAscii = (decimal) => {
   if (!decimal) return "N/A";
@@ -28,7 +29,7 @@ const decimalToAscii = (decimal) => {
 };
 
 const Songs = () => {
-  const { setMusic, setIsPlaying: setPlaying } = useContext(UserContext);
+  const { togglePlayPause, isPlaying, currentlyPlaying } = useContext(UserContext);
 
   const [songDetails, setSongDetails] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -40,72 +41,29 @@ const Songs = () => {
   const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [songArtists, setSongArtists] = useState({});
-  const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
-  const [audioPlayer, setAudioPlayer] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const { sendAsync, error: txError } = useSendTransaction({
     calls: undefined,
   });
   const { address } = useAccount();
 
-  const togglePlayPause = (uri, songId, title) => {
-    if (audioPlayer) {
-      audioPlayer.pause();
-      if (currentlyPlaying === songId) {
-        if (isPlaying) {
-          setIsPlaying(false);
-          setPlaying(false);
-          return;
-        } else {
-          audioPlayer.play();
-          setIsPlaying(true);
-          setPlaying(true);
-          return;
-        }
-      } else {
-        setIsPlaying(false);
-        setPlaying(false);
-        audioPlayer.src = "https://" + uri;
-        audioPlayer.play();
-        setCurrentlyPlaying(songId);
-        setIsPlaying(true);
-        setPlaying(true);
-        return;
-      }
-    }
-
-    const audio = new Audio();
-    let formattedUri = "https://" + uri;
-    audio.src = formattedUri;
-    audio.oncanplay = () => {
-      audio.play();
-      setIsPlaying(true);
-      setPlaying(true);
-    };
-
-    audio.onerror = (e) => {
-      console.log("Audio error:", e);
-      setIsPlaying(false);
-      setPlaying(false);
-    };
-
-    audio.onended = () => {
-      setIsPlaying(false);
-      setPlaying(false);
-    };
-    setCurrentlyPlaying(songId);
-    setAudioPlayer(audio);
-  };
-
   const fetchSongArtists = async (songId) => {
     try {
       const artists = await artistContract.call("get_song_creators", [songId]);
       const formattedArtists = Array.isArray(artists) ? artists : [artists];
+      const artistNames = [];
+      for(const artist of formattedArtists) {
+        const info = await artistContract.call("get_artist_profile", [artist]);
+        if (info && info.name) {
+          artistNames.push(decimalToAscii(info.name));
+        } else {
+          artistNames.push("Unknown Artist");
+        }
+      }
       setSongArtists((prev) => ({
         ...prev,
-        [songId]: formattedArtists,
+        [songId]: artistNames,
       }));
-      return formattedArtists;
+      return artistNames;
     } catch (err) {
       console.error(`Error fetching artists for song #${songId}:`, err);
       return [];
@@ -132,6 +90,7 @@ const Songs = () => {
 
           songs.push({
             ...song,
+            id: i,
             metadata: {
               ...song.metadata,
               title: decimalToAscii(song.metadata.title),
@@ -160,15 +119,6 @@ const Songs = () => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    return () => {
-      if (audioPlayer) {
-        audioPlayer.pause();
-        audioPlayer.src = "";
-      }
-    };
-  }, [audioPlayer]);
 
   useEffect(() => {
     fetchSongs();
@@ -344,7 +294,6 @@ const Songs = () => {
                   {selectedSongData.artists &&
                   selectedSongData.artists.length > 0
                     ? selectedSongData.artists
-                        .map((artist) => formatAddress(artist))
                         .join(", ")
                     : "Unknown Artist"}
                 </span>
@@ -359,11 +308,19 @@ const Songs = () => {
               <div className="flex items-center gap-6">
                 <button
                   onClick={() => {
-                    setMusic(selectedSongData.uri);
                     togglePlayPause(
-                      selectedSongData.uri,
+                      `https://${selectedSongData.uri}`,
                       selectedSong,
-                      selectedSongData.metadata.title
+                      {
+                        title: selectedSongData.metadata.title,
+                        genre: selectedSongData.metadata.genre,
+                        artist: selectedSongData.artists
+                          ? selectedSongData.artists.join(", ")
+                          : "Unknown Artist",
+                        image: formatImageUrl(
+                          selectedSongData.metadata.cover_image
+                        ),
+                      }
                     );
                   }}
                   className="w-14 h-14 bg-green-500 hover:bg-green-400 rounded-full flex items-center justify-center transition-all hover:scale-105 shadow-xl"
@@ -576,11 +533,17 @@ const Songs = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          setMusic(song.uri);
                           togglePlayPause(
-                            song.uri,
+                            `https://${song.uri}`,
                             songId,
-                            song.metadata.title
+                            {
+                              title: song.metadata.title,
+                              genre: song.metadata.genre,
+                              artist: song.artists
+                                ? song.artists.join(", ")
+                                : "Unknown Artist",
+                              image: formatImageUrl(song.metadata.cover_image),
+                            }
                           );
                         }}
                         className="absolute bottom-3 right-3 w-14 h-14 bg-green-500 hover:bg-green-400 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 shadow-2xl backdrop-blur-sm border border-green-400/20"
@@ -641,7 +604,6 @@ const Songs = () => {
                       <p className="text-sm text-gray-300 truncate font-medium">
                         {song.artists && song.artists.length > 0
                           ? song.artists
-                              .map((artist) => formatAddress(artist))
                               .join(", ")
                           : "Unknown Artist"}
                       </p>

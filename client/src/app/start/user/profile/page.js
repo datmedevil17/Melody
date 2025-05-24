@@ -286,7 +286,7 @@ const Page = () => {
               Please register to view your profile
             </h1>
             <Link
-              href={'/user'}
+              href={'/start/user'}
               className='ml-4 text-purple-400 underline'>
               Register
             </Link>

@@ -18,7 +18,7 @@ export default function WalletConnectorModal() {
   async function connectWallet() {
     const { connector } = await starknetkitConnectModal();
     if (!connector) return;
-    await connect({ connector });
+    connect({ connector });
   }
 
   const { address } = useAccount();
