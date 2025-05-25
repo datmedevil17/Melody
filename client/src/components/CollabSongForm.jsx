@@ -126,9 +126,9 @@ const CollabSongForm = () => {
   }
 
   return (
-    <div className='min-h-screen bg-black text-white'>
-      {/* Background gradient */}
-      <div className='fixed bg-gradient-to-br from-[#002200] via-black to-[#001a00] z-0' />
+    <div className='min-h-screen bg-gradient-to-br from-black via-gray-900 to-black'>
+      {/* Background gradient overlay */}
+      <div className='fixed inset-0 bg-gradient-to-br from-green-900/10 via-transparent to-green-800/10 z-0' />
 
       {/* Animated music elements background */}
       <div className='fixed inset-0 top-12 z-0 overflow-hidden'>
@@ -142,7 +142,7 @@ const CollabSongForm = () => {
               y: Math.random() * window.innerHeight,
             }}
             animate={{
-              opacity: [0.4, 0.7, 0.4],
+              opacity: [0.3, 0.6, 0.3],
               x: [
                 Math.random() * window.innerWidth,
                 Math.random() * window.innerWidth,
@@ -160,7 +160,7 @@ const CollabSongForm = () => {
               repeat: Number.POSITIVE_INFINITY,
               repeatType: 'reverse',
             }}
-            className='absolute text-[#90EE90]/30'
+            className='absolute text-green-400/20'
             style={{
               fontSize: `${Math.random() * 40 + 20}px`,
               filter: 'blur(0.5px)',
@@ -170,280 +170,349 @@ const CollabSongForm = () => {
         ))}
       </div>
 
-      <div className='relative z-10 py-10 px-4 sm:px-6'>
-        {/* Back button */}
-        <div className='max-w-3xl mx-auto mb-4'>
-          <Link
-            href='/user/profile'
-            className='inline-flex items-center px-4 py-2 bg-[#001a00]/70 text-[#90EE90] rounded-lg border border-[#004d00] hover:bg-[#002a00] transition-colors'>
-            <svg
-              className='w-5 h-5 mr-2'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
-              xmlns='http://www.w3.org/2000/svg'>
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth='2'
-                d='M10 19l-7-7m0 0l7-7m-7 7h18'
-              />
-            </svg>
-            Back to Profile
-          </Link>
+      <div className='relative z-10 py-6 px-4 sm:px-6'>
+        {/* Navigation Header */}
+        <div className='max-w-4xl mx-auto mb-6'>
+          <div className='flex items-center justify-between'>
+            <Link
+              href='/start/user/profile'
+              className='inline-flex items-center px-4 py-2 bg-gray-800/80 backdrop-blur-sm text-white rounded-full border border-gray-700/50 hover:bg-gray-700/80 transition-all duration-200 hover:scale-105'>
+              <svg
+                className='w-4 h-4 mr-2'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'>
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M10 19l-7-7m0 0l7-7m-7 7h18'
+                />
+              </svg>
+              Back
+            </Link>
+            <div className='text-sm text-gray-400 font-medium'>
+              Collaborate
+            </div>
+          </div>
         </div>
 
-        <div className='max-w-3xl mx-auto'>
+        <div className='max-w-4xl mx-auto'>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className='bg-[#001a00]/50 rounded-xl border border-[#004d00] shadow-lg overflow-hidden p-6'>
-            <h1
-              className='text-3xl font-bold text-[#90EE90] mb-2'
-              style={{ fontFamily: "'Audiowide', cursive" }}>
-              Register Collaborative Song
-            </h1>
-            <p className='text-[#90EE90]/70 mb-6'>
-              Create a new collaborative song between two artists on the
-              blockchain.
-            </p>
+            className='bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl overflow-hidden'>
+            
+            {/* Header Section */}
+            <div className='bg-gradient-to-r from-green-600/20 to-green-500/20 p-8 pb-6 border-b border-white/10'>
+              <h1 className='text-4xl font-bold text-white mb-2 tracking-tight'>
+                New Collaboration
+              </h1>
+              <p className='text-gray-300 text-lg'>
+                Create a collaborative song between two artists
+              </p>
+            </div>
 
-            {errorMessage && (
-              <div className='mb-4 p-3 bg-red-900/30 border border-red-500/50 text-red-300 rounded-md'>
-                {errorMessage}
-              </div>
-            )}
-
-            {successMessage && (
-              <div className='mb-4 p-3 bg-green-900/30 border border-green-500/50 text-green-300 rounded-md'>
-                {successMessage}
-              </div>
-            )}
-
-            {txError && (
-              <div className='mb-4 p-3 bg-red-900/30 border border-red-500/50 text-red-300 rounded-md'>
-                Transaction Error: {txError.message}
-              </div>
-            )}
-
-            <form
-              onSubmit={submitCollaboration}
-              className='space-y-6'>
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                <div>
-                  <label
-                    htmlFor='artist2'
-                    className='block text-sm font-medium text-[#90EE90] mb-1'>
-                    Artist 2 Address: <span className='text-red-400'>*</span>
-                  </label>
-                  <input
-                    type='text'
-                    id='artist2'
-                    name='artist2'
-                    value={formData.artist2}
-                    onChange={handleChange}
-                    placeholder='0x...'
-                    className='w-full p-3 bg-[#002200]/50 border border-[#004d00] text-[#90EE90] rounded-md focus:ring-2 focus:ring-[#90EE90]/50 focus:border-[#90EE90] placeholder-[#90EE90]/30'
-                    required
-                  />
-                  <p className='mt-1 text-xs text-[#90EE90]/50'>
-                    Enter the contract address of the second artist
-                  </p>
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor='songFile'
-                  className='block text-sm font-medium text-[#90EE90] mb-1'>
-                  Song File: <span className='text-red-400'>*</span>
-                </label>
-                <input
-                  type='file'
-                  id='songFile'
-                  ref={fileInputRef}
-                  accept='audio/*'
-                  onChange={handleSongFileChange}
-                  className='w-full p-3 bg-[#002200]/50 border border-[#004d00] text-[#90EE90] rounded-md focus:ring-2 focus:ring-[#90EE90]/50 focus:border-[#90EE90] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#90EE90]/10 file:text-[#90EE90] hover:file:bg-[#90EE90]/20'
-                  required
-                />
-                <p className='mt-1 text-xs text-[#90EE90]/50'>
-                  Upload your song file (mp3, wav, etc.)
-                </p>
-              </div>
-
-              {songFile && (
-                <div className='p-3 bg-[#002200]/30 rounded-md border border-[#004d00]'>
-                  <p className='text-sm font-medium text-[#90EE90]'>
-                    Selected File: {songFile.name}
-                  </p>
-                  <p className='text-xs text-[#90EE90]/50'>
-                    Size: {(songFile.size / (1024 * 1024)).toFixed(2)} MB
-                  </p>
-                </div>
+            <div className='p-8'>
+              {/* Alert Messages */}
+              {errorMessage && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className='mb-6 p-4 bg-red-500/10 backdrop-blur-sm border border-red-500/20 text-red-300 rounded-2xl'>
+                  <div className='flex items-center'>
+                    <svg className='w-5 h-5 mr-3 flex-shrink-0' fill='currentColor' viewBox='0 0 20 20'>
+                      <path fillRule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z' />
+                    </svg>
+                    {errorMessage}
+                  </div>
+                </motion.div>
               )}
 
-              <div className='bg-[#002200]/30 p-6 rounded-lg border border-[#004d00]'>
-                <h2 className='text-xl font-medium text-[#90EE90] mb-4'>
-                  Song Metadata
-                </h2>
+              {successMessage && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className='mb-6 p-4 bg-green-500/10 backdrop-blur-sm border border-green-500/20 text-green-300 rounded-2xl'>
+                  <div className='flex items-center'>
+                    <svg className='w-5 h-5 mr-3 flex-shrink-0' fill='currentColor' viewBox='0 0 20 20'>
+                      <path fillRule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z' />
+                    </svg>
+                    {successMessage}
+                  </div>
+                </motion.div>
+              )}
 
-                <div className='space-y-4'>
+              {txError && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className='mb-6 p-4 bg-red-500/10 backdrop-blur-sm border border-red-500/20 text-red-300 rounded-2xl'>
+                  <div className='flex items-center'>
+                    <svg className='w-5 h-5 mr-3 flex-shrink-0' fill='currentColor' viewBox='0 0 20 20'>
+                      <path fillRule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z' />
+                    </svg>
+                    Transaction Error: {txError.message}
+                  </div>
+                </motion.div>
+              )}
+
+              <form onSubmit={submitCollaboration} className='space-y-8'>
+                {/* Artist Address Section */}
+                <div className='bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10'>
+                  <h3 className='text-xl font-semibold text-white mb-4 flex items-center'>
+                    <svg className='w-6 h-6 mr-3 text-green-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                      <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z' />
+                    </svg>
+                    Collaborator
+                  </h3>
                   <div>
-                    <label
-                      htmlFor='title'
-                      className='block text-sm font-medium text-[#90EE90] mb-1'>
-                      Title: <span className='text-red-400'>*</span>
+                    <label htmlFor='artist2' className='block text-sm font-medium text-gray-300 mb-2'>
+                      Artist 2 Address <span className='text-red-400'>*</span>
                     </label>
                     <input
                       type='text'
-                      id='title'
-                      name='title'
-                      value={formData.title}
+                      id='artist2'
+                      name='artist2'
+                      value={formData.artist2}
                       onChange={handleChange}
-                      className='w-full p-3 bg-[#002200]/50 border border-[#004d00] text-[#90EE90] rounded-md focus:ring-2 focus:ring-[#90EE90]/50 focus:border-[#90EE90]'
+                      placeholder='0x...'
+                      className='w-full p-4 bg-black/20 backdrop-blur-sm border border-white/20 text-white rounded-xl focus:ring-2 focus:ring-green-500/50 focus:border-green-400/50 placeholder-gray-400 transition-all duration-200'
                       required
                     />
+                    <p className='mt-2 text-xs text-gray-400'>
+                      Enter the contract address of the second artist
+                    </p>
                   </div>
+                </div>
 
-                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                    <div>
-                      <label
-                        htmlFor='genre'
-                        className='block text-sm font-medium text-[#90EE90] mb-1'>
-                        Genre:
-                      </label>
-                      <select
-                        id='genre'
-                        name='genre'
-                        value={formData.genre}
-                        onChange={handleChange}
-                        className='w-full p-3 bg-[#002200]/50 border border-[#004d00] text-[#90EE90] rounded-md focus:ring-2 focus:ring-[#90EE90]/50 focus:border-[#90EE90]'>
-                        <option value=''>Select a genre</option>
-                        <option value='pop'>Pop</option>
-                        <option value='rock'>Rock</option>
-                        <option value='hip-hop'>Hip-Hop</option>
-                        <option value='r&b'>R&B</option>
-                        <option value='electronic'>Electronic</option>
-                        <option value='jazz'>Jazz</option>
-                        <option value='classical'>Classical</option>
-                        <option value='country'>Country</option>
-                        <option value='folk'>Folk</option>
-                        <option value='metal'>Metal</option>
-                        <option value='indie'>Indie</option>
-                        <option value='other'>Other</option>
-                      </select>
+                {/* File Upload Section */}
+                <div className='bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10'>
+                  <h3 className='text-xl font-semibold text-white mb-4 flex items-center'>
+                    <svg className='w-6 h-6 mr-3 text-green-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                      <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M9 19V6l6-6v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z' />
+                    </svg>
+                    Audio File
+                  </h3>
+                  <div>
+                    <label htmlFor='songFile' className='block text-sm font-medium text-gray-300 mb-2'>
+                      Song File <span className='text-red-400'>*</span>
+                    </label>
+                    <div className='relative'>
+                      <input
+                        type='file'
+                        id='songFile'
+                        ref={fileInputRef}
+                        accept='audio/*'
+                        onChange={handleSongFileChange}
+                        className='w-full p-4 bg-black/20 backdrop-blur-sm border-2 border-dashed border-white/20 text-white rounded-xl focus:ring-2 focus:ring-green-500/50 focus:border-green-400/50 file:mr-4 file:py-2 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-500/20 file:text-green-300 hover:file:bg-green-500/30 transition-all duration-200'
+                        required
+                      />
                     </div>
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor='releaseDate'
-                      className='block text-sm font-medium text-[#90EE90] mb-1'>
-                      Release Date:
-                    </label>
-                    <input
-                      type='date'
-                      id='releaseDate'
-                      name='releaseDate'
-                      value={formData.releaseDate}
-                      onChange={handleChange}
-                      className='w-full p-3 bg-[#002200]/50 border border-[#004d00] text-[#90EE90] rounded-md focus:ring-2 focus:ring-[#90EE90]/50 focus:border-[#90EE90]'
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor='coverImage'
-                      className='block text-sm font-medium text-[#90EE90] mb-1'>
-                      Cover Image:
-                    </label>
-                    <input
-                      type='file'
-                      id='coverImage'
-                      ref={imageInputRef}
-                      accept='image/*'
-                      onChange={handleCoverImageChange}
-                      className='w-full p-3 bg-[#002200]/50 border border-[#004d00] text-[#90EE90] rounded-md focus:ring-2 focus:ring-[#90EE90]/50 focus:border-[#90EE90] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#90EE90]/10 file:text-[#90EE90] hover:file:bg-[#90EE90]/20'
-                    />
-                    <p className='mt-1 text-xs text-[#90EE90]/50'>
-                      Upload cover art for your song (optional)
+                    <p className='mt-2 text-xs text-gray-400'>
+                      Upload your song file (MP3, WAV, FLAC, etc.)
                     </p>
                   </div>
 
-                  {coverImage && (
-                    <div className='p-3 bg-[#002200]/30 rounded-md border border-[#004d00] flex items-center space-x-3'>
-                      <div className='w-16 h-16 bg-[#002200] rounded overflow-hidden'>
-                        <img
-                          src={URL.createObjectURL(coverImage)}
-                          alt='Cover preview'
-                          className='w-full h-full object-cover'
+                  {songFile && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className='mt-4 p-4 bg-green-500/10 rounded-xl border border-green-500/20'>
+                      <div className='flex items-center'>
+                        <div className='w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mr-4'>
+                          <svg className='w-6 h-6 text-green-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M9 19V6l6-6v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z' />
+                          </svg>
+                        </div>
+                        <div>
+                          <p className='text-sm font-medium text-white'>{songFile.name}</p>
+                          <p className='text-xs text-gray-400'>
+                            {(songFile.size / (1024 * 1024)).toFixed(2)} MB
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
+
+                {/* Song Metadata Section */}
+                <div className='bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10'>
+                  <h3 className='text-xl font-semibold text-white mb-6 flex items-center'>
+                    <svg className='w-6 h-6 mr-3 text-green-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                      <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' />
+                    </svg>
+                    Song Details
+                  </h3>
+
+                  <div className='space-y-6'>
+                    <div>
+                      <label htmlFor='title' className='block text-sm font-medium text-gray-300 mb-2'>
+                        Song Title <span className='text-red-400'>*</span>
+                      </label>
+                      <input
+                        type='text'
+                        id='title'
+                        name='title'
+                        value={formData.title}
+                        onChange={handleChange}
+                        placeholder='Enter song title'
+                        className='w-full p-4 bg-black/20 backdrop-blur-sm border border-white/20 text-white rounded-xl focus:ring-2 focus:ring-green-500/50 focus:border-green-400/50 placeholder-gray-400 transition-all duration-200'
+                        required
+                      />
+                    </div>
+
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                      <div>
+                        <label htmlFor='genre' className='block text-sm font-medium text-gray-300 mb-2'>
+                          Genre
+                        </label>
+                        <select
+                          id='genre'
+                          name='genre'
+                          value={formData.genre}
+                          onChange={handleChange}
+                          className='w-full p-4 bg-black/20 backdrop-blur-sm border border-white/20 text-white rounded-xl focus:ring-2 focus:ring-green-500/50 focus:border-green-400/50 transition-all duration-200'>
+                          <option value=''>Select a genre</option>
+                          <option value='pop'>Pop</option>
+                          <option value='rock'>Rock</option>
+                          <option value='hip-hop'>Hip-Hop</option>
+                          <option value='r&b'>R&B</option>
+                          <option value='electronic'>Electronic</option>
+                          <option value='jazz'>Jazz</option>
+                          <option value='classical'>Classical</option>
+                          <option value='country'>Country</option>
+                          <option value='folk'>Folk</option>
+                          <option value='metal'>Metal</option>
+                          <option value='indie'>Indie</option>
+                          <option value='other'>Other</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label htmlFor='releaseDate' className='block text-sm font-medium text-gray-300 mb-2'>
+                          Release Date
+                        </label>
+                        <input
+                          type='date'
+                          id='releaseDate'
+                          name='releaseDate'
+                          value={formData.releaseDate}
+                          onChange={handleChange}
+                          className='w-full p-4 bg-black/20 backdrop-blur-sm border border-white/20 text-white rounded-xl focus:ring-2 focus:ring-green-500/50 focus:border-green-400/50 transition-all duration-200'
                         />
                       </div>
-                      <div>
-                        <p className='text-sm font-medium text-[#90EE90]'>
-                          {coverImage.name}
-                        </p>
-                        <p className='text-xs text-[#90EE90]/50'>
-                          Size: {(coverImage.size / (1024 * 1024)).toFixed(2)}{' '}
-                          MB
-                        </p>
-                      </div>
                     </div>
-                  )}
 
-                  <div>
-                    <label
-                      htmlFor='description'
-                      className='block text-sm font-medium text-[#90EE90] mb-1'>
-                      Description:
-                    </label>
-                    <textarea
-                      id='description'
-                      name='description'
-                      value={formData.description}
-                      onChange={handleChange}
-                      rows='4'
-                      placeholder='Describe the song and collaboration...'
-                      className='w-full p-3 bg-[#002200]/50 border border-[#004d00] text-[#90EE90] rounded-md focus:ring-2 focus:ring-[#90EE90]/50 focus:border-[#90EE90] placeholder-[#90EE90]/30'
-                    />
+                    <div>
+                      <label htmlFor='coverImage' className='block text-sm font-medium text-gray-300 mb-2'>
+                        Cover Art
+                      </label>
+                      <input
+                        type='file'
+                        id='coverImage'
+                        ref={imageInputRef}
+                        accept='image/*'
+                        onChange={handleCoverImageChange}
+                        className='w-full p-4 bg-black/20 backdrop-blur-sm border-2 border-dashed border-white/20 text-white rounded-xl focus:ring-2 focus:ring-green-500/50 focus:border-green-400/50 file:mr-4 file:py-2 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-500/20 file:text-green-300 hover:file:bg-green-500/30 transition-all duration-200'
+                      />
+                      <p className='mt-2 text-xs text-gray-400'>
+                        Upload cover art for your song (optional)
+                      </p>
+                    </div>
+
+                    {coverImage && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className='p-4 bg-white/5 rounded-xl border border-white/10 flex items-center space-x-4'>
+                        <div className='w-16 h-16 bg-black/20 rounded-xl overflow-hidden'>
+                          <img
+                            src={URL.createObjectURL(coverImage)}
+                            alt='Cover preview'
+                            className='w-full h-full object-cover'
+                          />
+                        </div>
+                        <div>
+                          <p className='text-sm font-medium text-white'>{coverImage.name}</p>
+                          <p className='text-xs text-gray-400'>
+                            {(coverImage.size / (1024 * 1024)).toFixed(2)} MB
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+
+                    <div>
+                      <label htmlFor='description' className='block text-sm font-medium text-gray-300 mb-2'>
+                        Description
+                      </label>
+                      <textarea
+                        id='description'
+                        name='description'
+                        value={formData.description}
+                        onChange={handleChange}
+                        rows='4'
+                        placeholder='Describe the song and collaboration...'
+                        className='w-full p-4 bg-black/20 backdrop-blur-sm border border-white/20 text-white rounded-xl focus:ring-2 focus:ring-green-500/50 focus:border-green-400/50 placeholder-gray-400 resize-none transition-all duration-200'
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className='p-4 bg-[#002200]/30 rounded-md border border-[#004d00]'>
-                <div className='flex items-center space-x-2'>
-                  <span className='text-sm font-medium text-[#90EE90]'>
-                    Current Wallet Address:
-                  </span>
-                  <code className='bg-[#002200] p-1 rounded text-sm text-[#90EE90]/70'>
-                    {address || 'Not connected'}
-                  </code>
-                </div>
-                <p className='mt-1 text-xs text-[#90EE90]/50'>
-                  Note: The transaction must be sent from one of the artist
-                  addresses or by an authorized address
-                </p>
-              </div>
-
-              <div className='mt-6'>
-                <button
-                  type='submit'
-                  disabled={isLoading}
-                  className={`w-full py-3 px-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-medium rounded-md shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#90EE90]/50 ${
-                    isLoading ? 'opacity-70 cursor-not-allowed' : ''
-                  }`}>
-                  {isLoading ? (
-                    <div className='flex items-center justify-center'>
-                      <div className='w-5 h-5 border-2 border-t-current border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin mr-2'></div>
-                      Submitting...
+                {/* Wallet Info Section */}
+                <div className='bg-gray-800/20 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/30'>
+                  <div className='flex items-center justify-between'>
+                    <div className='flex items-center space-x-3'>
+                      <div className='w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center'>
+                        <svg className='w-5 h-5 text-green-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                          <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z' />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className='text-sm font-medium text-white'>Connected Wallet</p>
+                        <code className='text-xs text-gray-400 font-mono'>
+                          {address ? `${address.slice(0, 8)}...${address.slice(-6)}` : 'Not connected'}
+                        </code>
+                      </div>
                     </div>
-                  ) : (
-                    'Submit Collaboration'
-                  )}
-                </button>
-              </div>
-            </form>
+                    <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      address ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'
+                    }`}>
+                      {address ? 'Connected' : 'Disconnected'}
+                    </div>
+                  </div>
+                  <p className='mt-3 text-xs text-gray-400'>
+                    The transaction must be sent from one of the artist addresses or by an authorized address
+                  </p>
+                </div>
+
+                {/* Submit Button */}
+                <div className='pt-4'>
+                  <motion.button
+                    type='submit'
+                    disabled={isLoading}
+                    whileHover={{ scale: isLoading ? 1 : 1.02 }}
+                    whileTap={{ scale: isLoading ? 1 : 0.98 }}
+                    className={`w-full py-4 px-6 bg-gradient-to-r from-green-600 via-green-500 to-green-600 hover:from-green-500 hover:via-green-400 hover:to-green-500 text-white font-semibold rounded-2xl shadow-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:ring-offset-2 focus:ring-offset-transparent ${
+                      isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:shadow-green-500/25'
+                    }`}>
+                    {isLoading ? (
+                      <div className='flex items-center justify-center'>
+                        <div className='w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-3'></div>
+                        Creating Collaboration...
+                      </div>
+                    ) : (
+                      <div className='flex items-center justify-center'>
+                        <svg className='w-5 h-5 mr-3' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                          <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M12 4v16m8-8H4' />
+                        </svg>
+                        Create Collaboration
+                      </div>
+                    )}
+                  </motion.button>
+                </div>
+              </form>
+            </div>
           </motion.div>
         </div>
       </div>

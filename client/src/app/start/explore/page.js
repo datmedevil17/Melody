@@ -127,6 +127,34 @@ const Explore = () => {
     fetchArtists()
   }, [])
 
+    const MusicBars = ({ size = 'sm', className = '' }) => (
+    <div className={`flex items-end space-x-0.5 ${className}`}>
+      {[1, 2, 3, 4].map((i) => (
+        <motion.div
+          key={i}
+          className={`bg-emerald-400 rounded-full ${
+            size === 'lg' ? 'w-1 h-6' : 'w-0.5 h-3'
+          }`}
+          animate={{
+            height: [
+              size === 'lg' ? '12px' : '6px',
+              size === 'lg' ? '24px' : '12px',
+              size === 'lg' ? '12px' : '6px',
+            ],
+          }}
+          transition={{
+            duration: 0.6 + i * 0.1,
+            repeat: Infinity,
+            repeatType: 'reverse',
+          }}
+        />
+      ))}
+    </div>
+  )
+  
+
+  
+
   // Format likes count for display
   const formatLikes = (count) => {
     if (!count) return '0'
@@ -139,14 +167,20 @@ const Explore = () => {
   }
 
   // Loading component for consistent loader display
-  const LoadingSection = () => (
-    <div className='flex justify-center items-center py-20'>
+   const LoadingSection = () => (
+    <div className='flex justify-center items-center py-16'>
       <div className='flex flex-col items-center'>
-        <div className='w-12 h-12 border-4 border-t-[#90EE90] border-[#004d00]/30 rounded-full animate-spin'></div>
-        <p className='mt-4 text-[#90EE90]/70 text-sm'>Loading content...</p>
+        <div className='relative'>
+          <div className='w-8 h-8 border-2 border-emerald-400/30 rounded-full'></div>
+          <div className='absolute top-0 left-0 w-8 h-8 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin'></div>
+        </div>
+        <p className='mt-3 text-emerald-400/70 text-sm font-medium'>Loading...</p>
       </div>
     </div>
   )
+
+
+
 
   return (
     <div className='min-h-screen bg-black text-white'>
@@ -193,66 +227,76 @@ const Explore = () => {
         ))}
       </div>
 
-      <div className='relative z-10 py-10 px-4 sm:px-6'>
-        <div className='max-w-7xl mx-auto'>
-          <h1
-            className='text-4xl font-bold mb-8 text-center text-[#90EE90]'
-            style={{ fontFamily: "'Audiowide', cursive" }}>
-            Explore Music
-          </h1>
+      <div className='relative '>
+        {/* Header */}
+        <div className='sticky top-0 bg-black/80 backdrop-blur-xl border-b border-emerald-900/30 z-20'>
+          <div className='max-w-7xl mx-auto px-6 py-4'>
+            <h1 className='text-3xl font-bold text-white tracking-tight'>
+              Explore
+            </h1>
+          </div>
+        </div>
 
+        <div className='max-w-7xl mx-auto px-6 py-8 space-y-12'>
           {/* Featured Artists Section */}
-          <section className='mb-12'>
-            <div className='flex justify-between items-center mb-6'>
-              <h2 className='text-2xl font-bold text-[#90EE90]'>
-                Featured Artists
-              </h2>
-              <button className='text-[#90EE90]/70 hover:text-[#90EE90] transition-colors'>
-                View All
+          <section>
+            <div className='flex items-center justify-between mb-6'>
+              <h2 className='text-2xl font-bold text-white'>Featured Artists</h2>
+              <button className='text-emerald-400 hover:text-emerald-300 transition-colors text-sm font-medium'>
+                See All
               </button>
             </div>
 
             {artistsLoading ? (
               <LoadingSection />
             ) : artists.length === 0 ? (
-              <div className='text-center py-12 text-[#90EE90]/70'>
-                No artists found at the moment
+              <div className='text-center py-16 text-gray-500'>
+                <div className='w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800 flex items-center justify-center'>
+                  <svg className='w-8 h-8' fill='currentColor' viewBox='0 0 24 24'>
+                    <path d='M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z'/>
+                    <path d='M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z'/>
+                  </svg>
+                </div>
+                <p>No artists found</p>
               </div>
             ) : (
-              <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6'>
+              <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4'>
                 {artists.map((artist) => (
                   <motion.div
                     key={artist.id}
-                    className='bg-[#001a00]/50 rounded-xl overflow-hidden border border-[#004d00] transition-all hover:shadow-lg hover:shadow-[#90EE90]/20'
+                    className='group cursor-pointer'
                     onHoverStart={() => setHoveredArtist(artist.id)}
                     onHoverEnd={() => setHoveredArtist(null)}
-                    whileHover={{ y: -5 }}>
-                    <div className='aspect-square relative'>
-                      <img
-                        src={artist.image}
-                        alt={artist.name}
-                        className='w-full h-full object-cover'
-                        onError={(e) => {
-                          e.target.onerror = null
-                          e.target.src =
-                            'https://via.placeholder.com/400x400/002200/90EE90?text=Artist'
-                        }}
-                      />
+                    whileHover={{ y: -2 }}
+                    transition={{ duration: 0.2 }}>
+                    <div className='relative mb-3'>
+                      <div className='aspect-square rounded-full overflow-hidden bg-gray-800 shadow-2xl'>
+                        <img
+                          src={artist.image}
+                          alt={artist.name}
+                          className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
+                          onError={(e) => {
+                            e.target.onerror = null
+                            e.target.src = 'https://via.placeholder.com/200x200/1f2937/10b981?text=Artist'
+                          }}
+                        />
+                      </div>
                       {hoveredArtist === artist.id && (
                         <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          className='absolute inset-0 bg-black/50 flex items-center justify-center'>
-                          <button className='bg-[#90EE90] text-black px-4 py-2 rounded-full font-medium hover:bg-[#90EE90]/90 transition-colors'>
-                            View Profile
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          className='absolute inset-0 flex items-center justify-center bg-black/60 rounded-full'>
+                          <button className='bg-emerald-400 hover:bg-emerald-300 text-black px-4 py-2 rounded-full font-semibold text-sm transition-colors shadow-lg'>
+                            View
                           </button>
                         </motion.div>
                       )}
                     </div>
-                    <div className='p-4'>
-                      <h3 className='font-bold text-lg text-[#90EE90] mb-1'>
+                    <div className='text-center'>
+                      <h3 className='font-semibold text-white group-hover:text-emerald-400 transition-colors truncate'>
                         {artist.name || 'Unknown Artist'}
                       </h3>
+                      <p className='text-sm text-gray-400 mt-1'>Artist</p>
                     </div>
                   </motion.div>
                 ))}
@@ -261,96 +305,63 @@ const Explore = () => {
           </section>
 
           {/* Recently Added Section */}
-          <section className='mb-12'>
-            <div className='flex justify-between items-center mb-6'>
-              <h2 className='text-2xl font-bold text-[#90EE90]'>
-                Recently Added
-              </h2>
-              <button className='text-[#90EE90]/70 hover:text-[#90EE90] transition-colors'>
-                View All
+          <section>
+            <div className='flex items-center justify-between mb-6'>
+              <h2 className='text-2xl font-bold text-white'>Recently Added</h2>
+              <button className='text-emerald-400 hover:text-emerald-300 transition-colors text-sm font-medium'>
+                See All
               </button>
             </div>
 
             {recentSongsLoading ? (
               <LoadingSection />
             ) : recentSongs.length === 0 ? (
-              <div className='text-center py-12 text-[#90EE90]/70'>
-                No recent songs found
+              <div className='text-center py-16 text-gray-500'>
+                <div className='w-16 h-16 mx-auto mb-4 rounded-xl bg-gray-800 flex items-center justify-center'>
+                  <svg className='w-8 h-8' fill='currentColor' viewBox='0 0 24 24'>
+                    <path d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/>
+                  </svg>
+                </div>
+                <p>No recent songs found</p>
               </div>
             ) : (
-              <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6'>
+              <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4'>
                 {recentSongs.map((song) => (
                   <motion.div
                     key={song.id}
-                    className='bg-[#001a00]/50 rounded-xl overflow-hidden border border-[#004d00] transition-all hover:shadow-lg hover:shadow-[#90EE90]/20'
+                    className='group cursor-pointer'
                     onHoverStart={() => setHoveredSong(song.id)}
                     onHoverEnd={() => setHoveredSong(null)}
-                    whileHover={{ y: -5 }}>
-                    <div className='aspect-square relative'>
-                      <img
-                        src={song.image}
-                        alt={song.title}
-                        className='w-full h-full object-cover'
-                        onError={(e) => {
-                          e.target.onerror = null
-                          e.target.src =
-                            'https://via.placeholder.com/400x400/002200/90EE90?text=Song'
-                        }}
-                      />
-                      {/* Playing animation overlay */}
+                    whileHover={{ y: -2 }}
+                    transition={{ duration: 0.2 }}>
+                    <div className='relative mb-3'>
+                      <div className='aspect-square rounded-2xl overflow-hidden bg-gray-800 shadow-2xl'>
+                        <img
+                          src={song.image}
+                          alt={song.title}
+                          className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
+                          onError={(e) => {
+                            e.target.onerror = null
+                            e.target.src = 'https://via.placeholder.com/200x200/1f2937/10b981?text=Song'
+                          }}
+                        />
+                      </div>
+                      
+                      {/* Playing indicator overlay */}
                       {currentlyPlaying === song.id && (
-                        <div className='absolute inset-0 bg-black/40 flex items-center justify-center pointer-events-none'>
-                          <div className='playing-animation flex items-end h-8 space-x-1'>
-                            <motion.span
-                              className='w-1.5 bg-[#90EE90] rounded-sm'
-                              animate={{ height: ['40%', '90%', '40%'] }}
-                              transition={{
-                                duration: 1.2,
-                                repeat: Infinity,
-                                ease: 'easeInOut',
-                              }}
-                            />
-                            <motion.span
-                              className='w-1.5 bg-[#90EE90] rounded-sm'
-                              animate={{ height: ['20%', '100%', '20%'] }}
-                              transition={{
-                                duration: 0.9,
-                                repeat: Infinity,
-                                ease: 'easeInOut',
-                                delay: 0.2,
-                              }}
-                            />
-                            <motion.span
-                              className='w-1.5 bg-[#90EE90] rounded-sm'
-                              animate={{ height: ['60%', '80%', '60%'] }}
-                              transition={{
-                                duration: 1,
-                                repeat: Infinity,
-                                ease: 'easeInOut',
-                                delay: 0.1,
-                              }}
-                            />
-                            <motion.span
-                              className='w-1.5 bg-[#90EE90] rounded-sm'
-                              animate={{ height: ['30%', '70%', '30%'] }}
-                              transition={{
-                                duration: 0.8,
-                                repeat: Infinity,
-                                ease: 'easeInOut',
-                                delay: 0.3,
-                              }}
-                            />
-                          </div>
+                        <div className='absolute inset-0 flex items-center justify-center bg-black/40 rounded-2xl'>
+                          <MusicBars size="lg" />
                         </div>
                       )}
 
-                      {hoveredSong === song.id && (
+                      {/* Hover play button */}
+                      {hoveredSong === song.id && currentlyPlaying !== song.id && (
                         <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          className='absolute inset-0 bg-black/50 flex items-center justify-center'>
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          className='absolute inset-0 flex items-center justify-center bg-black/60 rounded-2xl'>
                           <button
-                            className='bg-[#90EE90] text-black px-4 py-2 rounded-full font-medium hover:bg-[#90EE90]/90 transition-colors flex items-center gap-2'
+                            className='bg-emerald-400 hover:bg-emerald-300 text-black p-3 rounded-full shadow-lg transition-colors'
                             onClick={() =>
                               togglePlayPause(song.url, song.id, {
                                 title: song.title,
@@ -359,87 +370,57 @@ const Explore = () => {
                                 image: song.image,
                               })
                             }>
-                            {currentlyPlaying === song.id && isPlaying ? (
-                              <>
-                                <svg
-                                  className='w-5 h-5'
-                                  viewBox='0 0 24 24'
-                                  fill='currentColor'>
-                                  <path d='M6 19h4V5H6v14zm8-14v14h4V5h-4z' />
-                                </svg>
-                                Pause
-                              </>
-                            ) : (
-                              <>
-                                <svg
-                                  className='w-5 h-5'
-                                  viewBox='0 0 24 24'
-                                  fill='currentColor'>
-                                  <path d='M8 5v14l11-7z' />
-                                </svg>
-                                Play Now
-                              </>
-                            )}
+                            <svg className='w-6 h-6' viewBox='0 0 24 24' fill='currentColor'>
+                              <path d='M8 5v14l11-7z' />
+                            </svg>
+                          </button>
+                        </motion.div>
+                      )}
+
+                      {/* Pause button for currently playing */}
+                      {hoveredSong === song.id && currentlyPlaying === song.id && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          className='absolute inset-0 flex items-center justify-center bg-black/60 rounded-2xl'>
+                          <button
+                            className='bg-emerald-400 hover:bg-emerald-300 text-black p-3 rounded-full shadow-lg transition-colors'
+                            onClick={() =>
+                              togglePlayPause(song.url, song.id, {
+                                title: song.title,
+                                artist: song.artist,
+                                genre: song.genre,
+                                image: song.image,
+                              })
+                            }>
+                            <svg className='w-6 h-6' viewBox='0 0 24 24' fill='currentColor'>
+                              <path d='M6 19h4V5H6v14zm8-14v14h4V5h-4z' />
+                            </svg>
                           </button>
                         </motion.div>
                       )}
                     </div>
-                    <div className='p-4'>
-                      <div className='flex items-center gap-2'>
-                        <h3 className='font-bold text-lg text-[#90EE90] mb-1 truncate'>
+                    
+                    <div>
+                      <div className='flex items-center gap-2 mb-1'>
+                        <h3 className='font-semibold text-white group-hover:text-emerald-400 transition-colors truncate flex-1'>
                           {song.title || 'Untitled'}
                         </h3>
-
-                        {/* Animated icon for currently playing */}
                         {currentlyPlaying === song.id && (
-                          <motion.div
-                            className='flex items-center space-x-0.5 h-4'
-                            initial={{ opacity: 0.7 }}
-                            animate={{ opacity: 1 }}>
-                            <motion.span
-                              className='w-1 h-3 bg-[#90EE90] rounded-sm'
-                              animate={{ height: ['30%', '100%', '30%'] }}
-                              transition={{ duration: 0.8, repeat: Infinity }}
-                            />
-                            <motion.span
-                              className='w-1 h-3 bg-[#90EE90] rounded-sm'
-                              animate={{ height: ['100%', '30%', '100%'] }}
-                              transition={{
-                                duration: 0.8,
-                                repeat: Infinity,
-                                delay: 0.2,
-                              }}
-                            />
-                            <motion.span
-                              className='w-1 h-3 bg-[#90EE90] rounded-sm'
-                              animate={{ height: ['60%', '90%', '60%'] }}
-                              transition={{
-                                duration: 0.8,
-                                repeat: Infinity,
-                                delay: 0.4,
-                              }}
-                            />
-                          </motion.div>
+                          <MusicBars />
                         )}
                       </div>
-                      <p className='text-sm text-[#90EE90]/70 truncate'>
+                      <p className='text-sm text-gray-400 truncate mb-2'>
                         {song.artist || 'Unknown Artist'}
                       </p>
-                      <div className='flex justify-between items-center mt-2'>
-                        <div className='flex items-center text-sm text-[#90EE90]/70'>
-                          <svg
-                            className='w-4 h-4 mr-1'
-                            fill='currentColor'
-                            viewBox='0 0 20 20'>
-                            <path
-                              fillRule='evenodd'
-                              d='M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z'
-                              clipRule='evenodd'
-                            />
+                      <div className='flex items-center justify-between'>
+                        <div className='flex items-center text-xs text-gray-500'>
+                          <svg className='w-3 h-3 mr-1' fill='currentColor' viewBox='0 0 20 20'>
+                            <path fillRule='evenodd' d='M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z' clipRule='evenodd' />
                           </svg>
                           {formatLikes(song.likes)}
                         </div>
-                        <span className='text-xs bg-[#004d00]/30 text-[#90EE90] px-2 py-1 rounded-full'>
+                        <span className='text-xs text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded-full'>
                           {song.genre || 'Other'}
                         </span>
                       </div>
@@ -452,147 +433,106 @@ const Explore = () => {
 
           {/* Today's Hitlist Section */}
           <section>
-            <div className='flex justify-between items-center mb-6'>
-              <h2 className='text-2xl font-bold text-[#90EE90]'>
-                Today's Hitlist
-              </h2>
-              <button className='text-[#90EE90]/70 hover:text-[#90EE90] transition-colors'>
-                View All
+            <div className='flex items-center justify-between mb-6'>
+              <h2 className='text-2xl font-bold text-white'>Today's Hitlist</h2>
+              <button className='text-emerald-400 hover:text-emerald-300 transition-colors text-sm font-medium'>
+                See All
               </button>
             </div>
 
             {hitlistSongsLoading ? (
               <LoadingSection />
             ) : hitlistSongs.length === 0 ? (
-              <div className='text-center py-12 text-[#90EE90]/70 bg-[#001a00]/30 rounded-xl border border-[#004d00]'>
-                No songs in the hitlist yet
+              <div className='text-center py-16 text-gray-500 bg-gray-900/30 rounded-3xl border border-gray-800'>
+                <div className='w-16 h-16 mx-auto mb-4 rounded-xl bg-gray-800 flex items-center justify-center'>
+                  <svg className='w-8 h-8' fill='currentColor' viewBox='0 0 24 24'>
+                    <path d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'/>
+                  </svg>
+                </div>
+                <p>No songs in the hitlist yet</p>
               </div>
             ) : (
-              <div className='bg-[#001a00]/30 rounded-xl border border-[#004d00] overflow-hidden'>
+              <div className='bg-gray-900/40 backdrop-blur-sm rounded-3xl border border-gray-800 overflow-hidden'>
                 {hitlistSongs.map((song, index) => (
                   <motion.div
                     key={song.id}
-                    className='flex items-center p-4 hover:bg-[#001a00]/50 transition-colors group'
-                    whileHover={{ x: 10 }}>
-                    <div className='w-12 text-[#90EE90]/50 font-bold'>
-                      {index + 1}
+                    className='flex items-center p-4 hover:bg-gray-800/50 transition-all duration-200 group border-b border-gray-800/50 last:border-b-0'
+                    whileHover={{ x: 4 }}>
+                    
+                    {/* Rank Number */}
+                    <div className='w-12 flex items-center justify-center'>
+                      {currentlyPlaying === song.id ? (
+                        <MusicBars />
+                      ) : (
+                        <span className='text-2xl font-bold text-emerald-400'>
+                          {index + 1}
+                        </span>
+                      )}
                     </div>
-                    <div className='w-16 h-16 rounded-lg overflow-hidden mr-4 relative'>
+
+                    {/* Album Art */}
+                    <div className='w-14 h-14 rounded-xl overflow-hidden mr-4 relative bg-gray-800 flex-shrink-0'>
                       <img
                         src={song.image}
                         alt={song.title}
                         className='w-full h-full object-cover'
                         onError={(e) => {
                           e.target.onerror = null
-                          e.target.src =
-                            'https://via.placeholder.com/400x400/002200/90EE90?text=Song'
+                          e.target.src = 'https://via.placeholder.com/56x56/1f2937/10b981?text=♪'
                         }}
                       />
-
-                      {/* Playing animation overlay for hitlist */}
                       {currentlyPlaying === song.id && (
-                        <div className='absolute inset-0 flex items-center justify-center bg-black/40'>
-                          <motion.div
-                            className='flex items-center justify-center'
-                            animate={{ scale: [1, 1.1, 1] }}
-                            transition={{ duration: 1.5, repeat: Infinity }}>
-                            <svg
-                              className='w-8 h-8 text-[#90EE90]'
-                              viewBox='0 0 24 24'
-                              fill='currentColor'>
-                              <path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z' />
-                            </svg>
-                          </motion.div>
+                        <div className='absolute inset-0 bg-black/40 flex items-center justify-center'>
+                          <div className='w-6 h-6 bg-emerald-400 rounded-full flex items-center justify-center'>
+                            <div className='w-2 h-2 bg-black rounded-full'></div>
+                          </div>
                         </div>
                       )}
                     </div>
-                    <div className='flex-1'>
-                      <div className='flex items-center gap-2'>
-                        <h3 className='font-bold text-[#90EE90] group-hover:text-[#90EE90]/90 transition-colors'>
-                          {song.title || 'Untitled'}
-                        </h3>
 
-                        {/* Animated soundwave for currently playing in list view */}
-                        {currentlyPlaying === song.id && (
-                          <div className='flex items-center h-3 space-x-0.5 ml-2'>
-                            {[1, 2, 3, 4, 5].map((i) => (
-                              <motion.span
-                                key={i}
-                                className='w-0.5 bg-[#90EE90] rounded-full'
-                                animate={{
-                                  height: [
-                                    `${Math.floor(Math.random() * 40) + 30}%`,
-                                    `${Math.floor(Math.random() * 70) + 70}%`,
-                                    `${Math.floor(Math.random() * 40) + 30}%`,
-                                  ],
-                                }}
-                                transition={{
-                                  duration: 0.6 + i * 0.1,
-                                  repeat: Infinity,
-                                  repeatType: 'reverse',
-                                }}
-                              />
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      <p className='text-sm text-[#90EE90]/70'>
+                    {/* Song Info */}
+                    <div className='flex-1 min-w-0 mr-4'>
+                      <h3 className='font-semibold text-white group-hover:text-emerald-400 transition-colors truncate'>
+                        {song.title || 'Untitled'}
+                      </h3>
+                      <p className='text-sm text-gray-400 truncate'>
                         {song.artist || 'Unknown Artist'}
                       </p>
                     </div>
-                    <div className='flex items-center gap-6'>
-                      <div className='flex items-center text-sm text-[#90EE90]/70'>
-                        <svg
-                          className='w-4 h-4 mr-1'
-                          fill='currentColor'
-                          viewBox='0 0 20 20'>
-                          <path
-                            fillRule='evenodd'
-                            d='M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z'
-                            clipRule='evenodd'
-                          />
-                        </svg>
-                        {formatLikes(song.likes)}
-                      </div>
-                      <button
-                        className={`p-2 transition-all ${
-                          currentlyPlaying === song.id
-                            ? 'text-[#90EE90] opacity-100'
-                            : 'text-[#90EE90]/70 hover:text-[#90EE90] opacity-0 group-hover:opacity-100'
-                        }`}
-                        onClick={() =>
-                          togglePlayPause(song.url, song.id, {
-                            title: song.title,
-                            artist: song.artist,
-                            genre: song.genre,
-                            image: song.image,
-                          })
-                        }>
-                        {currentlyPlaying === song.id && isPlaying ? (
-                          <svg
-                            className='w-5 h-5'
-                            fill='currentColor'
-                            viewBox='0 0 20 20'>
-                            <path
-                              fillRule='evenodd'
-                              d='M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z'
-                              clipRule='evenodd'
-                            />
-                          </svg>
-                        ) : (
-                          <svg
-                            className='w-5 h-5'
-                            fill='currentColor'
-                            viewBox='0 0 20 20'>
-                            <path
-                              fillRule='evenodd'
-                              d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'
-                              clipRule='evenodd'
-                            />
-                          </svg>
-                        )}
-                      </button>
+
+                    {/* Like Count */}
+                    <div className='flex items-center text-sm text-gray-400 mr-6'>
+                      <svg className='w-4 h-4 mr-2' fill='currentColor' viewBox='0 0 20 20'>
+                        <path fillRule='evenodd' d='M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z' clipRule='evenodd' />
+                      </svg>
+                      {formatLikes(song.likes)}
                     </div>
+
+                    {/* Play Button */}
+                    <button
+                      className={`p-2 rounded-full transition-all duration-200 ${
+                        currentlyPlaying === song.id
+                          ? 'text-emerald-400 bg-emerald-400/10'
+                          : 'text-gray-400 hover:text-white hover:bg-gray-700 opacity-0 group-hover:opacity-100'
+                      }`}
+                      onClick={() =>
+                        togglePlayPause(song.url, song.id, {
+                          title: song.title,
+                          artist: song.artist,
+                          genre: song.genre,
+                          image: song.image,
+                        })
+                      }>
+                      {currentlyPlaying === song.id && isPlaying ? (
+                        <svg className='w-5 h-5' fill='currentColor' viewBox='0 0 24 24'>
+                          <path d='M6 19h4V5H6v14zm8-14v14h4V5h-4z' />
+                        </svg>
+                      ) : (
+                        <svg className='w-5 h-5' fill='currentColor' viewBox='0 0 24 24'>
+                          <path d='M8 5v14l11-7z' />
+                        </svg>
+                      )}
+                    </button>
                   </motion.div>
                 ))}
               </div>

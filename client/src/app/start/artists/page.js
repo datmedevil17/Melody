@@ -6,6 +6,8 @@ import {
   songContract,
   userContract,
 } from '../../../contract/contract'
+import { Heart, Play, Calendar, BarChart3, ArrowRight, Star, Music, Clock } from 'lucide-react';
+
 import { num } from 'starknet'
 import { useAccount, useSendTransaction } from '@starknet-react/core'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -277,21 +279,82 @@ const Page = () => {
 
       <div className='relative z-10'>
         {/* Header */}
-        <div className='bg-gradient-to-r from-[#002200]/30 to-[#001a00]/30 py-12 mb-8'>
-          <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-            <h1
-              className='text-4xl font-bold text-[#90EE90] mb-2'
-              style={{ fontFamily: "'Audiowide', cursive" }}>
+       <div className="relative overflow-hidden">
+      {/* Dynamic animated background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-green-900/60 via-emerald-900/40 to-black">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+        
+        {/* Animated orbs */}
+        <div className="absolute top-10 left-20 w-32 h-32 bg-gradient-to-r from-green-500/25 to-emerald-500/20 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute bottom-10 right-20 w-40 h-40 bg-gradient-to-r from-lime-500/20 to-green-500/15 rounded-full blur-2xl animate-pulse" style={{animationDelay: '1s'}}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-gradient-to-r from-emerald-500/15 to-green-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+      </div>
+
+      {/* Glassmorphism overlay */}
+      <div className="relative backdrop-blur-sm bg-black/20 border-b border-green-500/20">
+        <div className="max-w-7xl mx-auto px-6 py-16 lg:py-20">
+          
+          {/* Main content */}
+          <div className="relative z-10">
+            {/* Small label */}
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-500/10 backdrop-blur-md border border-green-400/30 mb-6">
+              <div className="w-2 h-2 bg-gradient-to-r from-lime-400 to-green-400 rounded-full mr-2 animate-pulse"></div>
+              <span className="text-sm font-medium text-green-100 tracking-wide">MUSIC DISCOVERY</span>
+            </div>
+
+            {/* Main heading with gradient text */}
+            <h1 className="text-6xl lg:text-7xl font-black mb-4 bg-gradient-to-r from-white via-green-200 to-lime-200 bg-clip-text text-transparent leading-tight">
               Artists
             </h1>
-            <p className='text-[#90EE90]/70'>
-              Discover amazing musicians from around the world
+
+            {/* Subtitle */}
+            <p className="text-xl text-green-100/80 font-light max-w-2xl leading-relaxed mb-8">
+              Discover amazing musicians from around the world and explore their latest releases
             </p>
+
+            {/* Action buttons */}
+            <div className="flex flex-wrap gap-4">
+              <button className="group px-8 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 rounded-full font-semibold text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-green-500/30">
+                <span className="flex items-center">
+                  Browse All
+                  <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </button>
+              
+              <button className="px-8 py-3 bg-green-500/10 hover:bg-green-500/20 backdrop-blur-md border border-green-400/30 hover:border-green-400/50 rounded-full font-semibold text-green-100 transition-all duration-300 transform hover:scale-105">
+                Featured Artists
+              </button>
+            </div>
+
+            {/* Stats or additional info */}
+            <div className="flex items-center gap-8 mt-12 pt-8 border-t border-green-500/20">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white mb-1">10K+</div>
+                <div className="text-sm text-green-200/70 uppercase tracking-wide">Artists</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white mb-1">50K+</div>
+                <div className="text-sm text-green-200/70 uppercase tracking-wide">Songs</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white mb-1">100+</div>
+                <div className="text-sm text-green-200/70 uppercase tracking-wide">Genres</div>
+              </div>
+            </div>
           </div>
+
+          {/* Decorative elements */}
         </div>
+      </div>
+
+      {/* Bottom fade effect */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-green-400/40 to-transparent"></div>
+    </div>
 
         {/* Content */}
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16'>
           {loading ? (
             <div className='flex justify-center items-center py-20'>
               <div className='flex flex-col items-center'>
@@ -340,134 +403,130 @@ const Page = () => {
               </div>
             </div>
           ) : (
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
-              {artistsData.map((artist) => (
-                <div
-                  key={artist.address}
-                  className='bg-[#001a00]/50 rounded-2xl overflow-hidden border border-[#004d00] backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:shadow-[#90EE90]/20 hover:border-[#90EE90]/50 group'>
-                  <div
-                    className='h-48 overflow-hidden relative cursor-pointer'
-                    onClick={() => openModal(artist)}>
-                    <div className='absolute inset-0 bg-gradient-to-t from-[#001a00] via-transparent to-transparent opacity-70 z-10'></div>
-                    <img
-                      src={
-                        artist.image ||
-                        'https://via.placeholder.com/400x300/1F2937/A78BFA?text=No+Image'
-                      }
-                      alt={artist.name}
-                      className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
-                      onError={(e) => {
-                        e.target.onerror = null
-                        e.target.src =
-                          'https://via.placeholder.com/400x300/1F2937/A78BFA?text=No+Image'
-                      }}
-                    />
-                    {artist.is_self && (
-                      <div className='absolute top-3 left-3 bg-gradient-to-r from-green-600 to-green-700 text-xs font-medium text-white px-2 py-1 rounded-full z-20'>
-                        Your Profile
-                      </div>
-                    )}
-                  </div>
+            <div className="min-h-screen bg-gradient-to-br from-black via-green-950/20 to-black p-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {artistsData.map((artist) => (
+            <div
+              key={artist.address}
+              className="group relative bg-gradient-to-br from-green-900/20 to-black/40 backdrop-blur-xl border border-green-500/20 rounded-3xl overflow-hidden hover:border-green-400/50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-green-500/10"
+            >
+              {/* Image container with play button overlay */}
+              <div
+                className="relative h-56 overflow-hidden cursor-pointer"
+                onClick={() => openModal(artist)}
+              >
+                {/* Background gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-20"></div>
+                
+                {/* Image */}
+                <img
+                  src={artist.image || 'https://via.placeholder.com/400x300/1F2937/A78BFA?text=No+Image'}
+                  alt={artist.name}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://via.placeholder.com/400x300/1F2937/A78BFA?text=No+Image';
+                  }}
+                />
 
-                  <div className='p-5'>
-                    <div className='flex justify-between items-start mb-3'>
-                      <h3
-                        className='text-xl font-bold text-[#90EE90] truncate cursor-pointer hover:text-[#90EE90]/80 transition-colors'
-                        onClick={() => openModal(artist)}>
-                        {artist.name || 'Unknown Artist'}
-                      </h3>
-                      {!artist.is_self &&
-                        (artist.is_favorite ? (
-                          <div className='flex items-center justify-center w-8 h-8 text-[#90EE90]'>
-                            <svg
-                              className='w-5 h-5'
-                              fill='currentColor'
-                              viewBox='0 0 20 20'>
-                              <path
-                                fillRule='evenodd'
-                                d='M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z'
-                                clipRule='evenodd'></path>
-                            </svg>
-                          </div>
-                        ) : (
-                          <button
-                            disabled={favoriteLoading[artist.address]}
-                            onClick={() => handleAddToFavorites(artist.address)}
-                            className='flex items-center justify-center w-8 h-8 rounded-full transition-colors text-[#90EE90]/70 hover:text-[#90EE90]'>
-                            {favoriteLoading[artist.address] ? (
-                              <span className='w-5 h-5 border-2 border-t-current border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin'></span>
-                            ) : (
-                              <svg
-                                className='w-5 h-5'
-                                fill='none'
-                                stroke='currentColor'
-                                viewBox='0 0 24 24'>
-                                <path
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth='2'
-                                  d='M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'></path>
-                              </svg>
-                            )}
-                          </button>
-                        ))}
-                    </div>
-
-                    <div className='space-y-2 mb-4'>
-                      <div className='flex items-center text-sm'>
-                        <svg
-                          className='w-4 h-4 text-[#90EE90] mr-2'
-                          fill='none'
-                          stroke='currentColor'
-                          viewBox='0 0 24 24'>
-                          <path
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                            strokeWidth='2'
-                            d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'></path>
-                        </svg>
-                        <span className='text-[#90EE90]/70'>
-                          {artist.song_count} songs
-                        </span>
-                      </div>
-                      <div className='flex items-center text-sm'>
-                        <svg
-                          className='w-4 h-4 text-[#90EE90] mr-2'
-                          fill='none'
-                          stroke='currentColor'
-                          viewBox='0 0 24 24'>
-                          <path
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                            strokeWidth='2'
-                            d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'></path>
-                        </svg>
-                        <span className='text-[#90EE90]/70'>
-                          Last upload: {truncateText(artist.last_upload, 20)}
-                        </span>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => openModal(artist)}
-                      className='w-full py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center'>
-                      <svg
-                        className='w-5 h-5 mr-2'
-                        fill='none'
-                        stroke='currentColor'
-                        viewBox='0 0 24 24'>
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth='2'
-                          d='M9 5l7 7-7 7'></path>
-                      </svg>
-                      View Songs
-                    </button>
+                {/* Play button overlay */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-30">
+                  <div className="w-16 h-16 bg-green-500/90 backdrop-blur-sm rounded-full flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-300 hover:bg-green-400">
+                    <Play className="w-7 h-7 text-white ml-1" fill="currentColor" />
                   </div>
                 </div>
-              ))}
+
+                {/* Profile badge */}
+                {artist.is_self && (
+                  <div className="absolute top-4 left-4 bg-gradient-to-r from-green-500 to-emerald-500 text-xs font-semibold text-white px-3 py-1.5 rounded-full z-30 backdrop-blur-sm border border-green-400/30">
+                    <Star className="w-3 h-3 inline mr-1" />
+                    Your Profile
+                  </div>
+                )}
+
+                {/* Genre tag */}
+                <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-xs font-medium text-green-200 px-2 py-1 rounded-full z-30 border border-green-500/30">
+                  {artist.genre}
+                </div>
+
+                {/* Favorite button */}
+                {!artist.is_self && (
+                  <div className="absolute bottom-4 right-4 z-30">
+                    {artist.is_favorite ? (
+                      <div className="w-10 h-10 bg-green-500/90 backdrop-blur-sm rounded-full flex items-center justify-center border border-green-400/50">
+                        <Heart className="w-5 h-5 text-white" fill="currentColor" />
+                      </div>
+                    ) : (
+                      <button
+                        disabled={favoriteLoading[artist.address]}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToFavorites(artist.address);
+                        }}
+                        className="w-10 h-10 bg-black/60 hover:bg-green-500/90 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300 border border-green-500/30 hover:border-green-400/50 hover:scale-110"
+                      >
+                        {favoriteLoading[artist.address] ? (
+                          <div className="w-5 h-5 border-2 border-green-400 border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+                          <Heart className="w-5 h-5 text-green-200 hover:text-white transition-colors" />
+                        )}
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Content */}
+              <div className="p-6">
+                {/* Artist name and plays */}
+                <div className="mb-4">
+                  <h3
+                    className="text-xl font-bold text-white mb-1 cursor-pointer hover:text-green-200 transition-colors duration-200 truncate"
+                    onClick={() => openModal(artist)}
+                  >
+                    {artist.name || 'Unknown Artist'}
+                  </h3>
+                  <p className="text-green-200/60 text-sm font-medium">
+                    {artist.plays} plays
+                  </p>
+                </div>
+
+                {/* Stats */}
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center text-green-200/70">
+                      <Music className="w-4 h-4 mr-2 text-green-400" />
+                      <span>{artist.song_count} tracks</span>
+                    </div>
+                    <div className="text-green-200/50 text-xs">
+                      #{Math.floor(Math.random() * 1000) + 1}
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center text-sm text-green-200/70">
+                    <Clock className="w-4 h-4 mr-2 text-green-400" />
+                    <span>Last upload: {truncateText(artist.last_upload, 20)}</span>
+                  </div>
+                </div>
+
+                {/* Action button */}
+                <button
+                  onClick={() => openModal(artist)}
+                  className="w-full py-3 bg-gradient-to-r from-green-600/80 to-emerald-600/80 hover:from-green-500 hover:to-emerald-500 backdrop-blur-sm border border-green-500/30 hover:border-green-400/50 text-white rounded-2xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-green-500/20 flex items-center justify-center font-semibold"
+                >
+                  <span>Explore Music</span>
+                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
+                </button>
+              </div>
+
+              {/* Subtle glow effect */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-green-500/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
             </div>
+          ))}
+        </div>
+      </div>
+    </div>
           )}
         </div>
       </div>
