@@ -1,5 +1,14 @@
-use super::errors::TokenErrors;
+// errors.rs
+pub mod Errors {
+    pub const ZERO_ADDRESS: felt252 = 'Zero address not allowed';
+    pub const INSUFFICIENT_BALANCE: felt252 = 'Insufficient balance';
+    pub const INSUFFICIENT_ALLOWANCE: felt252 = 'Insufficient allowance';
+    pub const UNAUTHORIZED: felt252 = 'Unauthorized caller';
+    pub const INVALID_AMOUNT: felt252 = 'Invalid amount';
+}
 
+use starknet::ContractAddress;
+use Errors as TokenErrors;
 
 #[starknet::interface]
 trait IMelodyToken<TContractState> {
@@ -8,33 +17,25 @@ trait IMelodyToken<TContractState> {
     fn symbol(self: @TContractState) -> felt252;
     fn decimals(self: @TContractState) -> u8;
     fn total_supply(self: @TContractState) -> u256;
-    fn balance_of(self: @TContractState, account: starknet::ContractAddress) -> u256;
-    fn allowance(
-        self: @TContractState, owner: starknet::ContractAddress, spender: starknet::ContractAddress,
-    ) -> u256;
-    fn transfer(
-        ref self: TContractState, recipient: starknet::ContractAddress, amount: u256,
-    ) -> bool;
+    fn balance_of(self: @TContractState, account: ContractAddress) -> u256;
+    fn allowance(self: @TContractState, owner: ContractAddress, spender: ContractAddress) -> u256;
+    fn transfer(ref self: TContractState, recipient: ContractAddress, amount: u256) -> bool;
     fn transfer_from(
         ref self: TContractState,
-        sender: starknet::ContractAddress,
-        recipient: starknet::ContractAddress,
+        sender: ContractAddress,
+        recipient: ContractAddress,
         amount: u256,
     ) -> bool;
-    fn approve(ref self: TContractState, spender: starknet::ContractAddress, amount: u256) -> bool;
+    fn approve(ref self: TContractState, spender: ContractAddress, amount: u256) -> bool;
 
     // Custom Melody platform functions
-    fn mint_to_user(
-        ref self: TContractState, user_address: starknet::ContractAddress, amount: u256,
-    );
-    fn burn_for_tipping(
-        ref self: TContractState, user_address: starknet::ContractAddress, amount: u256,
-    );
+    fn mint_to_user(ref self: TContractState, user_address: ContractAddress, amount: u256);
+    fn burn_for_tipping(ref self: TContractState, user_address: ContractAddress, amount: u256);
     fn get_listen_reward_rate(self: @TContractState) -> u256;
     fn set_listen_reward_rate(ref self: TContractState, new_rate: u256);
-    fn get_admin(self: @TContractState) -> starknet::ContractAddress;
+    fn get_admin(self: @TContractState) -> ContractAddress;
+    fn set_platform_contract(ref self: TContractState, new_platform: ContractAddress);
 }
-
 
 #[starknet::contract]
 mod MelodyToken {
@@ -112,15 +113,14 @@ mod MelodyToken {
         platform_contract: ContractAddress,
         initial_reward_rate: u256,
     ) {
-        assert(!admin.is_zero(), TokenErrors::ZERO_ADDRESS);
         assert(admin.is_non_zero(), TokenErrors::ZERO_ADDRESS);
         assert(platform_contract.is_non_zero(), TokenErrors::ZERO_ADDRESS);
 
         // Initialize token details
         self.name.write(name);
         self.symbol.write(symbol);
-        self.decimals.write(18_u8); // Standard for most tokens
-        self.total_supply.write(0_u256); // Start with zero supply
+        self.decimals.write(18_u8);
+        self.total_supply.write(0_u256);
 
         // Set admin and platform contract
         self.admin.write(admin);
@@ -130,7 +130,6 @@ mod MelodyToken {
 
     #[abi(embed_v0)]
     impl MelodyTokenImpl of IMelodyToken<ContractState> {
-        // ERC20 standard functions
         fn name(self: @ContractState) -> felt252 {
             self.name.read()
         }
@@ -151,9 +150,7 @@ mod MelodyToken {
             self.balances.read(account)
         }
 
-        fn allowance(
-            self: @ContractState, owner: ContractAddress, spender: ContractAddress,
-        ) -> u256 {
+        fn allowance(self: @ContractState, owner: ContractAddress, spender: ContractAddress) -> u256 {
             self.allowances.read((owner, spender))
         }
 
@@ -170,58 +167,45 @@ mod MelodyToken {
             amount: u256,
         ) -> bool {
             let caller = get_caller_address();
-
-            // Check allowance
             let current_allowance = self.allowances.read((sender, caller));
             assert(current_allowance >= amount, TokenErrors::INSUFFICIENT_ALLOWANCE);
 
-            // Update allowance
             self.allowances.write((sender, caller), current_allowance - amount);
-
-            // Transfer tokens
             self._transfer(sender, recipient, amount);
             true
         }
 
         fn approve(ref self: ContractState, spender: ContractAddress, amount: u256) -> bool {
             let owner = get_caller_address();
-
-            // Update allowance
             self.allowances.write((owner, spender), amount);
-
-            // Emit approval event
             self.emit(Approval { owner, spender, value: amount });
             true
         }
 
-        // Custom Melody platform functions
         fn mint_to_user(ref self: ContractState, user_address: ContractAddress, amount: u256) {
-            // Only platform contract or admin can mint tokens
-            let caller = get_caller_address();
-            let admin = self.admin.read();
-            let platform = self.platform_contract.read();
 
-            assert(caller == admin || caller == platform, TokenErrors::UNAUTHORIZED);
+            // Only platform contract can mint tokens (removed admin authorization)
             assert(user_address.is_non_zero(), TokenErrors::ZERO_ADDRESS);
             assert(amount > 0_u256, TokenErrors::INVALID_AMOUNT);
 
-            // Mint tokens
             let balance = self.balances.read(user_address);
             self.balances.write(user_address, balance + amount);
 
-            // Update total supply
             let supply = self.total_supply.read();
             self.total_supply.write(supply + amount);
 
-            // Emit transfer event (from zero address for minting)
-            self.emit(Transfer { from: 0.try_into().unwrap(), to: user_address, value: amount });
-
-            // Emit custom minting event
+            // Use zero address for minting (from address in Transfer event)
+            let zero_address: ContractAddress = 0_felt252.try_into().unwrap();
+            
+            self.emit(Transfer { 
+                from: zero_address, 
+                to: user_address, 
+                value: amount 
+            });
             self.emit(TokensMinted { to: user_address, amount });
         }
 
         fn burn_for_tipping(ref self: ContractState, user_address: ContractAddress, amount: u256) {
-            // Only platform contract or admin can burn tokens
             let caller = get_caller_address();
             let admin = self.admin.read();
             let platform = self.platform_contract.read();
@@ -229,21 +213,22 @@ mod MelodyToken {
             assert(caller == admin || caller == platform, TokenErrors::UNAUTHORIZED);
             assert(amount > 0_u256, TokenErrors::INVALID_AMOUNT);
 
-            // Check if user has enough tokens
             let balance = self.balances.read(user_address);
             assert(balance >= amount, TokenErrors::INSUFFICIENT_BALANCE);
 
-            // Burn tokens
             self.balances.write(user_address, balance - amount);
 
-            // Update total supply
             let supply = self.total_supply.read();
             self.total_supply.write(supply - amount);
 
-            // Emit transfer event (to zero address for burning)
-            self.emit(Transfer { from: user_address, to: 0.try_into().unwrap(), value: amount });
+            // Use zero address for burning (to address in Transfer event)
+            let zero_address: ContractAddress = 0_felt252.try_into().unwrap();
 
-            // Emit custom burning event
+            self.emit(Transfer { 
+                from: user_address, 
+                to: zero_address, 
+                value: amount 
+            });
             self.emit(TokensBurned { from: user_address, amount });
         }
 
@@ -252,47 +237,44 @@ mod MelodyToken {
         }
 
         fn set_listen_reward_rate(ref self: ContractState, new_rate: u256) {
-            // Only admin can change reward rate
             let caller = get_caller_address();
             let admin = self.admin.read();
-
             assert(caller == admin, TokenErrors::UNAUTHORIZED);
 
             let old_rate = self.listen_reward_rate.read();
             self.listen_reward_rate.write(new_rate);
-
-            // Emit event
             self.emit(RewardRateUpdated { old_rate, new_rate });
         }
 
         fn get_admin(self: @ContractState) -> ContractAddress {
             self.admin.read()
         }
+
+        fn set_platform_contract(ref self: ContractState, new_platform: ContractAddress) {
+            let caller = get_caller_address();
+            let admin = self.admin.read();
+            assert(caller == admin, TokenErrors::UNAUTHORIZED);
+            assert(new_platform.is_non_zero(), TokenErrors::ZERO_ADDRESS);
+            
+            self.platform_contract.write(new_platform);
+        }
     }
 
-    // Internal functions
     #[generate_trait]
     impl InternalFunctions of InternalTrait {
-        fn _transfer(
-            ref self: ContractState, from: ContractAddress, to: ContractAddress, amount: u256,
-        ) {
-            // Validate addresses
+        fn _transfer(ref self: ContractState, from: ContractAddress, to: ContractAddress, amount: u256) {
             assert(from.is_non_zero(), TokenErrors::ZERO_ADDRESS);
             assert(to.is_non_zero(), TokenErrors::ZERO_ADDRESS);
             assert(amount > 0_u256, TokenErrors::INVALID_AMOUNT);
 
-            // Check balance
             let from_balance = self.balances.read(from);
             assert(from_balance >= amount, TokenErrors::INSUFFICIENT_BALANCE);
 
-            // Update balances
             self.balances.write(from, from_balance - amount);
             let to_balance = self.balances.read(to);
             self.balances.write(to, to_balance + amount);
 
-            // Emit transfer event
             self.emit(Transfer { from, to, value: amount });
         }
     }
 }
-
