@@ -101,7 +101,6 @@ const BottomBarMusicPlayer = () => {
     audio.addEventListener("error", (e) => {
       console.error("Audio error:", e);
       setIsAudioLoading(false);
-      setIsPlaying(false);
     });
 
     return () => {
@@ -130,13 +129,15 @@ const BottomBarMusicPlayer = () => {
     if (!audio) return;
     try {
       const playPromise = audio.play();
+      console.log("Playing audio:", audioSrc);
       if (playPromise !== undefined) {
         await playPromise;
         startProgressTimer();
       }
-    } catch (error) {
-      console.error("Error playing audio:", error);
-      setIsPlaying(false);
+    } catch (e) {
+      console.log(e);
+      // console.error("Error playing audio:", error);
+      // setIsPlaying(false);
     }
   };
 
@@ -178,7 +179,7 @@ const BottomBarMusicPlayer = () => {
     if (collapseTimeout.current) clearTimeout(collapseTimeout.current);
     collapseTimeout.current = setTimeout(() => {
       setIsExpanded(false);
-    }, 5000);
+    }, 10000);
   };
 
   return (

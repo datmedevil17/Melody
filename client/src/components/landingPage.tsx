@@ -61,16 +61,7 @@ const LandingHero = () => {
             {/* Menu Button (top-right) */}
             
 
-            {/* Logo (top-left) */}
-            <div className="absolute top-6 left-6 text-xl font-semibold flex items-center gap-2">
-                {/* Uncomment the image below if you have a logo */}
-                {/* <img
-                    src="/logo.svg"
-                    alt="Melody"
-                    className="h-6 w-6"
-                /> */}
-                <span>Melody</span>
-            </div>
+            
         </section>
     );
 };

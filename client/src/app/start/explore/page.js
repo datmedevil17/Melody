@@ -366,14 +366,14 @@ const Explore = () => {
                       </div>
                       
                       {/* Playing indicator overlay */}
-                      {currentlyPlaying === song.id && (
+                      {currentlyPlaying === song.id && isPlaying && (
                         <div className='absolute inset-0 flex items-center justify-center bg-black/40 rounded-2xl'>
                           <MusicBars size="lg" />
                         </div>
                       )}
 
                       {/* Hover play button */}
-                      {hoveredSong === song.id && currentlyPlaying !== song.id && (
+                      {hoveredSong === song.id && !isPlaying && (
                         <motion.div
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
@@ -396,7 +396,7 @@ const Explore = () => {
                       )}
 
                       {/* Pause button for currently playing */}
-                      {hoveredSong === song.id && currentlyPlaying === song.id && (
+                      {hoveredSong === song.id && isPlaying && (
                         <motion.div
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
@@ -479,7 +479,7 @@ const Explore = () => {
                     
                     {/* Rank Number */}
                     <div className='w-12 flex items-center justify-center'>
-                      {currentlyPlaying === song.id ? (
+                      {currentlyPlaying === song.id && isPlaying ? (
                         <MusicBars />
                       ) : (
                         <span className='text-2xl font-bold text-emerald-400'>

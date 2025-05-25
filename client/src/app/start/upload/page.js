@@ -35,7 +35,7 @@ const UploadSong = () => {
   const [windowDimensions, setWindowDimensions] = useState({ width: 1200, height: 800 })
     // Handle window dimensions safely
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' ) {
       const updateDimensions = () => {
         setWindowDimensions({
           width: window.innerWidth,
@@ -244,31 +244,6 @@ const UploadSong = () => {
         ))}
         
         {/* Music notes - more refined */}
-        {Array.from({ length: 8 }).map((_, i) => (
-          <motion.div
-            key={`note-${i}`}
-            initial={{
-              opacity: 0,
-              x: Math.random() * window.innerWidth,
-              y: window.innerHeight + 50,
-            }}
-            animate={{
-              opacity: [0, 0.4, 0],
-              x: Math.random() * window.innerWidth,
-              y: -50,
-              rotate: 360,
-            }}
-            transition={{
-              duration: Math.random() * 15 + 10,
-              repeat: Infinity,
-              ease: 'linear',
-              delay: Math.random() * 5,
-            }}
-            className='absolute text-green-400/30 text-2xl font-light'
-          >
-            {['♪', '♫', '♬'][Math.floor(Math.random() * 3)]}
-          </motion.div>
-        ))}
       </div>
 
       <div className='relative z-10'>

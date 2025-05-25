@@ -1,12 +1,13 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import { Home, Search, Music, User, Menu, X, ChevronDown } from 'lucide-react';
-
+import { usePathname } from 'next/navigation';
 import WalletConnectorModal from './WalletConnectorModal';
+
 import Link from 'next/link';
 
 export default function Navbar() {
-  const [pathname, setPathname] = useState("/start/artists");
+    const pathname = usePathname(); // Assuming usePathname is a custom hook to get the current path
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -19,8 +20,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Don't render Navbar on the home page
-  if (pathname === "/") return null;
 
   const navItems = [
     { label: "Home", href: "/start", icon: Home },
@@ -31,8 +30,6 @@ export default function Navbar() {
   ];
 
   const handleNavClick = (href) => {
-    setPathname(href);
-    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -90,7 +87,7 @@ export default function Navbar() {
             {/* Right section */}
             <div className="flex items-center gap-4">
               {/* Search bar - desktop only */}
-              <div className="hidden lg:flex items-center">
+              {/* <div className="hidden lg:flex items-center">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
@@ -99,7 +96,7 @@ export default function Navbar() {
                     className="bg-gray-800 border border-gray-700 rounded-full pl-10 pr-4 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-gray-500 focus:bg-gray-700 transition-all duration-200 w-64"
                   />
                 </div>
-              </div>
+              </div> */}
 
               {/* Wallet Connector */}
               <WalletConnectorModal />

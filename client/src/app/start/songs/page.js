@@ -88,7 +88,7 @@ const Songs = () => {
 
           songs.push({
             ...song,
-            id: i,
+            id: parseInt(i),
             metadata: {
               ...song.metadata,
               title: decimalToAscii(song.metadata.title),
