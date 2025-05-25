@@ -1,4 +1,5 @@
-import CollabSongForm from "../../components/CollabSongForm"
+'use client'
+import CollabSongForm from "../../../components/CollabSongForm"
 
 
 const page = () => {

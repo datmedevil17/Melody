@@ -1,5 +1,5 @@
 'use client'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useSendTransaction, useAccount } from '@starknet-react/core'
 import { uploadToIpfs } from '../contract/pinata'
 import { num } from 'starknet'
@@ -9,6 +9,7 @@ import Link from 'next/link'
 
 const CollabSongForm = () => {
   const [isLoading, setIsLoading] = useState(false)
+  const [windowDimensions, setWindowDimensions] = useState({ width: 1200, height: 800 })
 
   const [formData, setFormData] = useState({
     artist2: '',
@@ -29,6 +30,23 @@ const CollabSongForm = () => {
     calls: undefined,
   })
   const { address } = useAccount()
+
+  // Handle window dimensions safely
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const updateDimensions = () => {
+        setWindowDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight
+        })
+      }
+      
+      updateDimensions()
+      window.addEventListener('resize', updateDimensions)
+      
+      return () => window.removeEventListener('resize', updateDimensions)
+    }
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -138,20 +156,20 @@ const CollabSongForm = () => {
             key={`note-${i}`}
             initial={{
               opacity: 0,
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
+              x: Math.random() * windowDimensions.width,
+              y: Math.random() * windowDimensions.height,
             }}
             animate={{
               opacity: [0.3, 0.6, 0.3],
               x: [
-                Math.random() * window.innerWidth,
-                Math.random() * window.innerWidth,
-                Math.random() * window.innerWidth,
+                Math.random() * windowDimensions.width,
+                Math.random() * windowDimensions.width,
+                Math.random() * windowDimensions.width,
               ],
               y: [
-                Math.random() * window.innerHeight,
-                Math.random() * window.innerHeight,
-                Math.random() * window.innerHeight,
+                Math.random() * windowDimensions.height,
+                Math.random() * windowDimensions.height,
+                Math.random() * windowDimensions.height,
               ],
               rotate: [0, 180, 360],
             }}

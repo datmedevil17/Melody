@@ -11,6 +11,24 @@ import { UserContext } from '../../../context/userContextProvider'
 const Explore = () => {
   const [hoveredArtist, setHoveredArtist] = useState(null)
   const [hoveredSong, setHoveredSong] = useState(null)
+  const [windowDimensions, setWindowDimensions] = useState({ width: 1200, height: 800 })
+
+    // Handle window dimensions safely
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const updateDimensions = () => {
+        setWindowDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight
+        })
+      }
+      
+      updateDimensions()
+      window.addEventListener('resize', updateDimensions)
+      
+      return () => window.removeEventListener('resize', updateDimensions)
+    }
+  }, [])
 
   // Add state for fetched data
   const [artists, setArtists] = useState([])
@@ -195,20 +213,20 @@ const Explore = () => {
             key={`note-${i}`}
             initial={{
               opacity: 0,
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
+              x: Math.random() * windowDimensions.innerWidth,
+              y: Math.random() * windowDimensions.innerHeight,
             }}
             animate={{
               opacity: [0.4, 0.7, 0.4],
               x: [
-                Math.random() * window.innerWidth,
-                Math.random() * window.innerWidth,
-                Math.random() * window.innerWidth,
+                Math.random() * windowDimensions.innerWidth,
+                Math.random() * windowDimensions.innerWidth,
+                Math.random() * windowDimensions.innerWidth,
               ],
               y: [
-                Math.random() * window.innerHeight,
-                Math.random() * window.innerHeight,
-                Math.random() * window.innerHeight,
+                Math.random() * windowDimensions.innerHeight,
+                Math.random() * windowDimensions.innerHeight,
+                Math.random() * windowDimensions.innerHeight,
               ],
               rotate: [0, 180, 360],
             }}
@@ -434,7 +452,7 @@ const Explore = () => {
           {/* Today's Hitlist Section */}
           <section>
             <div className='flex items-center justify-between mb-6'>
-              <h2 className='text-2xl font-bold text-white'>Today's Hitlist</h2>
+              <h2 className='text-2xl font-bold text-white'>{`Today's Hitlist`}</h2>
               <button className='text-emerald-400 hover:text-emerald-300 transition-colors text-sm font-medium'>
                 See All
               </button>

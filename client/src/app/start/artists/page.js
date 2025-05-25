@@ -6,7 +6,7 @@ import {
   songContract,
   userContract,
 } from '../../../contract/contract'
-import { Heart, Play, Calendar, BarChart3, ArrowRight, Star, Music, Clock } from 'lucide-react';
+import { Heart, Play, ArrowRight, Star, Music, Clock } from 'lucide-react';
 
 import { num } from 'starknet'
 import { useAccount, useSendTransaction } from '@starknet-react/core'
@@ -27,6 +27,23 @@ const Page = () => {
   const { sendAsync } = useSendTransaction({ calls: [] })
   const { isPlaying, togglePlayPause, currentlyPlaying } =
     useContext(UserContext)
+
+  const [windowDimensions, setWindowDimensions] = useState({ width: 1200, height: 800 })
+    useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const updateDimensions = () => {
+        setWindowDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight
+        })
+      }
+      
+      updateDimensions()
+      window.addEventListener('resize', updateDimensions)
+      
+      return () => window.removeEventListener('resize', updateDimensions)
+    }
+  }, [])
   const fetchSongs = async (artistAddress) => {
     setSongLoading(true)
     setSongsData([])
@@ -242,23 +259,23 @@ const Page = () => {
             initial={{
               opacity: 0,
               x:
-                Math.random() *
-                (typeof window !== 'undefined' ? window.innerWidth : 1000),
+                Math.random() * windowDimensions.innerWidth,
+                
               y:
-                Math.random() *
-                (typeof window !== 'undefined' ? window.innerHeight : 800),
+                Math.random() * windowDimensions.innerHeight,
+                
             }}
             animate={{
               opacity: [0.4, 0.7, 0.4],
               x: [
-                Math.random() * window.innerWidth,
-                Math.random() * window.innerWidth,
-                Math.random() * window.innerWidth,
+                Math.random() * windowDimensions.innerWidth,
+                Math.random() * windowDimensions.innerWidth,
+                Math.random() * windowDimensions.innerWidth,
               ],
               y: [
-                Math.random() * window.innerHeight,
-                Math.random() * window.innerHeight,
-                Math.random() * window.innerHeight,
+                Math.random() * windowDimensions.innerHeight,
+                Math.random() * windowDimensions.innerHeight,
+                Math.random() * windowDimensions.innerHeight,
               ],
               rotate: [0, 180, 360],
             }}

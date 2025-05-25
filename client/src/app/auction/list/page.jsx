@@ -5,8 +5,6 @@ import {
   Music,
   User,
   DollarSign,
-  Calendar,
-  Trophy,
   X,
   TrendingUp,
   Timer,

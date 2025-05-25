@@ -10,7 +10,6 @@ import {
 import { Contract } from "starknet";
 import { UserContext } from "../../../context/userContextProvider";
 import { motion } from "framer-motion";
-import { title } from "process";
 
 const decimalToAscii = (decimal) => {
   if (!decimal) return "N/A";
@@ -36,12 +35,11 @@ const Songs = () => {
   const [error, setError] = useState(null);
   const [selectedSong, setSelectedSong] = useState(null);
   const [showDetailPage, setShowDetailPage] = useState(false);
-  const [songStats, setSongStats] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [songArtists, setSongArtists] = useState({});
-  const { sendAsync, error: txError } = useSendTransaction({
+  const { sendAsync } = useSendTransaction({
     calls: undefined,
   });
   const { address } = useAccount();
@@ -156,9 +154,6 @@ const Songs = () => {
       setSelectedSong(songId);
       setShowDetailPage(true);
 
-      const stats = await getSongStats(songId);
-      setSongStats(stats);
-
       const songComments = await getCommentsOfSong(songId);
       setComments(songComments || []);
 
@@ -170,15 +165,6 @@ const Songs = () => {
     }
   };
 
-  const getSongStats = async (songId) => {
-    try {
-      const res = songContract.call("get_song_stats", [songId]);
-      return res;
-    } catch (err) {
-      console.error("Error fetching song stats:", err);
-      return null;
-    }
-  };
 
   const getCommentsOfSong = async (songId) => {
     try {

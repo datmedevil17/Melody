@@ -72,7 +72,7 @@ const BottomBarMusicPlayer = () => {
     metaData,
   } = useContext(UserContext);
 
-  const audioRef = useRef<any>(null);
+  const audioRef = useRef(new Audio());
   const intervalRef = useRef<NodeJS.Timeout>(setInterval(() => {}, 1000));
   const collapseTimeout = useRef<NodeJS.Timeout | null>(null);
 
@@ -98,7 +98,7 @@ const BottomBarMusicPlayer = () => {
 
     audio.addEventListener("loadedmetadata", () => setDuration(audio.duration));
     audio.addEventListener("canplay", () => setIsAudioLoading(false));
-    audio.addEventListener("error", (e: any) => {
+    audio.addEventListener("error", (e) => {
       console.error("Audio error:", e);
       setIsAudioLoading(false);
       setIsPlaying(false);

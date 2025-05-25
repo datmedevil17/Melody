@@ -6,7 +6,7 @@ import WalletConnectorModal from "./WalletConnectorModal";
 
 import { useRouter } from "next/navigation";
 
-import { useAccount } from '@starknet-react/core';
+import { useAccount} from '@starknet-react/core';
 
 
 const LandingHero = () => {

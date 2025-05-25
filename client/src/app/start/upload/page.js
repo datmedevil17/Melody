@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import Link from 'next/link'
-import { uploadToIpfs, uploadToIpfsJson } from '../../../contract/pinata'
+import { uploadToIpfs } from '../../../contract/pinata'
 import {
   useAccount,
   useContract,
@@ -10,26 +10,10 @@ import {
   useSendTransaction,
 } from '@starknet-react/core'
 import { artistABI, artistContractAddress } from '../../../contract/contract'
-import { shortString, uint256, num, hash } from 'starknet'
-import SHA256 from 'crypto-js/sha256'
+import { num, } from 'starknet'
 import { motion } from 'framer-motion'
 
-// Utility function to hash IPFS hash to a shorter format
-const hashIpfsHash = (ipfsHash) => {
-  // Generate SHA-256 hash of the IPFS hash
-  const hash = SHA256(ipfsHash).toString()
-  // Take first 31 characters to fit in felt
-  return hash.substring(0, 31)
-}
 
-const extractIpfsHash = (ipfsUrl) => {
-  // Extract hash from ipfs://QmHash format
-  const hash = ipfsUrl.replace('ipfs://', '')
-  return {
-    originalHash: hash,
-    shortenedHash: hashIpfsHash(hash),
-  }
-}
 
 // Convert date string to UNIX timestamp (seconds since epoch) for u64 type
 const dateToTimestamp = (dateString) => {
@@ -47,6 +31,26 @@ const UploadSong = () => {
     abi: artistABI,
     provider,
   })
+
+  const [windowDimensions, setWindowDimensions] = useState({ width: 1200, height: 800 })
+    // Handle window dimensions safely
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const updateDimensions = () => {
+        setWindowDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight
+        })
+      }
+      
+      updateDimensions()
+      window.addEventListener('resize', updateDimensions)
+      
+      return () => window.removeEventListener('resize', updateDimensions)
+    }
+  }, [])
+  
+
 
   const [songFile, setSongFile] = useState('')
   const [songHash, setSongHash] = useState(null)
@@ -215,18 +219,18 @@ const UploadSong = () => {
             key={`orb-${i}`}
             initial={{
               opacity: 0,
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
+              x: Math.random() * windowDimensions.innerWidth,
+              y: Math.random() * windowDimensions.innerHeight,
             }}
             animate={{
               opacity: [0.1, 0.3, 0.1],
               x: [
-                Math.random() * window.innerWidth,
-                Math.random() * window.innerWidth,
+                Math.random() * windowDimensions.innerWidth,
+                Math.random() * windowDimensions.innerWidth,
               ],
               y: [
-                Math.random() * window.innerHeight,
-                Math.random() * window.innerHeight,
+                Math.random() * windowDimensions.innerHeight,
+                Math.random() * windowDimensions.innerHeight,
               ],
             }}
             transition={{

@@ -618,7 +618,7 @@ const Page = () => {
                     Upload Song
                   </Link>
                   <Link
-                    href="/collab"
+                    href="/start/collab"
                     className="bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black dark:from-emerald-800 dark:to-emerald-900 dark:hover:from-emerald-700 dark:hover:to-emerald-800 text-white py-3 px-6 rounded-full font-semibold flex items-center transition-all duration-200 shadow-lg hover:shadow-gray-500/25 dark:hover:shadow-emerald-500/25 transform hover:scale-105"
                   >
                     <svg

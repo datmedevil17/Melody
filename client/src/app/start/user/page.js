@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { userABI, userContractAddress } from '../../contract/contract';
+import { userABI, userContractAddress } from '../../../contract/contract';
 import { useAccount, useContract, useProvider, useSendTransaction } from '@starknet-react/core';
 import { shortString } from 'starknet';
 import { useRouter } from 'next/navigation';

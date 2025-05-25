@@ -1,12 +1,12 @@
 'use client';
 
 import {
-  Connector,
+ 
   useAccount,
   useConnect,
   useDisconnect,
 } from '@starknet-react/core';
-import { StarknetkitConnector, useStarknetkitConnectModal } from 'starknetkit';
+import {  useStarknetkitConnectModal } from 'starknetkit';
 
 export default function WalletConnectorModal() {
   const { disconnect } = useDisconnect();

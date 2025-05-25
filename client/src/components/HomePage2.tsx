@@ -3,13 +3,29 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import { Play, ChevronRight, Disc, Zap, Lock, Share2, Music } from "lucide-react"
 // import { button } from "@/components/ui/button"
 import Link from "next/link"
+import { useState,useEffect } from "react"
 
 export default function HomePage2() {
   const { scrollYProgress } = useScroll()
 
   const headerOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0])
   const headerScale = useTransform(scrollYProgress, [0, 0.1], [1, 0.9])
-
+  const [windowDimensions, setWindowDimensions] = useState({ width: 1200, height: 800 })
+    useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const updateDimensions = () => {
+        setWindowDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight
+        })
+      }
+      
+      updateDimensions()
+      window.addEventListener('resize', updateDimensions)
+      
+      return () => window.removeEventListener('resize', updateDimensions)
+    }
+  }, [])
 
 
 
@@ -26,20 +42,20 @@ export default function HomePage2() {
             key={`note-${i}`}
             initial={{
               opacity: 0,
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
+              x: Math.random() * windowDimensions.width,
+              y: Math.random() * windowDimensions.height,
             }}
             animate={{
               opacity: [0.4, 0.7, 0.4],
               x: [
-                Math.random() * window.innerWidth,
-                Math.random() * window.innerWidth,
-                Math.random() * window.innerWidth,
+                Math.random() * windowDimensions.width,
+                Math.random() * windowDimensions.width,
+                Math.random() * windowDimensions.width,
               ],
               y: [
-                Math.random() * window.innerHeight,
-                Math.random() * window.innerHeight,
-                Math.random() * window.innerHeight,
+                Math.random() * windowDimensions.height,
+                Math.random() * windowDimensions.height,
+                Math.random() * windowDimensions.height,
               ],
               rotate: [0, 180, 360],
             }}
@@ -65,21 +81,21 @@ export default function HomePage2() {
             initial={{
               opacity: 0,
               scale: 0,
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
+              x: Math.random() * windowDimensions.width,
+              y: Math.random() * windowDimensions.height,
             }}
             animate={{
               opacity: [0.2, 0.4, 0.2],
               scale: [0.5, 0.7, 0.5],
               x: [
-                Math.random() * window.innerWidth,
-                Math.random() * window.innerWidth,
-                Math.random() * window.innerWidth,
+                Math.random() * windowDimensions.width,
+                Math.random() * windowDimensions.width,
+                Math.random() * windowDimensions.width,
               ],
               y: [
-                Math.random() * window.innerHeight,
-                Math.random() * window.innerHeight,
-                Math.random() * window.innerHeight,
+                Math.random() * windowDimensions.height,
+                Math.random() * windowDimensions.height,
+                Math.random() * windowDimensions.height,
               ],
               rotate: [0, 360, 720],
             }}
