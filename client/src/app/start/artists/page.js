@@ -328,38 +328,6 @@ const Page = () => {
             <p className="text-xl text-green-100/80 font-light max-w-2xl leading-relaxed mb-8">
               Discover amazing musicians from around the world and explore their latest releases
             </p>
-
-            {/* Action buttons */}
-            <div className="flex flex-wrap gap-4">
-              <button className="group px-8 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 rounded-full font-semibold text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-green-500/30">
-                <span className="flex items-center">
-                  Browse All
-                  <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </span>
-              </button>
-              
-              <button className="px-8 py-3 bg-green-500/10 hover:bg-green-500/20 backdrop-blur-md border border-green-400/30 hover:border-green-400/50 rounded-full font-semibold text-green-100 transition-all duration-300 transform hover:scale-105">
-                Featured Artists
-              </button>
-            </div>
-
-            {/* Stats or additional info */}
-            <div className="flex items-center gap-8 mt-12 pt-8 border-t border-green-500/20">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">10K+</div>
-                <div className="text-sm text-green-200/70 uppercase tracking-wide">Artists</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">50K+</div>
-                <div className="text-sm text-green-200/70 uppercase tracking-wide">Songs</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">100+</div>
-                <div className="text-sm text-green-200/70 uppercase tracking-wide">Genres</div>
-              </div>
-            </div>
           </div>
 
           {/* Decorative elements */}

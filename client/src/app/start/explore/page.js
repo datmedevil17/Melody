@@ -7,6 +7,7 @@ import {
   songContract,
 } from '../../../contract/contract'
 import { UserContext } from '../../../context/userContextProvider'
+import Link from 'next/link'
 
 const Explore = () => {
   const [hoveredArtist, setHoveredArtist] = useState(null)
@@ -260,9 +261,9 @@ const Explore = () => {
           <section>
             <div className='flex items-center justify-between mb-6'>
               <h2 className='text-2xl font-bold text-white'>Featured Artists</h2>
-              <button className='text-emerald-400 hover:text-emerald-300 transition-colors text-sm font-medium'>
+              <Link className='text-emerald-400 hover:text-emerald-300 transition-colors text-sm font-medium cursor-pointer' href={'/start/artists'}>
                 See All
-              </button>
+              </Link>
             </div>
 
             {artistsLoading ? (
@@ -326,9 +327,9 @@ const Explore = () => {
           <section>
             <div className='flex items-center justify-between mb-6'>
               <h2 className='text-2xl font-bold text-white'>Recently Added</h2>
-              <button className='text-emerald-400 hover:text-emerald-300 transition-colors text-sm font-medium'>
+              <Link className='text-emerald-400 hover:text-emerald-300 transition-colors text-sm font-medium cursor-pointer' href={'/start/songs'}>
                 See All
-              </button>
+              </Link>
             </div>
 
             {recentSongsLoading ? (
@@ -373,7 +374,7 @@ const Explore = () => {
                       )}
 
                       {/* Hover play button */}
-                      {hoveredSong === song.id && !isPlaying && (
+                      {hoveredSong === song.id && (!isPlaying || currentlyPlaying !== song.id) && (
                         <motion.div
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
@@ -396,7 +397,7 @@ const Explore = () => {
                       )}
 
                       {/* Pause button for currently playing */}
-                      {hoveredSong === song.id && isPlaying && (
+                      {hoveredSong === song.id && isPlaying && currentlyPlaying === song.id && (
                         <motion.div
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
@@ -453,9 +454,9 @@ const Explore = () => {
           <section>
             <div className='flex items-center justify-between mb-6'>
               <h2 className='text-2xl font-bold text-white'>{`Today's Hitlist`}</h2>
-              <button className='text-emerald-400 hover:text-emerald-300 transition-colors text-sm font-medium'>
+              <Link className='text-emerald-400 hover:text-emerald-300 transition-colors text-sm font-medium cursor-pointer' href={'/start/songs'}>
                 See All
-              </button>
+              </Link>
             </div>
 
             {hitlistSongsLoading ? (
