@@ -1,8 +1,7 @@
 # Melody 🎵
 
 *Decentralized Music Platform on Starknet*
-
-![Starknet Reignite Hackathon](https://example.com/starknet-reignite-banner.png)
+![Screenshot from 2025-05-26 16-37-31](https://github.com/user-attachments/assets/a2b13736-c74e-4870-af4f-9cdc6aa31ef5)
 
 ---
 
@@ -57,6 +56,9 @@ Manages artist registration, song uploads, and collaboration features:
 - Song upload and metadata handling
 - Collaboration system for multi-artist tracks
 - Comprehensive artist statistics and analytics
+  ![image](https://github.com/user-attachments/assets/6ad89cfa-f947-4087-8cb7-d3c042ed3e17)
+
+
 
 #### 2. **Song Contract** (`ISongContract`)
 Handles song interactions, engagement, and social features:
@@ -64,6 +66,9 @@ Handles song interactions, engagement, and social features:
 - Song statistics and popularity tracking  
 - User engagement rewards
 - Pagination and batch operations for scalability
+  ![image](https://github.com/user-attachments/assets/5a3978ce-58ef-4b03-92c6-bfc8d2aa11ce)
+
+  
 
 #### 3. **User Contract** (`IUserContract`)
 Manages user profiles, rewards, and favorite artists:
@@ -71,6 +76,8 @@ Manages user profiles, rewards, and favorite artists:
 - Token-based reward system
 - Artist favoriting and discovery
 - User activity tracking
+    ![image](https://github.com/user-attachments/assets/c6fb103c-5188-423b-972f-70baeb52239a)
+
 
 ### Technology Stack
 
