@@ -8,6 +8,8 @@
 ## Vision
 
 Melody envisions a revolutionary music ecosystem where artists and listeners connect directly, free from traditional intermediaries. Our platform empowers creators to share their art while building genuine communities around music, all secured by the power of blockchain technology.
+![image](https://github.com/user-attachments/assets/01cd8cde-1c26-49d9-ab77-0110dffd0f12)
+
 
 ## Problem Statement
 
@@ -144,18 +146,37 @@ favorite_artist(user_address, artist_address)
 - `upload_song()` - Upload song with metadata
 - `get_artist_profile()` - Retrieve artist information
 - `get_artist_collaborations()` - Get collaboration history
+  ![image](https://github.com/user-attachments/assets/972a4e3f-7b49-4ea7-a92c-88a5a1e2e0db)
+  ![image](https://github.com/user-attachments/assets/88a1be05-2c30-43c5-8866-cbdb56ccc08c)
+  ![image](https://github.com/user-attachments/assets/29230d02-5d66-4b3f-bd46-c1b259e79a25)
+  ![image](https://github.com/user-attachments/assets/a4aa18a2-36b0-468d-824b-c9b169de11e4)
+
+
+  
+
+
+  
 
 ### Song Interactions  
 - `like_song()` - Like a song
 - `comment_on_song()` - Add comment to song
 - `get_song_stats()` - Get comprehensive song statistics
 - `get_trending_songs()` - Retrieve trending content
+  ![image](https://github.com/user-attachments/assets/c9134c96-a6b8-475f-ae58-7e091a0d9ca4)
+  ![image](https://github.com/user-attachments/assets/3043a5a8-3269-4419-b4b4-060e940481c6)
+
+  
+
 
 ### User Functions
 - `register_user()` - Create user profile
 - `favorite_artist()` - Add artist to favorites
 - `get_user_tokens()` - Check token balance
 - `reward_user_for_listening()` - Earn listening rewards
+  ![image](https://github.com/user-attachments/assets/898d3215-5ed6-4f2d-9146-fe941053f95c)
+  ![image](https://github.com/user-attachments/assets/cc4e2630-5c4d-429d-bc27-3527f0ec64ab)
+
+
 
 
 
