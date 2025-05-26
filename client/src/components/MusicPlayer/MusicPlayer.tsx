@@ -262,7 +262,7 @@ const BottomBarMusicPlayer = () => {
   animate={{ scale: 1 }}
   exit={{ scale: 0 }}
   transition={{ type: 'spring', stiffness: 300 }}
-  className="fixed bottom-6 right-6 z-50 w-28 h-28 cursor-pointer"
+  className="fixed bottom-24 right-6 z-40 w-14 h-14 cursor-pointer "
   onClick={toggleExpand}
 >
   <div className="relative w-full h-full rounded-full bg-gradient-to-br from-white to-gray-100 shadow-lg border border-gray-300">
@@ -299,9 +299,9 @@ const BottomBarMusicPlayer = () => {
     <Image
       src={metaData.image || imageSrc}
       alt="Track"
-      width={72}
-      height={72}
-      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full object-cover ring-4 ring-white"
+      width={36}
+      height={36}
+      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full object-cover ring-4 ring-white"
     />
   </div>
 </motion.div>

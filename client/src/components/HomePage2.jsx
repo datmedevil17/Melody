@@ -262,7 +262,7 @@ export default function HomePage2() {
       <motion.section
         style={{ opacity: headerOpacity, scale: headerScale }}
         className='relative z-10 min-h-[90vh] flex items-center'>
-        <div className='container mx-auto px-4 py-20'>
+        <div className='container mx-auto px-4 py-20 flex flex-row justify-center items-center'>
           <div className='grid grid-cols-1 lg:grid-cols-2 gap-12 items-center'>
             <motion.div
               initial={{ opacity: 0, y: 20 }}

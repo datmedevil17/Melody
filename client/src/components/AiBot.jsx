@@ -352,7 +352,7 @@ User's message: ${userMessage.content}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className='fixed z-40 bottom-6 right-6 w-[350px] md:w-[400px] bg-[#001a00] border border-[#004d00] rounded-2xl shadow-xl overflow-hidden flex flex-col'
+            className='fixed z-50 bottom-6 right-6 w-[350px] md:w-[400px] bg-[#001a00] border border-[#004d00] rounded-2xl shadow-xl overflow-hidden flex flex-col'
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
