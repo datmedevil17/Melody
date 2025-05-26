@@ -297,17 +297,17 @@ const Page = () => {
             </div>
           </div>
         ) : !isRegistered ? (
-          <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
-            <h1 className="text-2xl font-bold">
-              Please register to view your profile
-            </h1>
-            <Link
-              href={"/start/user"}
-              className="ml-4 text-purple-400 underline"
-            >
-              Register
-            </Link>
-          </div>
+          <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white space-y-4">
+  <h1 className="text-2xl font-bold">
+    Please register to view your profile
+  </h1>
+  <Link href="/start/user">
+    <button className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-green-600 to-green-700 rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+      Register
+    </button>
+  </Link>
+</div>
+
         ) : mode === "user" ? (
           // User profile view
           <>
