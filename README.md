@@ -8,7 +8,8 @@
 ## Vision
 
 Melody envisions a revolutionary music ecosystem where artists and listeners connect directly, free from traditional intermediaries. Our platform empowers creators to share their art while building genuine communities around music, all secured by the power of blockchain technology.
-![image](https://github.com/user-attachments/assets/01cd8cde-1c26-49d9-ab77-0110dffd0f12)
+<img src="https://github.com/user-attachments/assets/01cd8cde-1c26-49d9-ab77-0110dffd0f12" alt="image" width="300" height="200">
+
 
 
 ## Problem Statement
