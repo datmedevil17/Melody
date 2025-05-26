@@ -179,6 +179,9 @@ favorite_artist(user_address, artist_address)
   ![image](https://github.com/user-attachments/assets/cc4e2630-5c4d-429d-bc27-3527f0ec64ab)
 
 
+### AI-Assistant
+![WhatsApp Image 2025-05-26 at 22 11 32](https://github.com/user-attachments/assets/3aece1fa-9f98-4240-a190-ce5f4c0d6adf)
+
 
 
 
